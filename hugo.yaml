@@ -1,75 +1,27 @@
 baseURL: https://mnorberg-dev.github.io/
 title: Matthew Norberg's Data Engineering Blog
 languageCode: en-us
-
 theme: ["PaperMod"]
 
 enableRobotsTXT: true
+enableEmoji: true
 buildDrafts: false
 buildFuture: false
 buildExpired: false
-enableEmoji: true
 
-params:
-  defaultTheme: "auto" # Options: light, dark, auto
-
-  author: Matthew Norberg
-
-  title: "Matthew Norberg's Data Engineering Blog"
-  description: "Practical Data Engineering Insights"
-  keywords: ["Data Engineering", "Blog", "Technology", "ETL", "Data Pipelines", "Big Data", "Data", "Python", "SQL"]
-
-  images: ["/favicon.ico"]
-
-  customCSS: ["/css/custom.css"]
-
-  showReadingTime: true
-  showBreadCrumbs: true
-  showCodeCopyButtons: true
-  showPostNavLinks: true
-  showToc: false
-  tocOpen: false
-  disableSpecial1stPost: false
-  disableScrollToTop: false
-  hidemeta: false
-  hideSummary: false
-
-  homeInfoParams:
-    Title: "Practical Data Engineering Insights"
-    Content: "Exploring modern data engineering, technology, and the lessons learned along the way."
-
-  socialIcons:
-    - name: github
-      url: "https://github.com/"
-    - name: linkedin
-      url: "https://www.linkedin.com/in/mnorberg24/"
-
-  assets:
-    favicon: "/favicon.ico"
-
-  fuseOpts:
-    isCaseSensitive: false
-    shouldSort: true
-    location: 0
-    distance: 1000
-    threshold: 0.4
-    minMatchCharLength: 0
-    keys:
-      - title
-      - permalink
-      - summary
-      - content
-
+# Outputs for RSS / search
 outputs:
   home:
     - HTML
     - RSS
-    - JSON 
+    - JSON
 
+# Pagination
 pagination:
   disableAliases: false
   pagerSize: 5
 
+# Menu
 menu:
   main:
     - identifier: Home
@@ -89,6 +41,63 @@ menu:
       url: /search/
       weight: 40
 
+# Caches
 caches:
   images:
     dir: :cacheDir/images
+
+# Theme-specific params
+params:
+  # Theme appearance
+  defaultTheme: "auto"
+  showReadingTime: true
+  showBreadCrumbs: true
+  showCodeCopyButtons: true
+  showPostNavLinks: true
+  showToc: false
+  tocOpen: false
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  hidemeta: false
+  hideSummary: false
+
+  # Author / site info
+  author: Matthew Norberg
+  description: "Practical Data Engineering Insights"
+  keywords: ["Data Engineering", "Blog", "Technology", "ETL", "Data Pipelines", "Big Data", "Data", "Python", "SQL"]
+  images: ["/favicon.ico"]
+
+  # Homepage info
+  homeInfoParams:
+    Title: "Practical Data Engineering Insights"
+    Content: "Exploring modern data engineering, technology, and the lessons learned along the way."
+
+  # Social links
+  socialIcons:
+    - name: github
+      url: "https://github.com/"
+    - name: linkedin
+      url: "https://www.linkedin.com/in/mnorberg24/"
+
+  # Favicon
+  assets:
+    favicon: "/favicon.ico"
+
+  # Fuse.js search options
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys:
+      - title
+      - permalink
+      - summary
+      - content
+
+# Syntax highlighting
+pygmentsCodeFences: true
+pygmentsUseClasses: true
+pygmentsStyle: monokai
