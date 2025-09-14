@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>https://mnorberg-dev.github.io/posts/</link>
+    <description>Recent content in Posts on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <image>
+      <title>Matthew Norberg&#39;s Data Engineering Blog</title>
+      <url>https://mnorberg-dev.github.io/favicon.ico</url>
+      <link>https://mnorberg-dev.github.io/favicon.ico</link>
+    </image>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 01 Jan 1970 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mnorberg-dev.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My first blog post</title>
+      <link>https://mnorberg-dev.github.io/posts/blog/</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 +0000</pubDate>
+      <guid>https://mnorberg-dev.github.io/posts/blog/</guid>
+      <description>&lt;h1 id=&#34;title&#34;&gt;Title&lt;/h1&gt;
+&lt;h2 id=&#34;subtitle&#34;&gt;Subtitle&lt;/h2&gt;
+&lt;h3 id=&#34;another-title&#34;&gt;Another Title&lt;/h3&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://mnorberg-dev.github.io/sitemap.xml
