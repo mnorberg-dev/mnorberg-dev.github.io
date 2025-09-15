@@ -75,7 +75,7 @@ params:
   # Social links
   socialIcons:
     - name: github
-      url: "https://github.com/"
+      url: "https://github.com/mnorberg-dev"
     - name: linkedin
       url: "https://www.linkedin.com/in/mnorberg24/"
 

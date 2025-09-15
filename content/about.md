@@ -14,7 +14,7 @@ My approach to data engineering can be summed up in one simple philosophy: *firs
 
 - **Data Pipelines & Medallion Architecture:** Designed fault-tolerant pipelines that move data through the medallion architecture layers—bronze, silver, and gold—improving data quality at each step and preparing it for use by downstream teams. Pipelines were engineered to minimize manual steps, making workflows easy to deploy, manage, and maintain.  
 
-- **Safeguarded & Sensitive Procedures:** Wrote code to handle sensitive processes mindfully, reducing the risk of mistakes. For example, I developed a WordPress ingestion client in Python with defensive safeguards to ensure proper usage.  
+- **Safeguarded Sensitive Procedures:** Wrote code to handle sensitive processes mindfully, reducing the risk of mistakes. For example, I developed a WordPress ingestion client in Python with defensive safeguards to ensure proper usage.  
 
 - **Data Quality & Governance:** Developed data quality checks and DLT pipelines using Data Expectations. Built dashboards to monitor data health, integrated governance tools like Atlan, and was selected as a Databricks Data & AI Summit speaker candidate, submitting a presentation on Data Expectations in Databricks.  
 
