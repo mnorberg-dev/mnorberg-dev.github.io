@@ -23,13 +23,14 @@
 &lt;h3 id=&#34;another-title&#34;&gt;Another Title&lt;/h3&gt;</description>
     </item>
     <item>
-      <title>About</title>
+      <title></title>
       <link>https://mnorberg-dev.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://mnorberg-dev.github.io/about/</guid>
-      <description>&lt;p&gt;Hi, I’m [Your Name] 👋&lt;/p&gt;
-&lt;p&gt;This is my personal blog where I write about [your topics: data engineering, tech, etc.].&lt;/p&gt;
-&lt;p&gt;When I’m not coding, I [hobby/interests].&lt;/p&gt;</description>
+      <description>&lt;h1 id=&#34;about-me&#34;&gt;About Me&lt;/h1&gt;
+&lt;p&gt;Hi! I’m Matthew Norberg, a Data Engineer with a passion for turning complex data challenges into clean, maintainable, and high-performing solutions. Over the past several years, I’ve had the opportunity to work with Databricks, Azure, and a variety of modern data tools, building platforms, pipelines, and systems that help organizations make better use of their data.&lt;/p&gt;
+&lt;h2 id=&#34;my-journey-in-data-engineering&#34;&gt;My Journey in Data Engineering&lt;/h2&gt;
+&lt;p&gt;I’ve always had a passion for programming and problem-solving, which first led me down the path of software engineering during my undergraduate studies. In graduate school, I started working more with data, earning a degree in Computer Science with a concentration in Data Science. This combination of software engineering and data expertise naturally led me to data engineering—a perfect middle ground between building robust systems and working with meaningful data. My background in CS and data science has prepared me well to tackle the challenges of modern data engineering.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
