@@ -46,12 +46,12 @@ caches:
   images:
     dir: :cacheDir/images
 
-# Theme-specific params
 params:
   # Theme appearance
-  defaultTheme: "auto"
+  defaultTheme: "light"
+  disableThemeToggle: true
   showReadingTime: true
-  showBreadCrumbs: true
+  showBreadCrumbs: false
   showCodeCopyButtons: true
   showPostNavLinks: true
   showToc: false
@@ -60,6 +60,9 @@ params:
   disableScrollToTop: false
   hidemeta: false
   hideSummary: false
+
+  # Necessary for code color schemes
+  disableHLJS: true
 
   # Author / site info
   author: Matthew Norberg
@@ -91,13 +94,9 @@ params:
     distance: 1000
     threshold: 0.4
     minMatchCharLength: 0
-    keys:
-      - title
-      - permalink
-      - summary
-      - content
+    keys: ["title", "permalink", "summary", "content"]
 
 # Syntax highlighting
-pygmentsCodeFences: true
-pygmentsUseClasses: true
-pygmentsStyle: monokai
+markup:
+  highlight:
+    noClasses: false

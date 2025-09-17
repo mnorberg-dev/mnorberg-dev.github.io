@@ -1,4 +1,6 @@
-# About Me
+---
+title: "About Me"
+---
 
 Hi! I’m Matthew Norberg, a Data Engineer with a passion for turning complex data challenges into clean, maintainable, and high-performing solutions. Over the past several years, I’ve had the opportunity to work with Databricks, Azure, and a variety of modern data tools, building platforms, pipelines, and systems that help organizations make better use of their data.  
 
