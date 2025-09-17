@@ -12,6 +12,8 @@ Databricks is quickly becoming one of the most popular data lakehouse platforms 
 
 Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.  
 
+👉 If you’d rather skip ahead and get straight to the solution, I’ve published the script (with setup instructions) in this [GitHub repo](https://github.com/mnorberg-dev/databricks-tools).
+
 ## The Problem: Too Many Tabs, Too Few Clues
 
 Many organizations using Databricks have multiple workspaces to represent different environments—think `dev`, `qa`, and `prod`. Some even have additional splits like staging or sandbox.  
@@ -20,7 +22,7 @@ If you’re working across all of them, here’s the problem: **your browser tab
 
 ![Too Many Tabs](/tamper-monkey/many-tabs.png)
 
-> Note: Domains in images are redacted, but in your environment, they’ll appear as GUIDs.
+> Note: URLs in images are redacted, but in your environment, the redacted portions will appear as GUIDs.
 
 Inside the workspace, the situation isn’t much better. It's not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:  
 
@@ -202,3 +204,5 @@ Double-check that:
 It’s a small tweak, but it solves a surprisingly big problem. If you’re juggling multiple Databricks environments, this little script will save you from confusion—and maybe even prevent a mistake or two.
 
 Sometimes the best tools aren’t the big, complicated ones. They’re the tiny hacks that make your day smoother.
+
+👉 You can grab the full script and step-by-step setup instructions in the `databricks-tools-repo` [here](https://github.com/mnorberg-dev/databricks-tools).
