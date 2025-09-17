@@ -8,7 +8,7 @@ slug: "databricks-tab-label-tool"
 author: "Matthew Norberg"
 ---
 
-Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.  
+Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.  
 
 Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.  
 
@@ -18,26 +18,34 @@ Many organizations using Databricks have multiple workspaces to represent differ
 
 If you’re working across all of them, here’s the problem: **your browser tabs all look the same.**  
 
+![Too Many Tabs](/tamper-monkey/many-tabs.png)
+
+> Note: Domains in images are redacted, but in your environment, they’ll appear as GUIDs.
+
 Inside the workspace, the situation isn’t much better. It's not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:  
 
-1. **The domain name.** Every environment has a URL that looks like `adb-<long string of numbers>`. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like `google.com` instead of memorizing IP addresses.  
-2. **A small piece of text in the top-right corner.** Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. And if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.  
+1. **The domain name.** Every environment has a URL like `adb-<long string of numbers>`. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like `google.com` instead of memorizing IP addresses.  
+2. **A small piece of text in the top-right corner.** Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. It’s easy to miss, and if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.
 
 The end result? Confusion, context-switching, and the very real risk of running a query in `prod` that you meant for `dev`.  
 
-**Where to add an image:** a screenshot of three Databricks tabs open in a browser, all with identical titles.  
+![Small Workspace Indicator](/tamper-monkey/workspace-indicator.png)
 
 ## But Wait, Isn’t There a Color Trick?
 
 Some people solve this by assigning different themes—say, dark mode for `prod` and light mode for `dev`. Clever idea, but it falls apart quickly:  
 
-- There are only two color schemes available. One environment will inevitably match another.  
-- If two environments share a metastore, changing one changes the other.  
+- There are only two color schemes available and many organizations have three workspaces meaning one environment will inevitably match another.
+- If two or more environments share a metastore, changing one changes the other.  
 - And let’s be honest: some developers simply refuse to use a theme they don’t like.  
 
 So while the color trick can work in a pinch, it’s not a real solution.  
 
-**Where to add an image:** side-by-side screenshot of Databricks in light mode vs. dark mode.  
+![Dark Theme](/tamper-monkey/dark-theme.png)
+
+> To activate dark mode, navigate to Settings → User Preferences → “Prefer Dark.”  
+>     
+> If you don’t enable this setting, your environment theme will default to match the light theme shown in the images above.  
 
 ## The Solution: Tampermonkey to the Rescue  
 
@@ -50,13 +58,36 @@ It’s simple, lightweight, and makes a huge difference:
 - Reduced risk of editing the wrong workspace  
 - A quality-of-life boost you’ll wonder how you lived without  
 
-And best of all: **little to no performance impact**. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.  
+And best of all: **little to no performance impact**. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.  Below, I've provided an image illustrating what your dev environment will look like after setting up the Tamper Monkey script for yourself.
 
-**Where to add an image:** screenshot of browser tabs labeled with `[🟢 DEV]`, `[🟡 QA]`, and `[🔴 PROD]`.  
+![Tamper Monkey In Action](/tamper-monkey/label-in-action.png)
 
-## How to Set It Up 
+## How to Set It Up
 
-Here’s the script that powers the whole thing:  
+Getting your Databricks tabs labeled automatically is quick and easy. You’ll need to:  
+
+1. Install Tampermonkey  
+2. Create a new script  
+3. Paste in the code  
+4. Configure your environment domains  
+5. Save and enable the script  
+6. Enable user scripts in your browser (Chrome only)  
+7. Verify it’s working  
+
+> Note: These instructions are written for Google Chrome, but the steps can be adapted to other browsers that support Tampermonkey.
+
+Follow the steps below.
+
+### 1. Install Tampermonkey
+- Download Tampermonkey for your browser from [tampermonkey.net](https://www.tampermonkey.net/).  
+- Restart your browser after installation.
+
+### 2. Create a New Script
+- Open the Tampermonkey extension → Dashboard → “Create a new script.”  
+- Delete the boilerplate code so the editor is blank.
+
+### 3. Add the Script
+Copy and paste the following code into the new script: 
 
 ```js
 // ==UserScript==
@@ -117,41 +148,31 @@ Here’s the script that powers the whole thing:
 })();
 ```
 
-1. Install Tampermonkey
+### 4. Configure Environment Domains
 
-- Download Tampermonkey for your browser from tampermonkey.net.
+Near the top of the script, replace the placeholders with your actual environment domains:
 
-- Restart your browser after installing.
+```js
+let devDomain = 'your-dev-domain';
+let qaDomain = 'your-qa-domain';
+let prodDomain = 'your-prod-domain';
+```
 
-2. Create a new script
-
-- Click the Tampermonkey extension → Dashboard → Create a new script.
-
-- Delete the boilerplate code and paste in the script above.
-
-3. Configure environment domains
-
-- Near the top of the script, edit the following variables:
-
-    ```js
-    let devDomain = 'your-dev-domain';
-    let qaDomain = 'your-qa-domain';
-    let prodDomain = 'your-prod-domain';
-    ```
-
-4. Save and enable the script
+### 5. Save and Enable the Script
 
 - Save your changes (File → Save).
 
 - Make sure the script toggle in Tampermonkey is turned on (green).
 
-5. Enable user scripts (Chrome only)
+### 6. Enable User Scripts in Chrome
 
-- Go to chrome://extensions → find Tampermonkey → click Details.
+- Go to `chrome://extensions` → find Tampermonkey → click **Details**.
 
-- Make sure Allow user scripts is enabled.
+- Make sure **Allow user scripts** is enabled.
 
-6. Verify installation
+> Note: Other browsers may have different settings for allowing user scripts—adapt accordingly.
+
+### 7. Verify installation
 
 - Open your Databricks environment in a new tab.
 

@@ -18,7 +18,7 @@
       <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
       <guid>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</guid>
-      <description>&lt;p&gt;Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.&lt;/p&gt;
+      <description>&lt;p&gt;Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.&lt;/p&gt;
 &lt;p&gt;Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.&lt;/p&gt;</description>
     </item>
   </channel>

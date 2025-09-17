@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>The Databricks Tool You Didn&#39;t Know You Needed | Matthew Norberg&#39;s Data Engineering Blog</title>
 <meta name="keywords" content="databricks, tampermonkey, tools, productivity">
-<meta name="description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.
+<meta name="description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.
 Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.">
 <meta name="author" content="Matthew Norberg">
 <link rel="canonical" href="https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/">
@@ -31,7 +31,7 @@ Yes, I know—there are popular extensions that let you develop code outside of 
 </noscript><meta property="og:url" content="https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/">
   <meta property="og:site_name" content="Matthew Norberg&#39;s Data Engineering Blog">
   <meta property="og:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-  <meta property="og:description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.
+  <meta property="og:description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.
 Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="article">
@@ -46,7 +46,7 @@ Yes, I know—there are popular extensions that let you develop code outside of 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://mnorberg-dev.github.io/favicon.ico">
 <meta name="twitter:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-<meta name="twitter:description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.
+<meta name="twitter:description" content="Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.
 Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.">
 
 
@@ -76,12 +76,12 @@ Yes, I know—there are popular extensions that let you develop code outside of 
   "@type": "BlogPosting",
   "headline": "The Databricks Tool You Didn't Know You Needed",
   "name": "The Databricks Tool You Didn\u0027t Know You Needed",
-  "description": "Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.\nYes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.\n",
+  "description": "Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.\nYes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.\n",
   "keywords": [
     "databricks", "tampermonkey", "tools", "productivity"
   ],
-  "articleBody": "Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.\nYes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.\nThe Problem: Too Many Tabs, Too Few Clues Many organizations using Databricks have multiple workspaces to represent different environments—think dev, qa, and prod. Some even have additional splits like staging or sandbox.\nIf you’re working across all of them, here’s the problem: your browser tabs all look the same.\nInside the workspace, the situation isn’t much better. It’s not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:\nThe domain name. Every environment has a URL that looks like adb-. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like google.com instead of memorizing IP addresses. A small piece of text in the top-right corner. Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. And if you’re juggling multiple tabs, you can’t even see that text without clicking into each one. The end result? Confusion, context-switching, and the very real risk of running a query in prod that you meant for dev.\nWhere to add an image: a screenshot of three Databricks tabs open in a browser, all with identical titles.\nBut Wait, Isn’t There a Color Trick? Some people solve this by assigning different themes—say, dark mode for prod and light mode for dev. Clever idea, but it falls apart quickly:\nThere are only two color schemes available. One environment will inevitably match another. If two environments share a metastore, changing one changes the other. And let’s be honest: some developers simply refuse to use a theme they don’t like. So while the color trick can work in a pinch, it’s not a real solution.\nWhere to add an image: side-by-side screenshot of Databricks in light mode vs. dark mode.\nThe Solution: Tampermonkey to the Rescue Enter Tampermonkey, a browser extension that lets you run custom JavaScript whenever you visit a matching URL.\nWith a short script, you can automatically label your Databricks browser tabs with an emoji + text identifier for each environment. Suddenly, dev, qa, and prod are crystal clear.\nIt’s simple, lightweight, and makes a huge difference:\nFaster navigation between environments Reduced risk of editing the wrong workspace A quality-of-life boost you’ll wonder how you lived without And best of all: little to no performance impact. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.\nWhere to add an image: screenshot of browser tabs labeled with [🟢 DEV], [🟡 QA], and [🔴 PROD].\nHow to Set It Up Here’s the script that powers the whole thing:\n// ==UserScript== // @name Databricks Tab Emoji Label // @namespace http://tampermonkey.net/ // @version 1.5 // @description Add emoji and label to Databricks tab title based on environment // @author Matthew Norberg // @match https://.azuredatabricks.net/* // @grant none // ==/UserScript== (function() { 'use strict'; function updateTitle() { const url = window.location.href; let label = ''; let emoji = ''; // Define your environment domains here let devDomain = ''; let qaDomain = ''; let prodDomain = ''; if (url.includes(devDomain)) { label = 'DEV'; emoji = '🟢'; } else if (url.includes(qaDomain)) { label = 'QA'; emoji = '🟡'; } else if (url.includes(prodDomain)) { label = 'PROD'; emoji = '🔴'; } else { label = 'OTHER'; emoji = '⚪'; } if (!document.title.startsWith(`[${emoji} ${label}]`)) { document.title = `[${emoji} ${label}] ${document.title}`; } } // Initial run setTimeout(updateTitle, 3000); // Monitor for URL changes in SPA let lastUrl = location.href; new MutationObserver(() =\u003e { const currentUrl = location.href; if (currentUrl !== lastUrl) { lastUrl = currentUrl; setTimeout(updateTitle, 2000); } }).observe(document, {subtree: true, childList: true}); })(); Install Tampermonkey Download Tampermonkey for your browser from tampermonkey.net.\nRestart your browser after installing.\nCreate a new script Click the Tampermonkey extension → Dashboard → Create a new script.\nDelete the boilerplate code and paste in the script above.\nConfigure environment domains Near the top of the script, edit the following variables:\nlet devDomain = 'your-dev-domain'; let qaDomain = 'your-qa-domain'; let prodDomain = 'your-prod-domain'; Save and enable the script Save your changes (File → Save).\nMake sure the script toggle in Tampermonkey is turned on (green).\nEnable user scripts (Chrome only) Go to chrome://extensions → find Tampermonkey → click Details.\nMake sure Allow user scripts is enabled.\nVerify installation Open your Databricks environment in a new tab.\nAfter a few seconds, your tab title should display the correct emoji + environment label.\nTroubleshooting Tab title doesn’t update right away\nThe script intentionally waits 3 seconds after page load before applying changes.\nWithout this delay, the title gets updated but is overwritten during the web page loading process.\nIn testing, 3 seconds worked well, but you can adjust this by editing the setTimeout call in the code:\nsetTimeout(updateTitle, 3000); Still not working?\nDouble-check that:\nThe script is enabled in Tampermonkey. Your domains are correctly set in both the variables and the @match lines. “Allow user scripts” is enabled in your browser’s extension settings. Final Thoughts It’s a small tweak, but it solves a surprisingly big problem. If you’re juggling multiple Databricks environments, this little script will save you from confusion—and maybe even prevent a mistake or two.\nSometimes the best tools aren’t the big, complicated ones. They’re the tiny hacks that make your day smoother.\n",
-  "wordCount" : "964",
+  "articleBody": "Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.\nYes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.\nThe Problem: Too Many Tabs, Too Few Clues Many organizations using Databricks have multiple workspaces to represent different environments—think dev, qa, and prod. Some even have additional splits like staging or sandbox.\nIf you’re working across all of them, here’s the problem: your browser tabs all look the same.\nNote: Domains in images are redacted, but in your environment, they’ll appear as GUIDs.\nInside the workspace, the situation isn’t much better. It’s not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:\nThe domain name. Every environment has a URL like adb-. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like google.com instead of memorizing IP addresses. A small piece of text in the top-right corner. Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. It’s easy to miss, and if you’re juggling multiple tabs, you can’t even see that text without clicking into each one. The end result? Confusion, context-switching, and the very real risk of running a query in prod that you meant for dev.\nBut Wait, Isn’t There a Color Trick? Some people solve this by assigning different themes—say, dark mode for prod and light mode for dev. Clever idea, but it falls apart quickly:\nThere are only two color schemes available and many organizations have three workspaces meaning one environment will inevitably match another. If two or more environments share a metastore, changing one changes the other. And let’s be honest: some developers simply refuse to use a theme they don’t like. So while the color trick can work in a pinch, it’s not a real solution.\nTo activate dark mode, navigate to Settings → User Preferences → “Prefer Dark.”\nIf you don’t enable this setting, your environment theme will default to match the light theme shown in the images above.\nThe Solution: Tampermonkey to the Rescue Enter Tampermonkey, a browser extension that lets you run custom JavaScript whenever you visit a matching URL.\nWith a short script, you can automatically label your Databricks browser tabs with an emoji + text identifier for each environment. Suddenly, dev, qa, and prod are crystal clear.\nIt’s simple, lightweight, and makes a huge difference:\nFaster navigation between environments Reduced risk of editing the wrong workspace A quality-of-life boost you’ll wonder how you lived without And best of all: little to no performance impact. I’ve been running this script for weeks, and my browser hasn’t skipped a beat. Below, I’ve provided an image illustrating what your dev environment will look like after setting up the Tamper Monkey script for yourself.\nHow to Set It Up Getting your Databricks tabs labeled automatically is quick and easy. You’ll need to:\nInstall Tampermonkey Create a new script Paste in the code Configure your environment domains Save and enable the script Enable user scripts in your browser (Chrome only) Verify it’s working Note: These instructions are written for Google Chrome, but the steps can be adapted to other browsers that support Tampermonkey.\nFollow the steps below.\n1. Install Tampermonkey Download Tampermonkey for your browser from tampermonkey.net. Restart your browser after installation. 2. Create a New Script Open the Tampermonkey extension → Dashboard → “Create a new script.” Delete the boilerplate code so the editor is blank. 3. Add the Script Copy and paste the following code into the new script:\n// ==UserScript== // @name Databricks Tab Emoji Label // @namespace http://tampermonkey.net/ // @version 1.5 // @description Add emoji and label to Databricks tab title based on environment // @author Matthew Norberg // @match https://.azuredatabricks.net/* // @grant none // ==/UserScript== (function() { 'use strict'; function updateTitle() { const url = window.location.href; let label = ''; let emoji = ''; // Define your environment domains here let devDomain = ''; let qaDomain = ''; let prodDomain = ''; if (url.includes(devDomain)) { label = 'DEV'; emoji = '🟢'; } else if (url.includes(qaDomain)) { label = 'QA'; emoji = '🟡'; } else if (url.includes(prodDomain)) { label = 'PROD'; emoji = '🔴'; } else { label = 'OTHER'; emoji = '⚪'; } if (!document.title.startsWith(`[${emoji} ${label}]`)) { document.title = `[${emoji} ${label}] ${document.title}`; } } // Initial run setTimeout(updateTitle, 3000); // Monitor for URL changes in SPA let lastUrl = location.href; new MutationObserver(() =\u003e { const currentUrl = location.href; if (currentUrl !== lastUrl) { lastUrl = currentUrl; setTimeout(updateTitle, 2000); } }).observe(document, {subtree: true, childList: true}); })(); 4. Configure Environment Domains Near the top of the script, replace the placeholders with your actual environment domains:\nlet devDomain = 'your-dev-domain'; let qaDomain = 'your-qa-domain'; let prodDomain = 'your-prod-domain'; 5. Save and Enable the Script Save your changes (File → Save).\nMake sure the script toggle in Tampermonkey is turned on (green).\n6. Enable User Scripts in Chrome Go to chrome://extensions → find Tampermonkey → click Details.\nMake sure Allow user scripts is enabled.\nNote: Other browsers may have different settings for allowing user scripts—adapt accordingly.\n7. Verify installation Open your Databricks environment in a new tab.\nAfter a few seconds, your tab title should display the correct emoji + environment label.\nTroubleshooting Tab title doesn’t update right away\nThe script intentionally waits 3 seconds after page load before applying changes.\nWithout this delay, the title gets updated but is overwritten during the web page loading process.\nIn testing, 3 seconds worked well, but you can adjust this by editing the setTimeout call in the code:\nsetTimeout(updateTitle, 3000); Still not working?\nDouble-check that:\nThe script is enabled in Tampermonkey. Your domains are correctly set in both the variables and the @match lines. “Allow user scripts” is enabled in your browser’s extension settings. Final Thoughts It’s a small tweak, but it solves a surprisingly big problem. If you’re juggling multiple Databricks environments, this little script will save you from confusion—and maybe even prevent a mistake or two.\nSometimes the best tools aren’t the big, complicated ones. They’re the tiny hacks that make your day smoother.\n",
+  "wordCount" : "1087",
   "inLanguage": "en",
   "image": "https://mnorberg-dev.github.io/favicon.ico","datePublished": "2025-09-16T00:00:00Z",
   "dateModified": "2025-09-16T00:00:00Z",
@@ -146,31 +146,37 @@ Yes, I know—there are popular extensions that let you develop code outside of 
     <h1 class="post-title entry-hint-parent">
       The Databricks Tool You Didn&#39;t Know You Needed
     </h1>
-    <div class="post-meta"><span title='2025-09-16 00:00:00 +0000 UTC'>September 16, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Matthew Norberg
+    <div class="post-meta"><span title='2025-09-16 00:00:00 +0000 UTC'>September 16, 2025</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Matthew Norberg
 
 </div>
   </header> 
-  <div class="post-content"><p>Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a good portion of the job happens directly in the browser inside their Databricks workspace.</p>
+  <div class="post-content"><p>Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.</p>
 <p>Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.</p>
 <h2 id="the-problem-too-many-tabs-too-few-clues">The Problem: Too Many Tabs, Too Few Clues<a hidden class="anchor" aria-hidden="true" href="#the-problem-too-many-tabs-too-few-clues">#</a></h2>
 <p>Many organizations using Databricks have multiple workspaces to represent different environments—think <code>dev</code>, <code>qa</code>, and <code>prod</code>. Some even have additional splits like staging or sandbox.</p>
 <p>If you’re working across all of them, here’s the problem: <strong>your browser tabs all look the same.</strong></p>
+<p><img alt="Too Many Tabs" loading="lazy" src="/tamper-monkey/many-tabs.png"></p>
+<blockquote>
+<p>Note: Domains in images are redacted, but in your environment, they’ll appear as GUIDs.</p></blockquote>
 <p>Inside the workspace, the situation isn’t much better. It&rsquo;s not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:</p>
 <ol>
-<li><strong>The domain name.</strong> Every environment has a URL that looks like <code>adb-&lt;long string of numbers&gt;</code>. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like <code>google.com</code> instead of memorizing IP addresses.</li>
-<li><strong>A small piece of text in the top-right corner.</strong> Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. And if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.</li>
+<li><strong>The domain name.</strong> Every environment has a URL like <code>adb-&lt;long string of numbers&gt;</code>. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like <code>google.com</code> instead of memorizing IP addresses.</li>
+<li><strong>A small piece of text in the top-right corner.</strong> Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. It’s easy to miss, and if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.</li>
 </ol>
 <p>The end result? Confusion, context-switching, and the very real risk of running a query in <code>prod</code> that you meant for <code>dev</code>.</p>
-<p><strong>Where to add an image:</strong> a screenshot of three Databricks tabs open in a browser, all with identical titles.</p>
+<p><img alt="Small Workspace Indicator" loading="lazy" src="/tamper-monkey/workspace-indicator.png"></p>
 <h2 id="but-wait-isnt-there-a-color-trick">But Wait, Isn’t There a Color Trick?<a hidden class="anchor" aria-hidden="true" href="#but-wait-isnt-there-a-color-trick">#</a></h2>
 <p>Some people solve this by assigning different themes—say, dark mode for <code>prod</code> and light mode for <code>dev</code>. Clever idea, but it falls apart quickly:</p>
 <ul>
-<li>There are only two color schemes available. One environment will inevitably match another.</li>
-<li>If two environments share a metastore, changing one changes the other.</li>
+<li>There are only two color schemes available and many organizations have three workspaces meaning one environment will inevitably match another.</li>
+<li>If two or more environments share a metastore, changing one changes the other.</li>
 <li>And let’s be honest: some developers simply refuse to use a theme they don’t like.</li>
 </ul>
 <p>So while the color trick can work in a pinch, it’s not a real solution.</p>
-<p><strong>Where to add an image:</strong> side-by-side screenshot of Databricks in light mode vs. dark mode.</p>
+<p><img alt="Dark Theme" loading="lazy" src="/tamper-monkey/dark-theme.png"></p>
+<blockquote>
+<p>To activate dark mode, navigate to Settings → User Preferences → “Prefer Dark.”</p>
+<p>If you don’t enable this setting, your environment theme will default to match the light theme shown in the images above.</p></blockquote>
 <h2 id="the-solution-tampermonkey-to-the-rescue">The Solution: Tampermonkey to the Rescue<a hidden class="anchor" aria-hidden="true" href="#the-solution-tampermonkey-to-the-rescue">#</a></h2>
 <p>Enter <strong>Tampermonkey</strong>, a browser extension that lets you run custom JavaScript whenever you visit a matching URL.</p>
 <p>With a short script, you can automatically label your Databricks browser tabs with an emoji + text identifier for each environment. Suddenly, <code>dev</code>, <code>qa</code>, and <code>prod</code> are crystal clear.</p>
@@ -180,10 +186,34 @@ Yes, I know—there are popular extensions that let you develop code outside of 
 <li>Reduced risk of editing the wrong workspace</li>
 <li>A quality-of-life boost you’ll wonder how you lived without</li>
 </ul>
-<p>And best of all: <strong>little to no performance impact</strong>. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.</p>
-<p><strong>Where to add an image:</strong> screenshot of browser tabs labeled with <code>[🟢 DEV]</code>, <code>[🟡 QA]</code>, and <code>[🔴 PROD]</code>.</p>
+<p>And best of all: <strong>little to no performance impact</strong>. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.  Below, I&rsquo;ve provided an image illustrating what your dev environment will look like after setting up the Tamper Monkey script for yourself.</p>
+<p><img alt="Tamper Monkey In Action" loading="lazy" src="/tamper-monkey/label-in-action.png"></p>
 <h2 id="how-to-set-it-up">How to Set It Up<a hidden class="anchor" aria-hidden="true" href="#how-to-set-it-up">#</a></h2>
-<p>Here’s the script that powers the whole thing:</p>
+<p>Getting your Databricks tabs labeled automatically is quick and easy. You’ll need to:</p>
+<ol>
+<li>Install Tampermonkey</li>
+<li>Create a new script</li>
+<li>Paste in the code</li>
+<li>Configure your environment domains</li>
+<li>Save and enable the script</li>
+<li>Enable user scripts in your browser (Chrome only)</li>
+<li>Verify it’s working</li>
+</ol>
+<blockquote>
+<p>Note: These instructions are written for Google Chrome, but the steps can be adapted to other browsers that support Tampermonkey.</p></blockquote>
+<p>Follow the steps below.</p>
+<h3 id="1-install-tampermonkey">1. Install Tampermonkey<a hidden class="anchor" aria-hidden="true" href="#1-install-tampermonkey">#</a></h3>
+<ul>
+<li>Download Tampermonkey for your browser from <a href="https://www.tampermonkey.net/">tampermonkey.net</a>.</li>
+<li>Restart your browser after installation.</li>
+</ul>
+<h3 id="2-create-a-new-script">2. Create a New Script<a hidden class="anchor" aria-hidden="true" href="#2-create-a-new-script">#</a></h3>
+<ul>
+<li>Open the Tampermonkey extension → Dashboard → “Create a new script.”</li>
+<li>Delete the boilerplate code so the editor is blank.</li>
+</ul>
+<h3 id="3-add-the-script">3. Add the Script<a hidden class="anchor" aria-hidden="true" href="#3-add-the-script">#</a></h3>
+<p>Copy and paste the following code into the new script:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// ==UserScript==
 </span></span></span><span class="line"><span class="cl"><span class="c1">// @name         Databricks Tab Emoji Label
 </span></span></span><span class="line"><span class="cl"><span class="c1">// @namespace    http://tampermonkey.net/
@@ -240,42 +270,12 @@ Yes, I know—there are popular extensions that let you develop code outside of 
 </span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span> <span class="p">{</span><span class="nx">subtree</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">childList</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="p">})();</span>
-</span></span></code></pre></div><ol>
-<li>Install Tampermonkey</li>
-</ol>
-<ul>
-<li>
-<p>Download Tampermonkey for your browser from tampermonkey.net.</p>
-</li>
-<li>
-<p>Restart your browser after installing.</p>
-</li>
-</ul>
-<ol start="2">
-<li>Create a new script</li>
-</ol>
-<ul>
-<li>
-<p>Click the Tampermonkey extension → Dashboard → Create a new script.</p>
-</li>
-<li>
-<p>Delete the boilerplate code and paste in the script above.</p>
-</li>
-</ul>
-<ol start="3">
-<li>Configure environment domains</li>
-</ol>
-<ul>
-<li>
-<p>Near the top of the script, edit the following variables:</p>
+</span></span></code></pre></div><h3 id="4-configure-environment-domains">4. Configure Environment Domains<a hidden class="anchor" aria-hidden="true" href="#4-configure-environment-domains">#</a></h3>
+<p>Near the top of the script, replace the placeholders with your actual environment domains:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">devDomain</span> <span class="o">=</span> <span class="s1">&#39;your-dev-domain&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">qaDomain</span> <span class="o">=</span> <span class="s1">&#39;your-qa-domain&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">prodDomain</span> <span class="o">=</span> <span class="s1">&#39;your-prod-domain&#39;</span><span class="p">;</span>
-</span></span></code></pre></div></li>
-</ul>
-<ol start="4">
-<li>Save and enable the script</li>
-</ol>
+</span></span></code></pre></div><h3 id="5-save-and-enable-the-script">5. Save and Enable the Script<a hidden class="anchor" aria-hidden="true" href="#5-save-and-enable-the-script">#</a></h3>
 <ul>
 <li>
 <p>Save your changes (File → Save).</p>
@@ -284,20 +284,18 @@ Yes, I know—there are popular extensions that let you develop code outside of 
 <p>Make sure the script toggle in Tampermonkey is turned on (green).</p>
 </li>
 </ul>
-<ol start="5">
-<li>Enable user scripts (Chrome only)</li>
-</ol>
+<h3 id="6-enable-user-scripts-in-chrome">6. Enable User Scripts in Chrome<a hidden class="anchor" aria-hidden="true" href="#6-enable-user-scripts-in-chrome">#</a></h3>
 <ul>
 <li>
-<p>Go to chrome://extensions → find Tampermonkey → click Details.</p>
+<p>Go to <code>chrome://extensions</code> → find Tampermonkey → click <strong>Details</strong>.</p>
 </li>
 <li>
-<p>Make sure Allow user scripts is enabled.</p>
+<p>Make sure <strong>Allow user scripts</strong> is enabled.</p>
 </li>
 </ul>
-<ol start="6">
-<li>Verify installation</li>
-</ol>
+<blockquote>
+<p>Note: Other browsers may have different settings for allowing user scripts—adapt accordingly.</p></blockquote>
+<h3 id="7-verify-installation">7. Verify installation<a hidden class="anchor" aria-hidden="true" href="#7-verify-installation">#</a></h3>
 <ul>
 <li>
 <p>Open your Databricks environment in a new tab.</p>
