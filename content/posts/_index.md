@@ -1,4 +1,3 @@
 ---
 title: "Posts"
-ShowBreadCrumbs: false
 ---

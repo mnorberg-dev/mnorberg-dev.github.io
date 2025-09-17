@@ -1,6 +1,12 @@
 
+@import 'github.css';
+
 .first-entry {
     margin-top: var(--gap) !important;
     margin-bottom: var(--gap) !important;
     min-height: 200px !important;
+}
+
+:root {
+    --code-block-bg: rgb(247, 248, 250) !important;
 }

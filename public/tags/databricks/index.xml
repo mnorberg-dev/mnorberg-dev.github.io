@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Databricks on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>https://mnorberg-dev.github.io/tags/databricks/</link>
+    <description>Recent content in Databricks on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <image>
+      <title>Matthew Norberg&#39;s Data Engineering Blog</title>
+      <url>https://mnorberg-dev.github.io/favicon.ico</url>
+      <link>https://mnorberg-dev.github.io/favicon.ico</link>
+    </image>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mnorberg-dev.github.io/tags/databricks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
+      <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
+      <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</guid>
+      <description>&lt;p&gt;Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.&lt;/p&gt;
+&lt;p&gt;Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
