@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Expectations on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>https://mnorberg-dev.github.io/tags/expectations/</link>
+    <description>Recent content in Expectations on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <image>
+      <title>Matthew Norberg&#39;s Data Engineering Blog</title>
+      <url>https://mnorberg-dev.github.io/favicon.ico</url>
+      <link>https://mnorberg-dev.github.io/favicon.ico</link>
+    </image>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://mnorberg-dev.github.io/tags/expectations/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Databricks Data Quality Expectations Guide</title>
+      <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
+      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
+      <description>&lt;p&gt;A guide on data quality expectations&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

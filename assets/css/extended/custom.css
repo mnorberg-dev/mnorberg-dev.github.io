@@ -7,6 +7,17 @@
     min-height: 200px !important;
 }
 
+.post-title {
+    margin-bottom: 12px !important;
+}
+
+.header {
+    padding-top: 16px !important;
+}
+
 :root {
     --code-block-bg: rgb(247, 248, 250) !important;
+    --gap: 32px !important;
+    --content-gap: 32px !important;
+    --main-width: 880px !important;
 }

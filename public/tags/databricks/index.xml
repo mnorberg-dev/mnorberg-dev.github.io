@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://mnorberg-dev.github.io/tags/databricks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Databricks Data Quality Expectations Guide</title>
+      <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
+      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
+      <description>&lt;p&gt;A guide on data quality expectations&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
       <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
