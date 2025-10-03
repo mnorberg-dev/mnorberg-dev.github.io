@@ -11,8 +11,17 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://mnorberg-dev.github.io/categories/engineering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Databricks Data Quality Expectations Guide</title>
+      <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
+      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; This presentation was originally created when the technology was called &lt;strong&gt;Delta Live Tables (DLT)&lt;/strong&gt;. Databricks has since rebranded it as &lt;strong&gt;Lakeflow Declarative Pipelines&lt;/strong&gt;. While the name has changed, many of the strategies and techniques for applying data quality rules remain the same. For the latest documentation, see the &lt;a href=&#34;https://docs.databricks.com/aws/en/dlt/&#34;&gt;Databricks Lakeflow Declarative Pipelines docs&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Ensuring high data quality is critical for analytics, decision-making, and building reliable AI/ML models. Without it, organizations risk costly errors, unreliable insights, and ineffective models.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
       <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
