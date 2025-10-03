@@ -53,12 +53,12 @@ params:
   showReadingTime: true
   showBreadCrumbs: false
   showCodeCopyButtons: true
-  showPostNavLinks: true
+  showPostNavLinks: false
   showToc: false
   tocOpen: false
   disableSpecial1stPost: false
   disableScrollToTop: false
-  hidemeta: false
+  hideMeta: false
   hideSummary: false
 
   # Necessary for code color schemes

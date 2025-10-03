@@ -18,7 +18,9 @@
       <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
       <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
-      <description>&lt;p&gt;A guide on data quality expectations&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; This presentation was originally created when the technology was called &lt;strong&gt;Delta Live Tables (DLT)&lt;/strong&gt;. Databricks has since rebranded it as &lt;strong&gt;Lakeflow Declarative Pipelines&lt;/strong&gt;. While the name has changed, many of the strategies and techniques for applying data quality rules remain the same. For the latest documentation, see the &lt;a href=&#34;https://docs.databricks.com/aws/en/dlt/&#34;&gt;Databricks Lakeflow Declarative Pipelines docs&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Ensuring high data quality is critical for analytics, decision-making, and building reliable AI/ML models. Without it, organizations risk costly errors, unreliable insights, and ineffective models.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
