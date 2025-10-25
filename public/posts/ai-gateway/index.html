@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Databricks AI Gateway Guide | Matthew Norberg&#39;s Data Engineering Blog</title>
+<meta name="keywords" content="databricks, ai, tracing">
+<meta name="description" content="Over the past month, I’ve been deep in the weeds experimenting with Mosaic AI Gateway in Databricks — configuring endpoints, debugging integrations, and figuring out how all the pieces fit together. After plenty of trial and error, I wanted to share what I’ve learned so other developers can get up and running faster.
+If you’ve explored Databricks’ newer AI features, you’ve probably noticed that the documentation, while thorough, can feel circular and fragmented. You often need to jump between Databricks docs, MLflow, and even OpenAI or Meta references, depending on your base model. It’s easy to lose the thread when trying to connect everything into a working system.">
+<meta name="author" content="Matthew Norberg">
+<link rel="canonical" href="http://localhost:1313/posts/ai-gateway/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.2b935d96f51fcfa3a0540ca89084f43b64dba9a9a58c52f9e02d7db55cd8497a.css" integrity="sha256-K5NdlvUfz6OgVAyokIT0O2TbqamljFL54C19tVzYSXo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/ai-gateway/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+</head>
+
+<body class="" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Matthew Norberg&#39;s Data Engineering Blog (Alt + H)">Matthew Norberg&#39;s Data Engineering Blog</a>
+            <div class="logo-switches">
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Databricks AI Gateway Guide
+    </h1>
+    <div class="post-meta"><span title='2025-10-05 00:00:00 +0000 UTC'>October 5, 2025</span>&nbsp;·&nbsp;24 min&nbsp;·&nbsp;Matthew Norberg
+
+</div>
+  </header> 
+  <div class="post-content"><p>Over the past month, I’ve been deep in the weeds experimenting with Mosaic AI Gateway in Databricks — configuring endpoints, debugging integrations, and figuring out how all the pieces fit together. After plenty of trial and error, I wanted to share what I’ve learned so other developers can get up and running faster.</p>
+<p>If you’ve explored Databricks’ newer AI features, you’ve probably noticed that the documentation, while thorough, can feel circular and fragmented. You often need to jump between Databricks docs, MLflow, and even OpenAI or Meta references, depending on your base model. It’s easy to lose the thread when trying to connect everything into a working system.</p>
+<p>This post is my attempt to bridge those gaps with a concrete, end-to-end example — the kind I wish I’d had when I started.</p>
+<p>In short: it’s a practical guide for developers who want to create a Databricks AI Gateway endpoint with tracing enabled, without getting lost in a maze of configuration steps and scattered documentation.</p>
+<h2 id="what-is-mosaic-ai-gateway">What is Mosaic AI Gateway?<a hidden class="anchor" aria-hidden="true" href="#what-is-mosaic-ai-gateway">#</a></h2>
+<p>Mosaic AI Gateway is Databricks’ unified interface for managing access to large language models (LLMs) and AI endpoints. It serves as a control layer between your applications and the models they call — helping teams standardize how they deploy, monitor, and secure their AI workloads.</p>
+<p>Out of the box, Mosaic AI Gateway provides several powerful features:</p>
+<ul>
+<li>Permission and rate limiting</li>
+<li>Payload logging</li>
+<li>Usage tracking</li>
+<li>AI Guardrails</li>
+<li>Fallbacks</li>
+<li>Traffic splitting</li>
+</ul>
+<p>Together, these capabilities make it easier to build production-ready AI systems that are safe, trackable, and cost-efficient.</p>
+<p>But there’s one critical capability missing — and it’s the focus of this post: MLflow Tracing.</p>
+<p>If you’re new to tracing, think of it as logging with context. A trace doesn’t just record the request and response; it also captures the intermediate steps and outputs along the way. When something breaks, those traces are invaluable for understanding what actually happened inside your model pipeline.</p>
+<p>So the question becomes: how do you build a Mosaic AI Gateway endpoint that captures traces for each request?</p>
+<p>That’s exactly the problem I set out to solve — creating a Databricks AI Gateway endpoint that generates a trace for every call.</p>
+<p>To save you time, I’ll start by showing the solution up front. But the rest of this post takes a more narrative approach — walking through my learning process, the documentation trails I followed, and the false starts that eventually led to the right path.</p>
+<p>You could argue that I should simply present the final setup and explain how it works. But I think it’s just as valuable to see what didn’t work. Sharing the failures, trade-offs, and dead ends helps demonstrate that the final approach isn’t just something that happened to work — it’s the one that stood up to testing and comparison.</p>
+<p>That’s especially relevant today, when our first instinct to solve a problem is often to open ChatGPT or another LLM and ask for help. The response might look convincing, but is it the best approach? With fast-moving tools like Mosaic AI Gateway, the underlying models often haven’t been trained on the latest APIs or docs — meaning their answers can be incomplete, outdated, or just don&rsquo;t work.</p>
+<p>By sharing both the process and the result, I hope to give readers confidence that this solution is not only functional but well-researched and battle-tested — the one that held up after real experimentation, not just a lucky first try.</p>
+<h2 id="the-solution-responsesagent">The Solution: ResponsesAgent<a hidden class="anchor" aria-hidden="true" href="#the-solution-responsesagent">#</a></h2>
+<p>As promised, let’s start with the answer.</p>
+<p>The simplest way to enable tracing while still using all the features of Mosaic AI Gateway is to create and deploy a ResponsesAgent model in Databricks. This model type has MLflow Tracing enabled by default, and when you host it through the Gateway, you retain the same production capabilities — including rate limiting, logging, guardrails, and more.</p>
+<p>In other words, a ResponsesAgent gives you the best of both worlds: full Gateway functionality and detailed trace data for every request.</p>
+<p>If you’re just here for the implementation details, feel free to skip ahead to the end of this post — I walk through the setup step by step.</p>
+<p>But if you’re curious about how I arrived at this solution, stick around. The next few sections cover the other approaches I tried, the dead ends I hit, and the reasoning that ultimately led to the ResponsesAgent path.</p>
+<h2 id="attempt-1-foundational-models">Attempt 1: Foundational Models<a hidden class="anchor" aria-hidden="true" href="#attempt-1-foundational-models">#</a></h2>
+<p>Like anyone learning a new system, I started at the beginning — the <a href="https://learn.microsoft.com/en-us/azure/databricks/ai-gateway/">Mosaic AI Gateway Introduction</a> page. It includes a table showing which features each model type supports:</p>
+<p><img alt="Databricks Table" loading="lazy" src="/ai-gateway/ai-gateway-table-edited.png"></p>
+<p>At first glance, external model endpoints seemed the most capable. However, for this walkthrough, I focused on foundational models. They’re easier for readers to follow along with since they don’t require setting up authentication or access to external services.</p>
+<p>Aside from that authentication step, foundational and external models function almost identically in configuration, serving behavior, and available Gateway features.</p>
+<p>As a newcomer, I assumed I could host a foundational model and still get traces. That would have been ideal — use a proven model and get observability for free. So my first goal was to spin up an endpoint and confirm whether tracing worked out of the box.</p>
+<p>The next section walks through how to create such an endpoint right up until the point where you learn that it does not support tracing. If you’re just here for the tracing solution, feel free to skip ahead to the Wrapper section — otherwise, here’s what I found.</p>
+<h3 id="foundational-model-endpoint-creation">Foundational Model Endpoint Creation<a hidden class="anchor" aria-hidden="true" href="#foundational-model-endpoint-creation">#</a></h3>
+<p>When creating infrastructure in Databricks, there are usually multiple paths to the same result — Terraform, Python, SQL, or the UI. For investigative work like this, I prefer the UI. It’s quick to explore configurations and verify behavior visually, even though in production you’d typically automate the process.</p>
+<p>To create an endpoint, go to Serving → Create Serving Endpoint, then choose Foundational Models in the Served Entities section. This opens the endpoint creation menu shown below. Working through it from top to bottom, first give your endpoint a name, then configure the Served Entities section.</p>
+<p><img alt="Endpoint Options" loading="lazy" src="/ai-gateway/endpoint-menu.png"></p>
+<p>The Served Entities section is where you select the model you want to serve. Click on the &lsquo;Select an Entity&rsquo; text in the &lsquo;Entity details&rsquo; box. Then choose the &lsquo;Foundational Models&rsquo; option from the radio list.</p>
+<p><img alt="Served Entity Menu" loading="lazy" src="/ai-gateway/served-entity-menu.png"></p>
+<p>After selecting that option, a second pop-up lists both foundational and external models, as shown below.</p>
+<p><img alt="Selection Menu Options" loading="lazy" src="/ai-gateway/selection-menu.png"></p>
+<p>This can be confusing at first because the pop-up menu is labeled Foundational Models, yet it also lists external providers. I’m calling this out for two reasons:</p>
+<ol>
+<li>
+<p>If you’re following along and want to use an external model instead, this is how you’d do it — select your model, complete the additional authentication step, and you’ll have an external model endpoint. You could then substitute that model’s name wherever a foundational model is used in this post.</p>
+</li>
+<li>
+<p>It highlights that the only real difference between foundational and external model endpoints is authentication; otherwise, the setup is identical.</p>
+</li>
+</ol>
+<p>Once you’ve chosen a foundational model — in this case, I selected GPT OSS 20B — you’ll see the configuration screen below.</p>
+<p><img alt="Model UI Options" loading="lazy" src="/ai-gateway/model-ui-options.png"></p>
+<p>Here you can configure throughput and scaling options, but notice there’s no tracing toggle. So how do you set up tracing for your model?</p>
+<blockquote>
+<p>Note: When I first started, I saw some models with a tracing toggle in the UI, but those seem to have disappeared. With Databricks’ rapid feature updates, I’ve seen frequent changes in the platform which often impact what you&rsquo;re working.</p>
+<p>When I first planned this post, I expected to ask, “What do you do if your model doesn’t support tracing?” — but now, none of them do. Fortunately, I still have an answer.</p></blockquote>
+<h3 id="searching-for-the-missing-piece">Searching for the Missing Piece<a hidden class="anchor" aria-hidden="true" href="#searching-for-the-missing-piece">#</a></h3>
+<p>Not knowing how, I dug deeper into the documentation. I found plenty of useful material about tracing GenAI apps, but very few that answered the core question: “How do I set up an endpoint that generates traces by default?”</p>
+<p>Here are a few of the more relevant but incomplete resources:</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/getting-started/tracing/tracing-notebook">&ldquo;Get started: MLflow Tracing for GenAI (Databricks Notebook)&rdquo;</a> &ndash; great for learning how traces work, but only covers tracing single notebook requests.</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/integrations/openai">&ldquo;Tracing OpenAI&rdquo;</a> — shows how to trace OpenAI calls, but not how to create an endpoint with tracing enabled.</li>
+</ul>
+<p>As you&rsquo;ll find if you start to go through the docs as well, most examples show how to trace one request, not how to create an endpoint creates a trace for each request it recieves.</p>
+<p>Finally, I stumbled on this artice <a href="https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/prod-tracing">&ldquo;Deploy agents with tracing&rdquo;</a>. This article finally pointed me in the right direction — though I was skeptical at first. My initial thought was: “Why do we need an agent? This seems like such a simple thing to achieve — an agent feels overcomplicated.”</p>
+<p>But that article sparked an idea: what if I could create a wrapper model that calls the underlying model while automatically handling tracing? That realization set the direction for my next experiment.</p>
+<h2 id="attempt-2-custom-python-model">Attempt 2: Custom Python Model<a hidden class="anchor" aria-hidden="true" href="#attempt-2-custom-python-model">#</a></h2>
+<p>If foundational models couldn’t generate traces directly, then I needed to create something that could. The answer was to build a wrapper — a lightweight layer that calls the real model behind the scenes while also handling tracing. Essentially, requests come into the wrapper, the wrapper calls the underlying model (like GPT OSS 20B), and then it returns the response unchanged. The difference is that the wrapper can log traces automatically.</p>
+<h3 id="the-wrapper-approach">The Wrapper Approach<a hidden class="anchor" aria-hidden="true" href="#the-wrapper-approach">#</a></h3>
+<p>At this point, we knew that while Databricks AI Gateway could host a foundational model directly, it didn’t support tracing in that configuration. Creating a wrapper model will allow us to use our foundational model and attain tracing functionality.</p>
+<p>Here’s the high-level plan:</p>
+<ol>
+<li>Build a small model class that wraps around our foundational model.</li>
+<li>Configure the class so that tracing is enabled by default.</li>
+<li>Register this model in Unity Catalog.</li>
+<li>Deploy it as a Serving Endpoint, just like before — except now the endpoint will support both AI Gateway and tracing.</li>
+</ol>
+<p>This approach gives us the same Gateway functionality as before, but with complete trace visibility. If this sounds confusing, just wait till we get to the code examples which I think will help clarify the setup.</p>
+<h3 id="wrapper-options">Wrapper Options<a hidden class="anchor" aria-hidden="true" href="#wrapper-options">#</a></h3>
+<p>Once I knew I needed a wrapper, the next question was how to define it with MLflow.</p>
+<p>There are two main ways to do this:</p>
+<ul>
+<li>Custom Python Model – You define your own PythonModel class and control every detail of how predictions are made.</li>
+<li>Responses Agent Model – You use one of Databricks’ prebuilt agent types (like ResponsesAgent) that already integrate tracing, tool use, and prompt orchestration.</li>
+</ul>
+<p>As I mentioned before, I was skeptical of the responses agent solution. My goal wasn’t to build a full agent-based system — I just wanted to trace model calls. That left me with one clear option: a Custom Python Model.</p>
+<p>That said, the <a href="https://learn.microsoft.com/en-us/azure/databricks/generative-ai/guide/introduction-generative-ai-apps">Gen AI Apps guide</a> clearly recommends using response agents over custom python models. However, I still wasn&rsquo;t convinced. I wanted somthing simple, transparent, and easy to debug.</p>
+<p>So I started by building the Python model — and as you can probably guess, it worked, but not as well as I’d hoped. Once I had it running, I compared it to a ResponsesAgent implementation and found that the agent approach was cleaner and better aligned with Databricks’ newer OpenAI Responses API. It also seemed more future-proof as Databricks expands its generative AI tooling.</p>
+<h3 id="implementing-a-custom-python-model">Implementing a Custom Python Model<a hidden class="anchor" aria-hidden="true" href="#implementing-a-custom-python-model">#</a></h3>
+<p>Creating a custom Python model in MLflow involves encapsulating your logic in a class that inherits from mlflow.pyfunc.PythonModel. The key method is predict, which receives input and returns the model’s response.</p>
+<p>Since this model is only a wrapper, our predict method just forwards the request to the underlying foundational model and returns its response.</p>
+<p>If you’d like to see the relevant documentation, here are the key references I used:</p>
+<ul>
+<li><a href="https://mlflow.org/docs/latest/ml/model/python_model/">MLflow Python Model Guide</a></li>
+<li><a href="https://mlflow.org/docs/latest/genai/serving/custom-apps/">Custom Serving Applications</a></li>
+<li><a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#mlflow.pyfunc.PythonModel">MLflow Python Model Class</a></li>
+</ul>
+<p><strong>1. Install dependencies</strong></p>
+<p>In the first notebook cell, install the following libraries using the code below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="o">-</span><span class="n">qqqq</span> <span class="n">databricks</span><span class="o">-</span><span class="n">openai</span>
+</span></span><span class="line"><span class="cl"><span class="n">dbutils</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">restartPython</span><span class="p">()</span>
+</span></span></code></pre></div><p>In addition to installing the databricks-openai package, this command upgrades MLflow — which is important because the current default serverless environment typically includes MLflow Skinny 2.x, but the code below requires MLflow 3.x.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Default Libraries</th>
+          <th>Installed Libraries</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>mlflow-skinny==2.21.3</code></td>
+          <td><code>mlflow==3.4.0</code></td>
+      </tr>
+      <tr>
+          <td><code>databricks-connect==16.4.2</code></td>
+          <td><code>mlflow-skinny==3.4.0</code></td>
+      </tr>
+      <tr>
+          <td><code>databricks-sdk==0.49.0</code></td>
+          <td><code>mlflow-tracing==3.4.0</code></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td><code>databricks-ai-bridge==0.8.0</code></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td><code>databricks-connect==16.4.2</code></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td><code>databricks-openai==0.6.1</code></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td><code>databricks-sdk==0.49.0</code></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td><code>databricks_vectorsearch==0.59</code></td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p>⚠️ Note: MLflow’s documentation warns against having both mlflow and mlflow-skinny installed simultaneously. I haven’t encountered issues with this setup, and several Databricks examples use the same install pattern — so I decided to trust it. Still, it’s something to watch for in case anything breaks or behaves unexpectedly.</p></blockquote>
+<p><strong>2. Define your model</strong></p>
+<p>Here’s the cell that defines the model and writes it to a file called <code>model.py</code>. Let’s walk through the file from top to bottom.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">%%</span><span class="n">writefile</span> <span class="n">model</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mlflow</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.pyfunc</span> <span class="kn">import</span> <span class="n">PythonModel</span><span class="p">,</span> <span class="n">PythonModelContext</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">databricks.sdk</span> <span class="kn">import</span> <span class="n">WorkspaceClient</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ModelWrapper</span><span class="p">(</span><span class="n">PythonModel</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">WorkspaceClient</span><span class="p">()</span><span class="o">.</span><span class="n">serving_endpoints</span><span class="o">.</span><span class="n">get_open_ai_client</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>  <span class="c1"># pyright: ignore</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context</span><span class="p">:</span> <span class="n">PythonModelContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model_input</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+</span></span><span class="line"><span class="cl">        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">model</span><span class="o">=</span><span class="s2">&#34;databricks-meta-llama-3-1-8b-instruct&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">messages</span><span class="o">=</span><span class="n">model_input</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">results</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">openai</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&#34;databricks&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&#34;/Shared/mn-demo-experiments&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="n">ModelWrapper</span><span class="p">())</span>
+</span></span></code></pre></div><p>The %%writefile command writes this cell’s contents to a file — in this case, model.py. This is required because the model registration step later references this file directly. It also keeps all the code for this example self-contained within a single notebook, aside from a small requirements.txt file.</p>
+<p>The ModelWrapper class inherits from PythonModel. In the constructor, we initialize a Databricks WorkspaceClient to access the serving endpoint client that will call our base model.</p>
+<p>If you’d like to connect to an external model instead of a foundational one, here’s how:</p>
+<ol>
+<li>Follow the steps in Attempt 1 to create a serving endpoint for your external model (e.g., external-model-endpoint).</li>
+<li>In the code above, replace the model parameter in the chat.completions.create call with the name of your external model.</li>
+<li>That’s it — your wrapper will now route requests to your external model instead.</li>
+</ol>
+<p>The next portion of the file is the predict method, which defines the inference logic — sending the request to the model and returning its response. You’ll also notice that I added type hints to this function. This prevents MLflow from emitting log warnings during model creation.</p>
+<p>The last four lines at the bottom of the cell are critical:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">openai</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&#34;databricks&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&#34;/Shared/mn-demo-experiments&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="n">ModelWrapper</span><span class="p">())</span>
+</span></span></code></pre></div><p>These lines enable tracing and logging.</p>
+<ul>
+<li>mlflow.openai.autolog() enables detailed trace collection. Without it, you’d only get partial trace data through decorators.</li>
+<li>The next two lines (set_tracking_uri and set_experiment) tell MLflow where to store trace data in Databricks.
+<ul>
+<li>If you omit the tracking URI and experiment setup, traces will only appear when you call the endpoint interactively from a Databricks notebook — not when hitting it via API.</li>
+</ul>
+</li>
+<li>Finally, set_model() sets the model object that is going to be logged.</li>
+</ul>
+<p><strong>3. Register the model</strong></p>
+<p>Once your model.py file is defined, the final step is to register it in Unity Catalog. The code below handles that process:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mlflow</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.models.resources</span> <span class="kn">import</span> <span class="n">DatabricksServingEndpoint</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">example</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;You are a helpful assistant.&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;What is the fibonacci sequence&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span><span class="o">=</span><span class="s2">&#34;mn-ai-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">python_model</span><span class="o">=</span><span class="s2">&#34;model.py&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">input_example</span><span class="o">=</span><span class="n">example</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">registered_model_name</span><span class="o">=</span><span class="s2">&#34;workspace.default.mn-ai-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pip_requirements</span><span class="o">=</span><span class="s2">&#34;requirements.txt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">resources</span><span class="o">=</span><span class="p">[</span><span class="n">DatabricksServingEndpoint</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s2">&#34;databricks-gpt-oss-20b&#34;</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span></code></pre></div><p>Since the %%writefile command in the previous cell writes your model code to disk rather than keeping it in memory, you’ll need to re-import MLflow (and any other dependencies) before running this step.</p>
+<p>The example variable defines a simple test input that MLflow uses to validate your model. Inside your requirements.txt, include databricks-openai — this package is required for deployment to work correctly.</p>
+<p><strong>What to Expect When You Run Model Registration Code</strong></p>
+<p>When you execute the registration cell, MLflow confirms a successful run and model version creation. The example input and response will appear inline:</p>
+<p><img alt="Model Registration" loading="lazy" src="/ai-gateway/model-registration.png"></p>
+<p>Immediately below that, you’ll see your first trace — showing not only the input and output, but detailed metadata such as call hierarchy, timing, and context:</p>
+<p><img alt="Model Registration Trace" loading="lazy" src="/ai-gateway/registration-trace.png"></p>
+<p><img alt="Model Registration Trace Part II" loading="lazy" src="/ai-gateway/registration-trace-endpoints.png"></p>
+<p><img alt="Model Registration Trace Part III" loading="lazy" src="/ai-gateway/registration-trace-endpoints-p2.png"></p>
+<p>At this point, you can also test your model directly from a notebook without importing the model.py file. Simply call mlflow.pyfunc.load_model() to load it from Unity Catalog, then invoke predict(). Due to the way we defined our model, you each notebook inference will automatically generate a trace, as shown here:</p>
+<p><img alt="Notebook Trace" loading="lazy" src="/ai-gateway/notebook-trace.png"></p>
+<h3 id="creating-the-endpoint">Creating the Endpoint<a hidden class="anchor" aria-hidden="true" href="#creating-the-endpoint">#</a></h3>
+<p>With your model registered, the next step is deployment.</p>
+<p>Navigate back to the Serving page, click Create Endpoint, and select your new Python model. You’ll now see an option to enable tracing — it should already be turned on by default:</p>
+<p><img alt="Endpoint Creation Menu With Python Model" loading="lazy" src="/ai-gateway/endpoint-creation-python-model.png"></p>
+<p>Scroll down to the AI Gateway section to configure settings like the Inference Table, which logs all requests and responses (though not as richly as traces). Note that inference tables aren’t yet available in the free Databricks tier.</p>
+<p>Once your endpoint finishes deploying, the interface should show it as Active and ready for REST requests:</p>
+<p><img alt="Endpoint Creation Screen" loading="lazy" src="/ai-gateway/ai-gateway-screen.png"></p>
+<p>You can now test it using curl or your preferred REST client — I’ve been using the REST Client extension in VS Code. After sending a few requests, check your Experiments page under the shared experiment path — you’ll see fresh traces appear there:</p>
+<p><img alt="Rest Client" loading="lazy" src="/ai-gateway/rest-client.png"></p>
+<p><img alt="Rest Trace" loading="lazy" src="/ai-gateway/rest-trace.png"></p>
+<p>At this point, you’ve successfully built an endpoint with full Mosaic AI Gateway functionality and detailed tracing — all through a custom Python model. You&rsquo;re probably wondering why I am not recommending the python model. The issue is that I had a difficult time setting up streaming responses with the custom python model. If streaming had worked seamlessly, this might have been my final recommendation. But it didn’t — and that’s what led me to explore the ResponsesAgent next.</p>
+<h3 id="what-went-wrong-with-streaming-requests">What Went Wrong with Streaming Requests<a hidden class="anchor" aria-hidden="true" href="#what-went-wrong-with-streaming-requests">#</a></h3>
+<p>If you’ve looked at the documentation I referenced earlier, you may have noticed that the PythonModel class in MLflow also defines a predict_stream function that you can override to support streaming requests.</p>
+<p>Here’s the basic idea: we implement the predict_stream function inside our model class. When a REST request includes a streaming parameter, MLflow will call predict_stream instead of predict, allowing the model to return partial results as they arrive.</p>
+<p>However, this is where things start to get tricky. The predict_stream function is designed to take the same PyFunc-compatible input as predict, so I defined it as follows:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">predict_stream</span><span class="p">(</span>  <span class="c1"># pyright: ignore</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context</span><span class="p">:</span> <span class="n">PythonModelContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">model_input</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+</span></span><span class="line"><span class="cl">        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">model</span><span class="o">=</span><span class="s2">&#34;databricks-meta-llama-3-1-8b-instruct&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">messages</span><span class="o">=</span><span class="n">model_input</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">full_message</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">new_content</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl">                <span class="n">full_message</span> <span class="o">+=</span> <span class="n">new_content</span>
+</span></span><span class="line"><span class="cl">                <span class="k">yield</span> <span class="n">new_content</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">yield</span> <span class="n">full_message</span>
+</span></span></code></pre></div><p><strong>Testing in a Notebook</strong></p>
+<p>When I imported the module directly and invoked predict_stream, it worked perfectly — chunked responses arrived in real time, and the trace appeared in the notebook output.</p>
+<p><img alt="Notebook Trace" loading="lazy" src="/ai-gateway/working-predict-stream.png"></p>
+<p><img alt="Notebook Trace" loading="lazy" src="/ai-gateway/working-predict-stream-trace.png"></p>
+<p>This confirmed that the function worked when called directly from the notebook. I could see all the chunks streaming back one by one, and tracing behaved exactly as expected.</p>
+<p>Encouraged by this, I decided to test the same functionality through other methods — and that’s where things started to fall apart.</p>
+<p><strong>Testing Through the Loaded Model and REST API</strong></p>
+<p>After registering the model in Unity Catalog, I tried invoking it again by loading it with mlflow.pyfunc.load_model() and calling predict_stream. This time, it failed.</p>
+<p><img alt="Notebook Trace" loading="lazy" src="/ai-gateway/failed-predict-stream.png"></p>
+<p>You can see in the image above that predict() still works fine when the model is loaded this way — but predict_stream() doesn’t. The same issue appears when invoking it through a REST endpoint:</p>
+<p><img alt="Notebook Trace" loading="lazy" src="/ai-gateway/bad-predict-stream-api.png"></p>
+<p>At this point, I was puzzled. The function clearly worked in one context but failed in another. I briefly considered adding a streaming flag to the predict method itself (e.g., predict(streaming=True)), but that felt like a hack and went against the intended design of the MLflow API. It also wasn’t as clean as maintaining two clearly defined methods — one for standard predictions and one for streaming.</p>
+<p>So I started digging into the root cause.</p>
+<p><strong>Digging into the Cause</strong></p>
+<p>Why didn’t predict_stream work when the model was loaded from Unity Catalog?</p>
+<p>The key detial lies in what mlflow.pyfunc.load_model() actually returns. According to the <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#mlflow.pyfunc.load_model">MLflow docs</a>, it doesn’t return your PythonModel directly — it returns a PyFuncModel, a wrapper class that standardizes how models are called.</p>
+<p>When you invoke predict_stream() on the loaded model, you’re actually calling the wrapper’s version of that function, which then delegates to your implementation. Unfortunately, something in that handoff — specifically in how inputs are validated and passed through — seems incompatible with the OpenAI-style message list I was using.</p>
+<p>For anyone interested in exploring further, you can inspect the predict_stream implementation in the <a href="https://mlflow.org/docs/latest/api_reference/_modules/mlflow/pyfunc.html">PyFuncModel source code</a>.</p>
+<p>What frustrated me about this experience is that <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#mlflow.pyfunc.PythonModel">MLFlow PythonModel documentation</a> states that both predict and predict_stream accept PyFunc-compatible input. Since my input worked perfectly with predict, I expected it to work with predict_stream as well.</p>
+<p>The <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#pyfunc-inference-api">Inference API docs</a> also claim that “a list of any type” should be valid input — further suggesting this should have worked.</p>
+<p><strong>Where Things Stand</strong></p>
+<p>To make predict_stream work, I had two main options:</p>
+<p>(1) change its input format, or
+(2) modify predict so it could handle streaming requests as well.</p>
+<p>Both felt like poor tradeoffs. I didn’t want to maintain separate input schemas for predict and predict_stream, and I also didn’t like the idea of adding a “streaming” flag to predict just to make it behave differently.</p>
+<p>If you don’t need streaming, the custom Python model approach is still an excellent choice — it’s flexible, powerful, and integrates seamlessly with Databricks. But for my use case — supporting both standard and streaming completions — it wasn’t enough.</p>
+<p>So it was time to move on to Attempt 3: the ResponsesAgent.</p>
+<h2 id="attempt-3-responses-agent">Attempt 3: Responses Agent<a hidden class="anchor" aria-hidden="true" href="#attempt-3-responses-agent">#</a></h2>
+<p>The Databricks documentation includes a “simple” guide for creating a Responses Agent endpoint. It’s a good starting point, but I’ll admit — I wasn’t a huge fan of the sample notebook. The call stack for basic predictions felt unnecessarily complex, and several unused libraries made it harder to see what was actually going on. At one point, I even caught myself wondering if those extra dependencies had some hidden purpose I’d missed.</p>
+<p>That said, it’s still a valuable reference. I adapted their example into a cleaner, more minimal version that’s easier to follow for anyone new to ResponsesAgent. That’s the version we’ll walk through here.</p>
+<p>For anyone curious, you can find Databricks’ original example notebook here: <a href="https://docs.databricks.com/aws/en/notebooks/source/mlflow3/simple-agent-mlflow3.html">https://docs.databricks.com/aws/en/notebooks/source/mlflow3/simple-agent-mlflow3.html</a>.</p>
+<h3 id="implementing-responses-agent">Implementing Responses Agent<a hidden class="anchor" aria-hidden="true" href="#implementing-responses-agent">#</a></h3>
+<p>As before, we’ll start our notebook with an installation cell — but this time we’ll add the <code>databricks-agents</code> library alongside <code>databricks-openai</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">%</span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="o">-</span><span class="n">qqqq</span> <span class="n">databricks</span><span class="o">-</span><span class="n">openai</span> <span class="n">databricks</span><span class="o">-</span><span class="n">agents</span>
+</span></span><span class="line"><span class="cl"><span class="n">dbutils</span><span class="o">.</span><span class="n">library</span><span class="o">.</span><span class="n">restartPython</span><span class="p">()</span>
+</span></span></code></pre></div><p>Next, we’ll define our agent and write it to a Python file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">%%</span><span class="n">writefile</span> <span class="n">model</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mlflow</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.pyfunc</span> <span class="kn">import</span> <span class="n">ResponsesAgent</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.types.responses</span> <span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ResponsesAgentRequest</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ResponsesAgentResponse</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ResponsesAgentStreamEvent</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">databricks.sdk</span> <span class="kn">import</span> <span class="n">WorkspaceClient</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generator</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SimpleResponsesAgent</span><span class="p">(</span><span class="n">ResponsesAgent</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">workspace_client</span> <span class="o">=</span> <span class="n">WorkspaceClient</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workspace_client</span><span class="o">.</span><span class="n">serving_endpoints</span><span class="o">.</span><span class="n">get_open_ai_client</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s2">&#34;databricks-gpt-oss-20b&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">ResponsesAgentRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResponsesAgentResponse</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">messages</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">input</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">messages</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prep_msgs_for_cc_llm</span><span class="p">(</span><span class="n">messages</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ResponsesAgentResponse</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">create_text_output_item</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">text</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">id</span>
+</span></span><span class="line"><span class="cl">                <span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">predict_stream</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">ResponsesAgentRequest</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">ResponsesAgentStreamEvent</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">messages</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prep_msgs_for_cc_llm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">input</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">item_id</span> <span class="o">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">full_message</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span> <span class="ow">and</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">new_content</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">delta</span><span class="o">.</span><span class="n">content</span>
+</span></span><span class="line"><span class="cl">                <span class="n">full_message</span> <span class="o">+=</span> <span class="n">new_content</span>
+</span></span><span class="line"><span class="cl">                <span class="k">yield</span> <span class="n">ResponsesAgentStreamEvent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">create_text_delta</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">delta</span><span class="o">=</span><span class="n">new_content</span><span class="p">,</span> <span class="n">item_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&#34;msg_</span><span class="si">{</span><span class="n">item_id</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">),</span>
+</span></span><span class="line"><span class="cl">                <span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">item_id</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">yield</span> <span class="n">ResponsesAgentStreamEvent</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">type</span><span class="o">=</span><span class="s2">&#34;response.output_item.done&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">item</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">create_text_output_item</span><span class="p">(</span>  <span class="c1"># pyright:ignore</span>
+</span></span><span class="line"><span class="cl">                <span class="n">text</span><span class="o">=</span><span class="n">full_message</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&#34;msg_</span><span class="si">{</span><span class="n">item_id</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">openai</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&#34;databricks&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="s2">&#34;/Shared/mn-demo-experiments-agent&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="n">SimpleResponsesAgent</span><span class="p">())</span>
+</span></span></code></pre></div><p><strong>Understanding the <code>predict</code> Function</strong></p>
+<p>At first glance, this looks similar to our earlier custom Python model — but there are three key differences:</p>
+<ol>
+<li>
+<p>Inheritance: our class now inherits from ResponsesAgent instead of PythonModel.</p>
+</li>
+<li>
+<p>Types: the predict method takes a single parameter of type ResponsesAgentRequest and returns a ResponsesAgentResponse.</p>
+</li>
+<li>
+<p>Translation: Before sending messages to the model, it calls self.prep_msgs_for_cc_llm() — a helper function that quietly handles a lot of complexity.</p>
+</li>
+</ol>
+<p>In order to understand these differences and fully understand the code, we have to start at the request and response structures in place.</p>
+<p><strong>Request and Response Structure</strong></p>
+<p>Here&rsquo;s a simplified example from the <a href="https://mlflow.org/docs/latest/genai/serving/responses-agent/#schema-and-types">MLflow Responses Agent docs</a>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Example Request schema</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;input&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;What is the weather like in Boston today?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;tools&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;function&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;get_current_weather&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;parameters&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;properties&#34;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&#34;location&#34;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;string&#34;</span><span class="p">}},</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;required&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;location&#34;</span><span class="p">,</span> <span class="s2">&#34;unit&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Example Response schema</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;output&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;message&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;some-id&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;status&#34;</span><span class="p">:</span> <span class="s2">&#34;completed&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;output_text&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;rainy&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>These schemas define how ResponsesAgentRequest and ResponsesAgentResponse are structured.  Note that both can include additional parameters (like temperature or max_output_tokens), so it’s worth checking the <a href="https://mlflow.org/docs/latest/api_reference/python_api/mlflow.types.html#mlflow.types.responses.ResponsesAgentRequest">full API reference</a> for details.</p>
+<p><strong>The Role of <code>prep_msgs_for_cc_llm()</code></strong></p>
+<p>OpenAI recently introduced a new Responses API, which replaces the older Chat Completions API used in many legacy examples.  Databricks’ ResponsesAgent class and its request/response types are built to align with this newer API.</p>
+<p>However — and this is where things get tricky — the two APIs expect slightly different input formats.</p>
+<ul>
+<li>The Chat Completions API expects a list of messages.</li>
+<li>The Responses API can accept a single string or a structured schema.</li>
+</ul>
+<p>This means that a request formatted for the Responses API won’t necessarily work with the Chat Completions API.</p>
+<p>That’s where prep_msgs_for_cc_llm() (short for prepare messages for chat completion LLM) comes in — it automatically converts the input into the correct structure.  You don’t have to define it yourself; it’s inherited from the ResponsesAgent base class.</p>
+<p><strong>Why Not Use the Responses API Directly?</strong></p>
+<p>You might wonder: if our input already matches the Responses schema, why not just call the Responses API?</p>
+<p>Something like this should work, right?</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">messages</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">input</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><p>In theory, yes — but in practice, not yet within Databricks.</p>
+<p>Here’s why: the WorkspaceClient from the Databricks SDK provides a wrapped client that can access registered models inside your workspace, regardless of where they’re hosted. It’s convenient because you don’t need to configure environment variables for authentication.</p>
+<p>My guess is that his SDK client hasn’t been fully updated to support the new Responses API. As a result, calling client.responses.create() currently raises an error — even with simple requests.</p>
+<p>This theory is further supported by the official Databricks notebooks: all of them use the ResponsesAgent class (which matches the Responses API schema) but still call the Chat Completions API using the <code>prep_msgs_for_cc_llm</code> function behind the scenes.</p>
+<p><strong>A Note on Alternative Clients</strong></p>
+<p>There is another way to call the Responses API in Databricks — by using the standard OpenAI client instead of the SDK:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
+</span></span></code></pre></div><p>This approach works when calling external models that support the Responses API (note that some older models don’t).  However, it requires you to set environment variables for authentication.</p>
+<p><strong>Wrapping Up predict</strong></p>
+<p>After the messages are translated, the model is called as usual. The final step is returning a response that matches the ResponsesAgentResponse schema:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">ResponsesAgentResponse</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">create_text_output_item</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">text</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&#34;msg_1&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span></code></pre></div><p>Since the ResponsesAgent is designed for the Responses API (while our response object follows the Chat Completions schema), this constructor bridges the two formats.  The helper function create_text_output_item() creates a properly structured output entry — one of several output types available.  You can find the full list in the <a href="https://mlflow.org/docs/latest/genai/serving/responses-agent/#creating-agent-output">Creating Agent Output section</a> of the ResponsesAgent documentation.</p>
+<p>Also don’t worry about losing details from the original response.
+Although we only return the message text, MLflow’s tracing automatically captures the full request and response context — including all the metadata — behind the scenes.</p>
+<p><strong>What About Streaming?</strong></p>
+<p>Streaming worked much more smoothly with ResponsesAgent than it did with the custom Python model.</p>
+<p>Here’s what’s happening in the code:</p>
+<ol>
+<li>The call to the model includes the stream=True parameter, which signals that we want token-by-token output.</li>
+<li>The response arrives in chunks. The code accumulates these chunks into a single message.</li>
+<li>As new chunks arrive, we yield incremental ResponsesAgentStreamEvent objects so the user can see updates in real time.</li>
+<li>Finally, we yield a “done” event to signal that the response is complete.</li>
+</ol>
+<p>This design allows your application to display streaming responses without blocking — and since it’s built into the ResponsesAgent framework, the setup is minimal.</p>
+<p><strong>Logging and Deployment</strong></p>
+<p>There are two additional notebook cells to complete the setup:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># cell 1</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mlflow</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.models.resources</span> <span class="kn">import</span> <span class="n">DatabricksServingEndpoint</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">UC_LOCATION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;workspace.default.agent-demo-endpoint&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mlflow</span><span class="o">.</span><span class="n">openai</span><span class="o">.</span><span class="n">autolog</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">logged_agent_info</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span><span class="o">=</span><span class="s2">&#34;agent-demo-endpoint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">python_model</span><span class="o">=</span><span class="s2">&#34;agent_model_streaming.py&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">registered_model_name</span><span class="o">=</span><span class="n">UC_LOCATION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pip_requirements</span><span class="o">=</span><span class="s2">&#34;requirements.txt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">resources</span><span class="o">=</span><span class="p">[</span><span class="n">DatabricksServingEndpoint</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s2">&#34;databricks-gpt-oss-20b&#34;</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># COMMAND ----------</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">agents</span>  <span class="c1"># pyright: ignore</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">agents</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">UC_LOCATION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">model_version</span><span class="o">=</span><span class="n">logged_agent_info</span><span class="o">.</span><span class="n">registered_model_version</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><p>The first cell logs the model — something you’ve seen earlier in this series.</p>
+<p>The second cell deploys the agent directly from code, so you don’t need to use the Databricks Serving UI manually.</p>
+<p>If the model is already deployed, it will automatically apply updates — a small but very welcome time-saver.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>It was a long journey to arrive at the Responses Agent approach — but hopefully one that made the reasoning clear.</p>
+<p>If you’ve followed along from the beginning, you can see how a newcomer might start with foundational models, explore custom Python models, and eventually land on Responses Agents as the most robust and traceable option.</p>
+<p>If you take away just a few things, let them be these:</p>
+<ul>
+<li>You now understand how Mosaic AI Gateway, model serving, Python models, and Responses Agents fit together.</li>
+<li>If you’re building something similar, you can confidently start with Responses Agents, knowing that the alternatives were explored and tested.</li>
+</ul>
+<p>Thanks for reading — and for sticking with a deep-dive post!</p>
+<p>I wanted to make this guide as thorough as possible so it answers the questions I had when I first started.</p>
+<p>If you enjoyed this, stay tuned for more articles on data engineering, AI, and Databricks.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/databricks/">Databricks</a></li>
+      <li><a href="http://localhost:1313/tags/ai/">Ai</a></li>
+      <li><a href="http://localhost:1313/tags/tracing/">Tracing</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="http://localhost:1313/">Matthew Norberg&#39;s Data Engineering Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

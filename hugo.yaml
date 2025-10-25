@@ -100,3 +100,4 @@ params:
 markup:
   highlight:
     noClasses: false
+    style: "github"
