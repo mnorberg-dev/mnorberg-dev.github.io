@@ -1,5 +1,5 @@
 ---
-title: "Databricks AI Gateway Guide"
+title: "Tracing with Databricks Mosaic AI Gateway: A Practical Guide"
 date: 2025-10-05
 draft: false
 tags: ["databricks", "ai", "tracing"]
@@ -8,56 +8,31 @@ slug: "ai-gateway"
 author: "Matthew Norberg"
 ---
 
-Over the past month, I’ve been deep in the weeds experimenting with Mosaic AI Gateway in Databricks — configuring endpoints, debugging integrations, and figuring out how all the pieces fit together. After plenty of trial and error, I wanted to share what I’ve learned so other developers can get up and running faster.
+Mosaic AI Gateway is Databricks’ system for managing and governing how your organization uses large language models (LLMs) and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads — making it easier to manage access, monitor performance, and keep costs in check.
 
-If you’ve explored Databricks’ newer AI features, you’ve probably noticed that the documentation, while thorough, can feel circular and fragmented. You often need to jump between Databricks docs, MLflow, and even OpenAI or Meta references, depending on your base model. It’s easy to lose the thread when trying to connect everything into a working system.
+Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. Without it, visibility into model behavior can be limited. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.
 
-This post is my attempt to bridge those gaps with a concrete, end-to-end example — the kind I wish I’d had when I started.
+So the question becomes: **how do you build a Mosaic AI Gateway endpoint that captures traces for each request?**
 
-In short: it’s a practical guide for developers who want to create a Databricks AI Gateway endpoint with tracing enabled, without getting lost in a maze of configuration steps and scattered documentation.
+## The Goal of This Guide
 
-## What is Mosaic AI Gateway?
+My goal is to show you how to build a Mosaic AI endpoint with tracing enabled by default — and to make that process clear enough that you can adapt it to your own setup. Over the past month, I’ve spent a lot of time configuring endpoints, debugging integrations, and figuring out how all the pieces fit together. After plenty of trial and error, I wanted to share what I’ve learned so other developers can get up and running faster.
 
-Mosaic AI Gateway is Databricks’ unified interface for managing access to large language models (LLMs) and AI endpoints. It serves as a control layer between your applications and the models they call — helping teams standardize how they deploy, monitor, and secure their AI workloads.
+If you’ve explored Databricks’ newer AI features, you’ve probably noticed that the documentation, while thorough, can feel circular and fragmented. You often need to jump between Databricks, MLflow, and OpenAI documentation to piece things together. It’s easy to lose the thread when trying to connect everything into a working system.
 
-Out of the box, Mosaic AI Gateway provides several powerful features:
+This post is my attempt to bridge those gaps with a concrete, end-to-end example — the kind I wish I’d had when I started. It’s a practical guide to getting tracing working with Mosaic AI Gateway without getting lost in a maze of configuration steps and scattered docs. To save you time, I’ll start by showing the solution up front, then walk you through the process that got me there — including the different methods I tried along the way.
 
-- Permission and rate limiting
-- Payload logging
-- Usage tracking
-- AI Guardrails
-- Fallbacks
-- Traffic splitting
-
-Together, these capabilities make it easier to build production-ready AI systems that are safe, trackable, and cost-efficient.
-
-But there’s one critical capability missing — and it’s the focus of this post: MLflow Tracing.
-
-If you’re new to tracing, think of it as logging with context. A trace doesn’t just record the request and response; it also captures the intermediate steps and outputs along the way. When something breaks, those traces are invaluable for understanding what actually happened inside your model pipeline.
-
-So the question becomes: how do you build a Mosaic AI Gateway endpoint that captures traces for each request?
-
-That’s exactly the problem I set out to solve — creating a Databricks AI Gateway endpoint that generates a trace for every call.
-
-To save you time, I’ll start by showing the solution up front. But the rest of this post takes a more narrative approach — walking through my learning process, the documentation trails I followed, and the false starts that eventually led to the right path.
-
-You could argue that I should simply present the final setup and explain how it works. But I think it’s just as valuable to see what didn’t work. Sharing the failures, trade-offs, and dead ends helps demonstrate that the final approach isn’t just something that happened to work — it’s the one that stood up to testing and comparison.
-
-That’s especially relevant today, when our first instinct to solve a problem is often to open ChatGPT or another LLM and ask for help. The response might look convincing, but is it the best approach? With fast-moving tools like Mosaic AI Gateway, the underlying models often haven’t been trained on the latest APIs or docs — meaning their answers can be incomplete, outdated, or just don't work.
-
-By sharing both the process and the result, I hope to give readers confidence that this solution is not only functional but well-researched and battle-tested — the one that held up after real experimentation, not just a lucky first try.
+You could argue that I should simply present the final setup and explain how it works. But I think it’s just as valuable to see what didn’t work. By sharing both the process and the result, I hope to give you confidence that this approach isn’t just functional, but tested, reasoned through, and grounded in actual experimentation.
 
 ## The Solution: ResponsesAgent
 
 As promised, let’s start with the answer.
 
-The simplest way to enable tracing while still using all the features of Mosaic AI Gateway is to create and deploy a ResponsesAgent model in Databricks. This model type has MLflow Tracing enabled by default, and when you host it through the Gateway, you retain the same production capabilities — including rate limiting, logging, guardrails, and more.
+The simplest way to enable tracing while still using all the features of Mosaic AI Gateway is to create and deploy a **ResponsesAgent** model in Databricks. This model type has MLflow Tracing enabled by default, and when hosted through the Gateway, you retain the same production capabilities — including rate limiting, logging, guardrails, and more.
 
-In other words, a ResponsesAgent gives you the best of both worlds: full Gateway functionality and detailed trace data for every request.
+In short, a ResponsesAgent gives you the best of both worlds: full Gateway functionality and detailed trace data for every request.
 
-If you’re just here for the implementation details, feel free to skip ahead to the end of this post — I walk through the setup step by step.
-
-But if you’re curious about how I arrived at this solution, stick around. The next few sections cover the other approaches I tried, the dead ends I hit, and the reasoning that ultimately led to the ResponsesAgent path.
+If you’re here just for the implementation, you can skip to the end — I’ll walk through the setup step by step. But if you’re curious how I arrived at this solution, stick around. The next sections cover the other approaches I tried, the dead ends I hit, and how they led me to the ResponsesAgent path.
 
 ## Attempt 1: Foundational Models
 
@@ -65,100 +40,79 @@ Like anyone learning a new system, I started at the beginning — the [Mosaic AI
 
 ![Databricks Table](/ai-gateway/ai-gateway-table-edited.png)
 
-At first glance, external model endpoints seemed the most capable. However, for this walkthrough, I focused on foundational models. They’re easier for readers to follow along with since they don’t require setting up authentication or access to external services.
+At first glance, external model endpoints seemed the most capable. However, for this walkthrough, I focused on foundational models. They’re easier for readers to follow since they don’t require setting up authentication or external service access. Aside from that step, foundational and external models behave almost identically in configuration, serving behavior, and available Gateway features.
 
-Aside from that authentication step, foundational and external models function almost identically in configuration, serving behavior, and available Gateway features.
-
-As a newcomer, I assumed I could host a foundational model and still get traces. That would have been ideal — use a proven model and get observability for free. So my first goal was to spin up an endpoint and confirm whether tracing worked out of the box.
-
-The next section walks through how to create such an endpoint right up until the point where you learn that it does not support tracing. If you’re just here for the tracing solution, feel free to skip ahead to the Wrapper section — otherwise, here’s what I found.
+As a newcomer, I assumed I could host a foundational model and get tracing automatically — use a proven model and gain observability for free. That seemed like the ideal starting point, so my first goal was to spin up an endpoint and see how far I could get.
 
 ### Foundational Model Endpoint Creation
 
-When creating infrastructure in Databricks, there are usually multiple paths to the same result — Terraform, Python, SQL, or the UI. For investigative work like this, I prefer the UI. It’s quick to explore configurations and verify behavior visually, even though in production you’d typically automate the process.
+When creating infrastructure in Databricks, there are usually multiple paths to the same result — Terraform, Python, SQL, or the UI. For investigative work like this, I prefer the UI. It makes it easy to explore configurations and verify behavior visually, even though in production you’d typically automate the process.
 
-To create an endpoint, go to Serving → Create Serving Endpoint, then choose Foundational Models in the Served Entities section. This opens the endpoint creation menu shown below. Working through it from top to bottom, first give your endpoint a name, then configure the Served Entities section.
+To create an endpoint, go to **Serving → Create Serving Endpoint**, then choose **Foundational Models** in the *Served Entities* section. This opens the endpoint creation menu shown below. Working through it from top to bottom, first give your endpoint a name, then configure the *Served Entities* section.
 
 ![Endpoint Options](/ai-gateway/endpoint-menu.png)
 
-The Served Entities section is where you select the model you want to serve. Click on the 'Select an Entity' text in the 'Entity details' box. Then choose the 'Foundational Models' option from the radio list.
+Click **Select an Entity**, choose **Foundational Models** from the radio list, then click **Select a foundational model** in the box. You'll see a new pop-up menu listing both foundational and external models.
 
-![Served Entity Menu](/ai-gateway/served-entity-menu.png)
-
-After selecting that option, a second pop-up lists both foundational and external models, as shown below.
-
-![Selection Menu Options](/ai-gateway/selection-menu.png)
+![Entity Menu Creation Guide](/ai-gateway/endpoint-menu-guide.png)
 
 This can be confusing at first because the pop-up menu is labeled Foundational Models, yet it also lists external providers. I’m calling this out for two reasons:
 
-1. If you’re following along and want to use an external model instead, this is how you’d do it — select your model, complete the additional authentication step, and you’ll have an external model endpoint. You could then substitute that model’s name wherever a foundational model is used in this post.
+1. Suppose you’d like to configure an external model instead. Start by selecting your provider and completing the authentication step shown above. Then finish creating your serving endpoint, taking note of the name you assign it. You’ll need that endpoint name later when configuring your ResponsesAgent to call this endpoint, which in turn routes to your external model.
+2. It shows that the only real difference between foundational and external models is authentication; the rest of the setup is identical.
 
-2. It highlights that the only real difference between foundational and external model endpoints is authentication; otherwise, the setup is identical.
-
-Once you’ve chosen a foundational model — in this case, I selected GPT OSS 20B — you’ll see the configuration screen below.
+Once you’ve chosen a foundational model — in this case, I selected **GPT OSS 20B** for demo purposes — you’ll see the configuration screen below.
 
 ![Model UI Options](/ai-gateway/model-ui-options.png)
 
-Here you can configure throughput and scaling options, but notice there’s no tracing toggle. So how do you set up tracing for your model?
+Here you can configure throughput and scaling options, but there’s **no tracing toggle**. 
 
-> Note: When I first started, I saw some models with a tracing toggle in the UI, but those seem to have disappeared. With Databricks’ rapid feature updates, I’ve seen frequent changes in the platform which often impact what you're working. 
-> 
-> When I first planned this post, I expected to ask, “What do you do if your model doesn’t support tracing?” — but now, none of them do. Fortunately, I still have an answer.
+> **Note**: When I first started, I saw some models with a tracing toggle in the UI, but those have since disappeared. Databricks evolves quickly, and feature changes often land mid-project. When I began this post, I expected to ask, “What if your model doesn’t support tracing?” — now, none of them do. Fortunately, I still have an answer.
 
 ### Searching for the Missing Piece
 
-Not knowing how, I dug deeper into the documentation. I found plenty of useful material about tracing GenAI apps, but very few that answered the core question: “How do I set up an endpoint that generates traces by default?”
+Not knowing how to proceed, I dug into the documentation. There was plenty about tracing GenAI apps — but little on how to create an endpoint that **automatically generates traces**.
 
-Here are a few of the more relevant but incomplete resources:
+A few helpful but incomplete resources included:
 
 - ["Get started: MLflow Tracing for GenAI (Databricks Notebook)"](https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/getting-started/tracing/tracing-notebook) -- great for learning how traces work, but only covers tracing single notebook requests.
-- ["Tracing OpenAI"](https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/integrations/openai) — shows how to trace OpenAI calls, but not how to create an endpoint with tracing enabled.
+- ["Tracing OpenAI"](https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/integrations/openai) — shows how to trace OpenAI calls, but not for endpoint deployment.
 
-As you'll find if you start to go through the docs as well, most examples show how to trace one request, not how to create an endpoint creates a trace for each request it recieves.
+As you'll find if you start to go through the docs as well, most examples show how to trace one request, not how to create an endpoint creates a trace for each request it recieves. Eventually, I found ["Deploy agents with tracing"](https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/prod-tracing), which pointed me in the right direction -- though I was skeptical at first. My initial reaction was: “Why do we need an agent? This seems like such a simple thing to achieve — an agent feels overcomplicated.”
 
-Finally, I stumbled on this artice ["Deploy agents with tracing"](https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/tracing/prod-tracing). This article finally pointed me in the right direction — though I was skeptical at first. My initial thought was: “Why do we need an agent? This seems like such a simple thing to achieve — an agent feels overcomplicated.”
-
-But that article sparked an idea: what if I could create a wrapper model that calls the underlying model while automatically handling tracing? That realization set the direction for my next experiment.
+But that article sparked an idea: **what if I created a wrapper model** that calls the underlying model while automatically handling tracing? That realization shaped my next experiment.
 
 ## Attempt 2: Custom Python Model
 
-If foundational models couldn’t generate traces directly, then I needed to create something that could. The answer was to build a wrapper — a lightweight layer that calls the real model behind the scenes while also handling tracing. Essentially, requests come into the wrapper, the wrapper calls the underlying model (like GPT OSS 20B), and then it returns the response unchanged. The difference is that the wrapper can log traces automatically.
+If foundational models couldn’t generate traces directly, then I needed something that could. The answer was to build a wrapper model — a lightweight layer that accepts requests, forwards them to the underlying model (like GPT OSS 20B), and returns the response unchanged. The difference is that the wrapper can be configured to add tracing to each request by default.
 
-### The Wrapper Approach
-
-At this point, we knew that while Databricks AI Gateway could host a foundational model directly, it didn’t support tracing in that configuration. Creating a wrapper model will allow us to use our foundational model and attain tracing functionality.
-
-Here’s the high-level plan:
+Here's the high level plan:
 
 1. Build a small model class that wraps around our foundational model.
 2. Configure the class so that tracing is enabled by default.
 3. Register this model in Unity Catalog.
 4. Deploy it as a Serving Endpoint, just like before — except now the endpoint will support both AI Gateway and tracing.
 
-This approach gives us the same Gateway functionality as before, but with complete trace visibility. If this sounds confusing, just wait till we get to the code examples which I think will help clarify the setup.
+This approach gives you the same Gateway functionality as before, but with complete trace coverage. If this sounds confusing, hopefully the code examples will help make things concrete.
 
 ### Wrapper Options
 
-Once I knew I needed a wrapper, the next question was how to define it with MLflow.
+Once I knew I needed a wrapper, the next question was how to define it with MLflow. There are two main options:
 
-There are two main ways to do this:
+- **Custom Python Model** – Define your own the `PythonModel` class and implement your own prediction functions.
+- **Responses Agent Model** – Use the `ResponsesAgent` class to create a agent model that calls your foundational model under the hood.
 
-- Custom Python Model – You define your own PythonModel class and control every detail of how predictions are made.
-- Responses Agent Model – You use one of Databricks’ prebuilt agent types (like ResponsesAgent) that already integrate tracing, tool use, and prompt orchestration.
-
-As I mentioned before, I was skeptical of the responses agent solution. My goal wasn’t to build a full agent-based system — I just wanted to trace model calls. That left me with one clear option: a Custom Python Model.
+As I mentioned before, I was skeptical of the `ResponsesAgent` approach. My goal wasn’t to build a full agent-based system — I just wanted to trace model calls. That made the **Custom Python Model** path seem like the most straightforward solution.
 
 That said, the [Gen AI Apps guide](https://learn.microsoft.com/en-us/azure/databricks/generative-ai/guide/introduction-generative-ai-apps) clearly recommends using response agents over custom python models. However, I still wasn't convinced. I wanted somthing simple, transparent, and easy to debug.
 
-So I started by building the Python model — and as you can probably guess, it worked, but not as well as I’d hoped. Once I had it running, I compared it to a ResponsesAgent implementation and found that the agent approach was cleaner and better aligned with Databricks’ newer OpenAI Responses API. It also seemed more future-proof as Databricks expands its generative AI tooling.
+So I built the Python model — and, as you can probably guess, it worked, but not as well as I’d hoped. Once it was running, I compared it to a `ResponsesAgent` implementation and found that the agent approach was cleaner, better aligned with Databricks’ newer OpenAI Responses API, and more future-proof as the platform continues to evolve.
 
 ### Implementing a Custom Python Model
 
-Creating a custom Python model in MLflow involves encapsulating your logic in a class that inherits from mlflow.pyfunc.PythonModel. The key method is predict, which receives input and returns the model’s response.
+Creating a custom Python model in MLflow involves encapsulating your logic in a class that inherits from `mlflow.pyfunc.PythonModel`. The key method is `predict`, which receives input and returns the model’s response. Since this model acts only as a wrapper, our `predict` method simply forwards each request to the underlying foundational model and returns its response.
 
-Since this model is only a wrapper, our predict method just forwards the request to the underlying foundational model and returns its response.
-
-If you’d like to see the relevant documentation, here are the key references I used:
+If you’d like to dig deeper, these are the main references I used:
 
 - [MLflow Python Model Guide](https://mlflow.org/docs/latest/ml/model/python_model/)
 - [Custom Serving Applications](https://mlflow.org/docs/latest/genai/serving/custom-apps/)
@@ -186,11 +140,11 @@ In addition to installing the databricks-openai package, this command upgrades M
 |                              | `databricks-sdk==0.49.0`        |
 |                              | `databricks_vectorsearch==0.59` |
 
-> ⚠️ Note: MLflow’s documentation warns against having both mlflow and mlflow-skinny installed simultaneously. I haven’t encountered issues with this setup, and several Databricks examples use the same install pattern — so I decided to trust it. Still, it’s something to watch for in case anything breaks or behaves unexpectedly.
+> ⚠️ Note: MLflow’s documentation warns against installing both `mlflow` and `mlflow-skinny`. I haven’t encountered any issues, and several Databricks examples use the same approach — but it’s worth keeping in mind if anything behaves unexpectedly.
 
 **2. Define your model**
 
-Here’s the cell that defines the model and writes it to a file called `model.py`. Let’s walk through the file from top to bottom.
+In cell 2 of our notebook, we define our model and save it to `model.py`. Let’s walk through the code from top to bottom to understand what each part does and why it matters.
 
 ```python
 %%writefile model.py
@@ -199,24 +153,24 @@ from mlflow.pyfunc import PythonModel, PythonModelContext
 from databricks.sdk import WorkspaceClient
 from typing import Any, Dict, List, Optional
 
+
 class ModelWrapper(PythonModel):
     def __init__(self):
         self.client = WorkspaceClient().serving_endpoints.get_open_ai_client()
 
-    def predict(  # pyright: ignore
+    def predict(
         self,
         context: PythonModelContext,
         model_input: List[Dict[str, str]],
         params: Optional[Dict[str, Any]] = None,
     ) -> List[str]:
         results = []
-        
+
         response = self.client.chat.completions.create(
-            model="databricks-meta-llama-3-1-8b-instruct",
-            messages=model_input
+            model="databricks-meta-llama-3-1-8b-instruct", messages=model_input
         )
         results.append(response.choices[0].message.content)
-        
+
         return results
 
 mlflow.openai.autolog()
@@ -225,19 +179,20 @@ mlflow.set_experiment("/Shared/mn-demo-experiments")
 mlflow.models.set_model(ModelWrapper())
 ```
 
-The %%writefile command writes this cell’s contents to a file — in this case, model.py. This is required because the model registration step later references this file directly. It also keeps all the code for this example self-contained within a single notebook, aside from a small requirements.txt file.
+The `%%writefile` command writes this cell’s contents to the model.py file. This is necessary because the registration step later on will need to read your model from disk. You could, of course, create this file manually and omit this cell entirely, but writing it dynamically keeps the notebook self-contained and repeatable. Aside from a small `requirements.txt` file, this approach ensures everything you need to reproduce the setup lives in one place.
 
-The ModelWrapper class inherits from PythonModel. In the constructor, we initialize a Databricks WorkspaceClient to access the serving endpoint client that will call our base model.
+The `%%writefile` command writes this cell’s contents to the `model.py` file. This is required because the model registration step needs to read in the model from a `.py` file. We could have placed this code in the file manually and ommited this cell from the notebook. However, the `%%writefile` command allows us to keep all the code self-contained within a single notebook, aside from a small `requirements.txt` file.
 
-If you’d like to connect to an external model instead of a foundational one, here’s how:
+The `ModelWrapper` class inherits from `PythonModel`, the standard interface for custom MLflow models. Inside the constructor, we initialize a `WorkspaceClient`, which gives us access to the serving endpoint client that will call our base model. That means our wrapper model can seamlessly forward requests to any foundation model or custom endpoint you’ve already deployed.
 
-1. Follow the steps in Attempt 1 to create a serving endpoint for your external model (e.g., external-model-endpoint).
-2. In the code above, replace the model parameter in the chat.completions.create call with the name of your external model.
-3. That’s it — your wrapper will now route requests to your external model instead.
+At this point, if you’d like to connect to an **external model** instead of a foundational one, follow these steps below:
 
-The next portion of the file is the predict method, which defines the inference logic — sending the request to the model and returning its response. You’ll also notice that I added type hints to this function. This prevents MLflow from emitting log warnings during model creation.
+1. Follow the steps in Attempt 1 to create a serving endpoint for your external model (e.g., `external-model-endpoint`).
+2. Replace the `model` parameter in the `chat.completions.create()` call with the name of your external model.
 
-The last four lines at the bottom of the cell are critical:
+The next portion of the file is the `predict` method, which defines the inference logic — sending the request to the model and returning its response. You’ll notice that I added type hints to this function. In particular, MLflow will emit a `UserWarning` if the `model_input` parameter does not have a type hint applied. Some of the online examples I found only added type hints to the `model_input` parameter to silence the warning. Personally, I think if you are going to add type hints, you should be concsistent and add them everywhere. This approach prevents the `UserWarning` and aligns the code with Python best practices.
+
+Finally, look closely at the last four lines — they’re easy to overlook but absolutely essential:
 
 ```python
 mlflow.openai.autolog()
@@ -247,18 +202,31 @@ mlflow.models.set_model(ModelWrapper())
 ```
 
 These lines enable tracing and logging.
-- mlflow.openai.autolog() enables detailed trace collection. Without it, you’d only get partial trace data through decorators.
-- The next two lines (set_tracking_uri and set_experiment) tell MLflow where to store trace data in Databricks.
-  - If you omit the tracking URI and experiment setup, traces will only appear when you call the endpoint interactively from a Databricks notebook — not when hitting it via API.
-- Finally, set_model() sets the model object that is going to be logged.
+- `mlflow.openai.autolog()` enables detailed trace collection. Without it, you’d only get partial trace data through manually placed decorators.
+- `set_tracking_uri()` and `set_experiment()` specify where to store traces Databricks. If you skip this step, traces will only appear when you call the endpoint interactively from a Databricks notebook — not when hitting it via API.
+- `set_model()` sets the model object that is going to be logged.
 
-**3. Register the model**
+**3. Restart the Python Library**
 
-Once your model.py file is defined, the final step is to register it in Unity Catalog. The code below handles that process:
+This next step might seem odd, but it’s crucial. Right after creating the `model.py` file, restart the Python library using `dbutils`:
+
+```python
+dbutils.library.restartPython()
+```
+
+If you skip this step, you’ll likely run into an import error the first time you reference `model.py`. The reason is subtle: when your compute session starts, Databricks appears to take a snapshot of your working directory. At that point, `model.py` doesn’t exist yet — so even after you write it, the environment doesn’t see it until you restart the interpreter. Restarting refreshes the session state so the new file becomes visible.
+
+This same issue also applies if you modify `model.py` later. Suppose you rerun the `%%writefile` cell to overwrite the file with new code — unless you restart the Python library again, Databricks will continue using the old, cached version. It’s an easy mistake to make, but if you notice that your updates aren’t showing up, this is probably why.
+
+**4. Register the model**
+
+Once your `model.py` file is defined, the final step is to register it in Unity Catalog.
 
 ```python
 import mlflow
 from mlflow.models.resources import DatabricksServingEndpoint
+
+import model
 
 example = [
     {"role": "system", "content": "You are a helpful assistant."},
@@ -271,65 +239,83 @@ with mlflow.start_run():
         python_model="model.py",
         input_example=example,
         registered_model_name="workspace.default.mn-ai-demo",
-        pip_requirements="requirements.txt",
+        pip_requirements=["databricks-openai"],
         resources=[DatabricksServingEndpoint(endpoint_name="databricks-gpt-oss-20b")],
     )
 ```
 
-Since the %%writefile command in the previous cell writes your model code to disk rather than keeping it in memory, you’ll need to re-import MLflow (and any other dependencies) before running this step.
+Since the previous `%%writefile` cell only wrote your model code to disk rather than executing it, you’ll need to re-import MLflow (and any dependencies) here. More importantly, notice the `import model` statement — this is a critical step. When Python imports the `model` module, it executes the last four lines we added earlier (`autolog`, `set_tracking_uri`, `set_experiment`, and `set_model`). This ensures that your experiment setup runs **before** `mlflow.start_run()` is called.
 
-The example variable defines a simple test input that MLflow uses to validate your model. Inside your requirements.txt, include databricks-openai — this package is required for deployment to work correctly.
+If you skip the import, MLflow will create two separate “Experiments”: one in your `/Shared` directory (as intended) and another automatically tied to your notebook. Only one of them will contain trace data, which makes debugging and cleanup a headache. Running `import model` keeps everything in sync and ensures that both your experiment metadata and your traces land in the right place.
+
+You might be wondering why those four setup lines live inside the `model.py` file instead of the registration cell. I wondered the same thing and tried refactoring the code so the setup happened before the `start_run()` call. Surprisingly, the tracing functionality didn't work correctly anymore. It seems that MLflow requires those configuration calls to live inside the Python file that defines the model in order to properly associate the tracing context with the model object.
+
+If you’ve seen Databricks examples that don’t include this `import model` step, that’s usually because they test the model in an earlier cell by calling its `predict()` method directly. Those tests implicitly execute the four setup lines, so the import isn’t needed later. However, if you skip the test cell and go straight to registration, you must import the module explicitly — otherwise, you’ll again end up with two experiments and inconsistent logging. It’s a small but important detail that saves a lot of confusion down the line.
+
+Finally, the `example` variable defines a simple input that MLflow uses to validate your model during registration.
 
 **What to Expect When You Run Model Registration Code**
 
-When you execute the registration cell, MLflow confirms a successful run and model version creation. The example input and response will appear inline:
+When you execute the registration cell, MLflow will confirm that your run completed successfully and that a new model version has been created. During this process, you’ll also see a short message that says something like *“Running the predict function to generate output based on input example.”* This step validates that your model can execute end-to-end without errors by running a quick inference using the `example` input you defined earlier.
 
-![Model Registration](/ai-gateway/model-registration.png)
+![Model Registration](/ai-gateway/new-model-registration.png)
 
-Immediately below that, you’ll see your first trace — showing not only the input and output, but detailed metadata such as call hierarchy, timing, and context:
+In most runs, you’ll also see the model’s output (from the LLM) appear directly in the notebook output area. When I re-ran the notebook to capture the screenshot above, however, the output didn’t appear — so don’t panic if the same thing happens to you. I have found the tracing during the model registration can be inconsistent. If you re-run the cell later, you'll probably see the trace of the input example without any changes to the code.
 
-![Model Registration Trace](/ai-gateway/registration-trace.png)
+Even if the model’s output doesn’t display inline, you can still confirm that the trace was generated successfully. Open the **Experiments** page in Databricks, and you should see a new experiment created under the location you specified in your model setup — in my case, `/Shared/mn-demo-experiments`, since that’s the path I set in the `mlflow.set_experiment()` call inside `model.py`.
 
-![Model Registration Trace Part II](/ai-gateway/registration-trace-endpoints.png)
+I’ve added a short demo below showing how that looks in practice:
 
-![Model Registration Trace Part III](/ai-gateway/registration-trace-endpoints-p2.png)
+<div class="video-wrapper">
+    <video controls playsinline>
+        <source src="/ai-gateway/first-trace.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
 
-At this point, you can also test your model directly from a notebook without importing the model.py file. Simply call mlflow.pyfunc.load_model() to load it from Unity Catalog, then invoke predict(). Due to the way we defined our model, you each notebook inference will automatically generate a trace, as shown here:
+As you can see in the video, the resulting trace contains much more than just the input prompt and model response — it includes structured metadata about the request, timestamps, token usage, model configuration, and more. These details are what make MLflow Tracing so valuable when debugging or tuning model behavior.
+
+Once your model is registered, you can also interact with it directly from any Databricks notebook without re-importing the `model.py` file. Simply load it from Unity Catalog using `mlflow.pyfunc.load_model()` and call `predict()` with your desired input. Because tracing is baked into the model itself (via the `autolog()` configuration in `model.py`), each inference you run from a notebook will automatically produce a new trace entry — like the example shown below.
 
 ![Notebook Trace](/ai-gateway/notebook-trace.png)
 
 ### Creating the Endpoint
 
-With your model registered, the next step is deployment.
+With your model now registered in Unity Catalog, the next step is to deploy it as a serving endpoint.
 
-Navigate back to the Serving page, click Create Endpoint, and select your new Python model. You’ll now see an option to enable tracing — it should already be turned on by default:
+From the Databricks workspace, navigate to the **Serving** page and click **Create Endpoint**. Select your newly registered Python model from the list — you should see that there's now an option to enable tracing. Make sure this setting is turned on if it isn't already.
 
 ![Endpoint Creation Menu With Python Model](/ai-gateway/endpoint-creation-python-model.png)
 
-Scroll down to the AI Gateway section to configure settings like the Inference Table, which logs all requests and responses (though not as richly as traces). Note that inference tables aren’t yet available in the free Databricks tier.
+Scroll down to the **AI Gateway** section to configure additional settings like the **Inference Table**, which records all requests and responses. This table is useful for auditing and performance tracking, though it doesn’t include the same level of detail as MLflow Traces. (Keep in mind that inference tables aren’t available on the free Databricks tier.)
 
-Once your endpoint finishes deploying, the interface should show it as Active and ready for REST requests:
+Once you’ve configured your settings, click **Create** and wait for your model’s serving endpoint to finish deploying. When the status shows as **Active**, the endpoint is live and ready to accept REST API calls.
 
 ![Endpoint Creation Screen](/ai-gateway/ai-gateway-screen.png)
 
-You can now test it using curl or your preferred REST client — I’ve been using the REST Client extension in VS Code. After sending a few requests, check your Experiments page under the shared experiment path — you’ll see fresh traces appear there:
+You can now test it using `curl` or your preferred REST client — I’ve been using the REST Client extension in VS Code. After sending a few requests, check your **Experiments** page under the shared experiment path — you’ll see fresh traces appear there. Here's a short demo showing how to send a request to the endpoint and then see the associated trace:
 
-![Rest Client](/ai-gateway/rest-client.png)
+<div class="video-wrapper">
+    <video controls playsinline>
+        <source src="/ai-gateway/rest-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
 
-![Rest Trace](/ai-gateway/rest-trace.png)
+> Note: I am not sure why the trace in the video looks unusual. I have encountered this before and days later, it was fixed. So no need to worry. The main thing is that the trace was logged.
 
 At this point, you’ve successfully built an endpoint with full Mosaic AI Gateway functionality and detailed tracing — all through a custom Python model. You're probably wondering why I am not recommending the python model. The issue is that I had a difficult time setting up streaming responses with the custom python model. If streaming had worked seamlessly, this might have been my final recommendation. But it didn’t — and that’s what led me to explore the ResponsesAgent next. 
 
 ### What Went Wrong with Streaming Requests
 
-If you’ve looked at the documentation I referenced earlier, you may have noticed that the PythonModel class in MLflow also defines a predict_stream function that you can override to support streaming requests.
+If you’ve looked at the documentation I referenced earlier, you may have noticed that the PythonModel class in MLflow also defines a `predict_stream` function that you can override to support streaming requests.
 
-Here’s the basic idea: we implement the predict_stream function inside our model class. When a REST request includes a streaming parameter, MLflow will call predict_stream instead of predict, allowing the model to return partial results as they arrive.
+Here’s the basic idea: we implement the `predict_stream` function inside our model class. When a REST request includes a streaming parameter, MLflow will call `predict_stream` instead of predict, allowing the model to return partial results as they arrive.
 
-However, this is where things start to get tricky. The predict_stream function is designed to take the same PyFunc-compatible input as predict, so I defined it as follows:
+Here’s how I initially implemented it inside the `ModelWrapper` class:
 
 ```python
-def predict_stream(  # pyright: ignore
+def predict_stream(
         self,
         context: PythonModelContext,
         model_input: List[Dict[str, str]],
@@ -353,11 +339,14 @@ def predict_stream(  # pyright: ignore
 
 **Testing in a Notebook**
 
-When I imported the module directly and invoked predict_stream, it worked perfectly — chunked responses arrived in real time, and the trace appeared in the notebook output.
+When I imported the module directly in a Databricks notebook and invoked `predict_stream()` manually, everything worked perfectly. I saw the responses stream back in real time, and each run produced a complete MLflow trace showing every chunk of output.
 
-![Notebook Trace](/ai-gateway/working-predict-stream.png)
-
-![Notebook Trace](/ai-gateway/working-predict-stream-trace.png)
+<div class="video-wrapper">
+    <video controls playsinline>
+        <source src="/ai-gateway/python-streaming.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
 
 This confirmed that the function worked when called directly from the notebook. I could see all the chunks streaming back one by one, and tracing behaved exactly as expected.
 
@@ -365,25 +354,25 @@ Encouraged by this, I decided to test the same functionality through other metho
 
 **Testing Through the Loaded Model and REST API**
 
-After registering the model in Unity Catalog, I tried invoking it again by loading it with mlflow.pyfunc.load_model() and calling predict_stream. This time, it failed.
+After registering the model in Unity Catalog, I tried invoking it again by loading it with `mlflow.pyfunc.load_model()` and calling `predict_stream`. This time, it failed.
 
 ![Notebook Trace](/ai-gateway/failed-predict-stream.png)
 
-You can see in the image above that predict() still works fine when the model is loaded this way — but predict_stream() doesn’t. The same issue appears when invoking it through a REST endpoint:
+Interestingly, `predict()` continued to work just fine in this context — but `predict_stream()` didn’t. The same issue appeared when I called the endpoint through the REST API:
 
 ![Notebook Trace](/ai-gateway/bad-predict-stream-api.png)
 
-At this point, I was puzzled. The function clearly worked in one context but failed in another. I briefly considered adding a streaming flag to the predict method itself (e.g., predict(streaming=True)), but that felt like a hack and went against the intended design of the MLflow API. It also wasn’t as clean as maintaining two clearly defined methods — one for standard predictions and one for streaming.
+At this point, I was puzzled. The function clearly worked in one context but failed in another. I briefly considered adding a streaming flag to the predict method itself (e.g., `predict(streaming=True)`), but that felt like a hack and went against the intended design of the MLflow API. It also wasn’t as clean as maintaining two clearly defined methods — one for standard predictions and one for streaming.
 
 So I started digging into the root cause.
 
 **Digging into the Cause**
 
-Why didn’t predict_stream work when the model was loaded from Unity Catalog?
+Why didn’t `predict_stream()` work when the model was loaded from Unity Catalog?
 
-The key detial lies in what mlflow.pyfunc.load_model() actually returns. According to the [MLflow docs](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#mlflow.pyfunc.load_model), it doesn’t return your PythonModel directly — it returns a PyFuncModel, a wrapper class that standardizes how models are called.
+The key detial lies in what `mlflow.pyfunc.load_model()` actually returns. According to the [MLflow docs](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.pyfunc.html#mlflow.pyfunc.load_model), it doesn’t return your `PythonModel` directly — it returns a `PyFuncModel`, a wrapper class that standardizes how models are called.
 
-When you invoke predict_stream() on the loaded model, you’re actually calling the wrapper’s version of that function, which then delegates to your implementation. Unfortunately, something in that handoff — specifically in how inputs are validated and passed through — seems incompatible with the OpenAI-style message list I was using.
+When you invoke `predict_stream()` on the loaded model, you’re actually calling the wrapper’s version of that function, which then delegates to your implementation. Unfortunately, something in that handoff — specifically in how inputs are validated and passed through — seems incompatible with the OpenAI-style message list I was using.
 
 For anyone interested in exploring further, you can inspect the predict_stream implementation in the [PyFuncModel source code](https://mlflow.org/docs/latest/api_reference/_modules/mlflow/pyfunc.html). 
 
@@ -393,37 +382,37 @@ The [Inference API docs](https://mlflow.org/docs/latest/api_reference/python_api
 
 **Where Things Stand**
 
-To make predict_stream work, I had two main options:
+To make `predict_stream()` work, I had two main options:
 
-(1) change its input format, or
-(2) modify predict so it could handle streaming requests as well.
+(1) Change its input format to something that MLflow’s wrapper would accept, or
+(2) Modify `predict()` to handle streaming requests as well.
 
-Both felt like poor tradeoffs. I didn’t want to maintain separate input schemas for predict and predict_stream, and I also didn’t like the idea of adding a “streaming” flag to predict just to make it behave differently.
+Both felt like poor tradeoffs. I didn’t want to maintain separate input schemas for `predict()` and `predict_stream()`. I also didn't like the idea of adding a “streaming” flag to `predict()` just to make it behave differently.
 
-If you don’t need streaming, the custom Python model approach is still an excellent choice — it’s flexible, powerful, and integrates seamlessly with Databricks. But for my use case — supporting both standard and streaming completions — it wasn’t enough.
+So while the custom Python model approach worked beautifully for standard requests — giving full control, transparency, and seamless Databricks integration — it simply wasn’t reliable for streaming. For most use cases, that limitation might not matter. But for my goal — supporting both standard and streaming completions — it was a dealbreaker.
 
 So it was time to move on to Attempt 3: the ResponsesAgent.
 
 ## Attempt 3: Responses Agent
 
-The Databricks documentation includes a “simple” guide for creating a Responses Agent endpoint. It’s a good starting point, but I’ll admit — I wasn’t a huge fan of the sample notebook. The call stack for basic predictions felt unnecessarily complex, and several unused libraries made it harder to see what was actually going on. At one point, I even caught myself wondering if those extra dependencies had some hidden purpose I’d missed.
+The Databricks documentation includes a “simple” guide for creating a Responses Agent endpoint. It’s a good starting point, but I’ll admit — I wasn’t a huge fan of the sample notebook. The call stack for basic predictions felt unnecessarily complex, and several unused libraries made it tough to tell which parts actually mattered. At one point, I even caught myself wondering if those dependencies had hidden purposes.
 
-That said, it’s still a valuable reference. I adapted their example into a cleaner, more minimal version that’s easier to follow for anyone new to ResponsesAgent. That’s the version we’ll walk through here.
+That said, the example still illustrates the core concept well. I adapted it into a cleaner, minimal version that focuses on the essentials — the one we’ll walk through here.
 
 For anyone curious, you can find Databricks’ original example notebook here: https://docs.databricks.com/aws/en/notebooks/source/mlflow3/simple-agent-mlflow3.html.
 
 ### Implementing Responses Agent
 
-As before, we’ll start our notebook with an installation cell — but this time we’ll add the `databricks-agents` library alongside `databricks-openai`.
+As before, we’ll start our notebook with an installation cell — but this time we’ll add the `databricks-agents` library alongside `databricks-openai`. Following the installation cell, we have the `%%writefile` cell which writes our code to the `model.py` file. 
+
+> Note: In Databricks, .py files can be loaded as notebooks. Cells are seperated by lines with the text `# COMMAND ----------`. As such, the following code cell is representing two notebook cells.
 
 ```python
 %pip install -U -qqqq databricks-openai databricks-agents
 dbutils.library.restartPython()
-```
 
-Next, we’ll define our agent and write it to a Python file:
+# COMMAND ----------
 
-```python
 %%writefile model.py
 import mlflow
 
@@ -505,11 +494,11 @@ mlflow.models.set_model(SimpleResponsesAgent())
 
 At first glance, this looks similar to our earlier custom Python model — but there are three key differences:
 
-1. Inheritance: our class now inherits from ResponsesAgent instead of PythonModel.
+1. **Inheritance**: our class now inherits from `ResponsesAgent` instead of `PythonModel`.
 
-2. Types: the predict method takes a single parameter of type ResponsesAgentRequest and returns a ResponsesAgentResponse.
+2. **Types**: `predict()` accepts a single parameter of type `ResponsesAgentRequest` and returns a `ResponsesAgentResponse`.
 
-3. Translation: Before sending messages to the model, it calls self.prep_msgs_for_cc_llm() — a helper function that quietly handles a lot of complexity.
+3. **Translation**: before sending messages to the model, it calls `self.prep_msgs_for_cc_llm()` — a helper function that quietly handles a lot of complexity.
 
 In order to understand these differences and fully understand the code, we have to start at the request and response structures in place.
 
@@ -558,19 +547,16 @@ Here's a simplified example from the [MLflow Responses Agent docs](https://mlflo
 }
 ```
 
-These schemas define how ResponsesAgentRequest and ResponsesAgentResponse are structured.  Note that both can include additional parameters (like temperature or max_output_tokens), so it’s worth checking the [full API reference](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.types.html#mlflow.types.responses.ResponsesAgentRequest) for details.
+These schemas define how `ResponsesAgentRequest` and `ResponsesAgentResponse` are structured.  Note that both can include additional parameters (like temperature or max_output_tokens), so it’s worth checking the [full API reference](https://mlflow.org/docs/latest/api_reference/python_api/mlflow.types.html#mlflow.types.responses.ResponsesAgentRequest) for details.
 
 **The Role of `prep_msgs_for_cc_llm()`**
 
-OpenAI recently introduced a new Responses API, which replaces the older Chat Completions API used in many legacy examples.  Databricks’ ResponsesAgent class and its request/response types are built to align with this newer API.
+OpenAI recently introduced a new **Responses API** to improve upon their existing **Chat Completions API**. Databricks’ `ResponsesAgent` class and its request/response types are built to align with this newer API. However, the two APIs expect slightly different input formats.
 
-However — and this is where things get tricky — the two APIs expect slightly different input formats.
 - The Chat Completions API expects a list of messages.
 - The Responses API can accept a single string or a structured schema.
 
-This means that a request formatted for the Responses API won’t necessarily work with the Chat Completions API.
-
-That’s where prep_msgs_for_cc_llm() (short for prepare messages for chat completion LLM) comes in — it automatically converts the input into the correct structure.  You don’t have to define it yourself; it’s inherited from the ResponsesAgent base class.
+This means that a request formatted for the Responses API won’t necessarily work with the Chat Completions API. That’s where the `prep_msgs_for_cc_llm()` (short for prepare messages for chat completion LLM) comes in. It automatically converts input from the Responses format to the Chat Completions format. Fortunately, you don’t have to define it yourself; it’s inherited from the ResponsesAgent base class.
 
 **Why Not Use the Responses API Directly?**
 
@@ -589,11 +575,11 @@ response = client.responses.create(
 
 In theory, yes — but in practice, not yet within Databricks.
 
-Here’s why: the WorkspaceClient from the Databricks SDK provides a wrapped client that can access registered models inside your workspace, regardless of where they’re hosted. It’s convenient because you don’t need to configure environment variables for authentication.
+Here’s why: the `WorkspaceClient` from the Databricks SDK provides a wrapped client that can access registered models inside your workspace, regardless of where they’re hosted. It’s convenient because you don’t need to configure environment variables for authentication.
 
-My guess is that his SDK client hasn’t been fully updated to support the new Responses API. As a result, calling client.responses.create() currently raises an error — even with simple requests.
+My guess is that his SDK client hasn’t been fully updated to support the new Responses API. As a result, calling client.`responses.create()` currently raises an error — even with simple requests.
 
-This theory is further supported by the official Databricks notebooks: all of them use the ResponsesAgent class (which matches the Responses API schema) but still call the Chat Completions API using the `prep_msgs_for_cc_llm` function behind the scenes.
+This theory is further supported by the official Databricks notebooks: all of them use the `ResponsesAgent` class (which matches the Responses API schema) but still call the Chat Completions API using the `prep_msgs_for_cc_llm` function behind the scenes.
 
 **A Note on Alternative Clients**
 
@@ -605,9 +591,9 @@ from openai import OpenAI
 client = OpenAI()
 ```
 
-This approach works when calling external models that support the Responses API (note that some older models don’t).  However, it requires you to set environment variables for authentication.
+This approach works when calling external models that support the Responses API (note that some older models don’t).  However, it requires you to set environment variables for authentication. You also need access to an external model, something I didn't want to set up for this blog since Databricks has so many foundational ones available. 
 
-**Wrapping Up predict**
+**Wrapping Up `predict()`**
 
 After the messages are translated, the model is called as usual. The final step is returning a response that matches the ResponsesAgentResponse schema:
 
@@ -621,10 +607,9 @@ After the messages are translated, the model is called as usual. The final step 
         )
 ```
 
-Since the ResponsesAgent is designed for the Responses API (while our response object follows the Chat Completions schema), this constructor bridges the two formats.  The helper function create_text_output_item() creates a properly structured output entry — one of several output types available.  You can find the full list in the [Creating Agent Output section](https://mlflow.org/docs/latest/genai/serving/responses-agent/#creating-agent-output) of the ResponsesAgent documentation.
+This step ensures the returned object follows the Responses schema, even though the underlying model call still uses Chat Completions. The helper create_text_output_item() builds a properly structured response entry — one of several output types available. You can find the full list in the [ResponsesAgent documentation](https://mlflow.org/docs/latest/genai/serving/responses-agent/#creating-agent-output).
 
-Also don’t worry about losing details from the original response.
-Although we only return the message text, MLflow’s tracing automatically captures the full request and response context — including all the metadata — behind the scenes.
+Also don’t worry about losing details from the original response. Even though we return only the generated text, MLflow’s tracing automatically records the full request, response, and metadata — giving you complete visibility into every call.
 
 **What About Streaming?**
 

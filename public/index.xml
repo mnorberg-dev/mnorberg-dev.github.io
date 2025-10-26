@@ -14,12 +14,12 @@
     <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Databricks AI Gateway Guide</title>
+      <title>Tracing with Databricks Mosaic AI Gateway: A Practical Guide</title>
       <link>http://localhost:1313/posts/ai-gateway/</link>
       <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/ai-gateway/</guid>
-      <description>&lt;p&gt;Over the past month, I’ve been deep in the weeds experimenting with Mosaic AI Gateway in Databricks — configuring endpoints, debugging integrations, and figuring out how all the pieces fit together. After plenty of trial and error, I wanted to share what I’ve learned so other developers can get up and running faster.&lt;/p&gt;
-&lt;p&gt;If you’ve explored Databricks’ newer AI features, you’ve probably noticed that the documentation, while thorough, can feel circular and fragmented. You often need to jump between Databricks docs, MLflow, and even OpenAI or Meta references, depending on your base model. It’s easy to lose the thread when trying to connect everything into a working system.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Mosaic AI Gateway is Databricks’ system for managing and governing how your organization uses large language models (LLMs) and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads — making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;
+&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. Without it, visibility into model behavior can be limited. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Databricks Data Quality Expectations Guide</title>

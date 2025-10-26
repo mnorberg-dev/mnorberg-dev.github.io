@@ -31,6 +31,33 @@
     background-color: var(--code-block-bg) !important;
 }
 
+/* Responsive video wrapper for embedded/local videos */
+.video-wrapper{
+    position: relative;
+    display: block !important;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    margin: 1rem 0;
+    min-height: 160px; /* safety fallback if padding-bottom is overridden */
+}
+.video-wrapper iframe,
+.video-wrapper video{
+    position: absolute;
+    top:0;
+    left:0;
+    width:100% !important;
+    height:100% !important;
+    display: block !important;
+    border:0;
+    background: #000; /* ensure controls are visible on light backgrounds */
+}
+
+/* Visual debug aid: remove or reduce once confirmed working */
+.video-wrapper{
+    outline: 1px solid rgba(0,0,0,0.04);
+}
+
 :root {
     --code-block-bg: rgb(247, 248, 250) !important;
     --gap: 32px !important;
