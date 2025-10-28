@@ -251,8 +251,6 @@ Since the previous `%%writefile` cell only wrote your model code to disk rather 
 > 
 > If you omit the import, MLflow will create two separate experiments, one under `/Shared` (as intended) and another tied to your notebook. Only one will contain trace data, leading to confusion and cleanup headaches later.
 
-More importantly, the `import model` statement is critical. When Python imports the `model` module, it executes the setup lines mentioned earlier (`autolog`, `set_tracking_uri`, `set_experiment`, and `set_model`). This ensures that your experiment configuration runs **before** `mlflow.start_run()` is called, properly linking traces to the right experiment.
-
 You might wonder why those setup lines live inside `model.py` file instead of the registration cell. I tried moving them into the registration cell, before the `start_run()` call. Unfortunately, the tracing functionality did not work correctly anymore. It appears MLflow requires those configuration calls to exist in the same file that defines the model so it can correctly attach the tracing context. 
 
 If you’ve seen Databricks examples that omit the `import model` step, it’s usually because they test the model earlier in the notebook by importing it and calling its `predict()` method directly. In those cases, the setup lines run implicitly through statements like `from model import AGENT` or `from model import CustomPythonModel`. It's important to understand that if you skip that test cell, you’ll need to explicitly import your Python model as shown here — otherwise you’ll end up with duplicate experiments and inconsistent logs. It’s a small but important detail that saves a lot of confusion later on.
