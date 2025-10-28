@@ -394,7 +394,7 @@ That said, the example still illustrates the core concept well. I adapted it int
 
 For anyone curious, you can find Databricks’ original example notebook here: https://docs.databricks.com/aws/en/notebooks/source/mlflow3/simple-agent-mlflow3.html.
 
-### Implementing Responses Agent
+### Implementing a Responses Agent
 
 As before, we’ll start our notebook with an installation cell — but this time we’ll add the `databricks-agents` library alongside `databricks-openai`. Following the installation cell, we have the `%%writefile` cell which writes our code to the `model.py` file. 
 
