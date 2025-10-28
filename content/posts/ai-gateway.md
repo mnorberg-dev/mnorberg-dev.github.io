@@ -294,7 +294,7 @@ Once you’ve configured your settings, click **Create** and wait for deployment
 
 ![Endpoint Creation Screen](/ai-gateway/ai-gateway-screen.png)
 
-You can now test it with `curl` or your favorite REST clien (I like the REST Client extension in VS Code). After sending a few requests, open the **Experiments** page under your shared experiment path to see fresh traces appear. Here’s a quick demo showing the process:
+You can now test it with `curl` or your favorite REST client (I like the REST Client extension in VS Code). After sending a few requests, open the **Experiments** page under your shared experiment path to see fresh traces appear. Here’s a quick demo showing the process:
 
 <div class="video-wrapper">
     <video controls playsinline>
@@ -671,6 +671,8 @@ I won’t demonstrate the REST endpoint here — there’s no meaningful differe
         Your browser does not support the video tag.
     </video>
 </div>
+
+> **Note**: In the video, some cell outputs were intentionally hidden to conceal the URL where the agent is being deployed. You’ll have to take my word and the green check marks that everything worked as expected. I’d love to say I figured out how to properly redact those values in the video, but I’m not quite that tech-savvy (yet). Maybe that’ll be the topic of a future blog post.
 
 ## Conclusion
 
