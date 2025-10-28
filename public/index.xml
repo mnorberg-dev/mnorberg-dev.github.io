@@ -2,47 +2,47 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>https://mnorberg-dev.github.io/</link>
     <description>Recent content on Matthew Norberg&#39;s Data Engineering Blog</description>
     <image>
       <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-      <url>http://localhost:1313/favicon.ico</url>
-      <link>http://localhost:1313/favicon.ico</link>
+      <url>https://mnorberg-dev.github.io/favicon.ico</url>
+      <link>https://mnorberg-dev.github.io/favicon.ico</link>
     </image>
     <generator>Hugo -- 0.151.0</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://mnorberg-dev.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tracing with Databricks Mosaic AI Gateway: A Practical Guide</title>
-      <link>http://localhost:1313/posts/ai-gateway/</link>
+      <link>https://mnorberg-dev.github.io/posts/ai-gateway/</link>
       <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/ai-gateway/</guid>
-      <description>&lt;p&gt;Databricks Mosaic AI Gateway helps teams manage and govern how they use LLMs and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads — making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;
-&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. Without it, visibility into model behavior can be limited. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
+      <guid>https://mnorberg-dev.github.io/posts/ai-gateway/</guid>
+      <description>&lt;p&gt;Databricks Mosaic AI Gateway helps teams manage and govern how they use LLMs and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads, making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;
+&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Databricks Data Quality Expectations Guide</title>
-      <link>http://localhost:1313/posts/data-quality-expectations/</link>
+      <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/data-quality-expectations/</guid>
+      <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
       <description>&lt;p&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; This presentation was originally created when the technology was called &lt;strong&gt;Delta Live Tables (DLT)&lt;/strong&gt;. Databricks has since rebranded it as &lt;strong&gt;Lakeflow Declarative Pipelines&lt;/strong&gt;. While the name has changed, many of the strategies and techniques for applying data quality rules remain the same. For the latest documentation, see the &lt;a href=&#34;https://docs.databricks.com/aws/en/dlt/&#34;&gt;Databricks Lakeflow Declarative Pipelines docs&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Ensuring high data quality is critical for analytics, decision-making, and building reliable AI/ML models. Without it, organizations risk costly errors, unreliable insights, and ineffective models.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
-      <link>http://localhost:1313/posts/databricks-tab-label-tool/</link>
+      <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/databricks-tab-label-tool/</guid>
+      <guid>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</guid>
       <description>&lt;p&gt;Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.&lt;/p&gt;
 &lt;p&gt;Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://mnorberg-dev.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://mnorberg-dev.github.io/about/</guid>
       <description>&lt;p&gt;Hi! I’m Matthew Norberg, a Data Engineer with a passion for turning complex data challenges into clean, maintainable, and high-performing solutions. Over the past several years, I’ve had the opportunity to work with Databricks, Azure, and a variety of modern data tools, building platforms, pipelines, and systems that help organizations make better use of their data.&lt;/p&gt;
 &lt;h2 id=&#34;my-journey-in-data-engineering&#34;&gt;My Journey in Data Engineering&lt;/h2&gt;
 &lt;p&gt;I’ve always had a passion for programming and problem-solving, which first led me down the path of software engineering during my undergraduate studies. In graduate school, I started working more with data, earning a degree in Computer Science with a concentration in Data Science. This combination of software engineering and data expertise naturally led me to data engineering—a perfect middle ground between building robust systems and working with meaningful data. My background in CS and data science has prepared me well to tackle the challenges of modern data engineering.&lt;/p&gt;</description>
