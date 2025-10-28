@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Matthew Norberg&#39;s Data Engineering Blog</title>
     <link>https://mnorberg-dev.github.io/categories/</link>
     <description>Recent content in Categories on Matthew Norberg&#39;s Data Engineering Blog</description>
-    <image>
-      <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-      <url>https://mnorberg-dev.github.io/favicon.ico</url>
-      <link>https://mnorberg-dev.github.io/favicon.ico</link>
-    </image>
-    <generator>Hugo -- 0.151.0</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://mnorberg-dev.github.io/categories/index.xml" rel="self" type="application/rss+xml" />

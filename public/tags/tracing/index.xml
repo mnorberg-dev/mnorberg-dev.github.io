@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tracing on Matthew Norberg&#39;s Data Engineering Blog</title>
     <link>https://mnorberg-dev.github.io/tags/tracing/</link>
     <description>Recent content in Tracing on Matthew Norberg&#39;s Data Engineering Blog</description>
-    <image>
-      <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-      <url>https://mnorberg-dev.github.io/favicon.ico</url>
-      <link>https://mnorberg-dev.github.io/favicon.ico</link>
-    </image>
-    <generator>Hugo -- 0.151.0</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://mnorberg-dev.github.io/tags/tracing/index.xml" rel="self" type="application/rss+xml" />
@@ -18,8 +13,7 @@
       <link>https://mnorberg-dev.github.io/posts/ai-gateway/</link>
       <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
       <guid>https://mnorberg-dev.github.io/posts/ai-gateway/</guid>
-      <description>&lt;p&gt;Databricks Mosaic AI Gateway helps teams manage and govern how they use LLMs and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads, making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;
-&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Databricks Mosaic AI Gateway helps teams manage and govern how they use LLMs and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads, making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;&#xA;&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
