@@ -2,31 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Databricks on Matthew Norberg&#39;s Data Engineering Blog</title>
-    <link>https://mnorberg-dev.github.io/tags/databricks/</link>
+    <link>http://localhost:1313/tags/databricks/</link>
     <description>Recent content in Databricks on Matthew Norberg&#39;s Data Engineering Blog</description>
     <image>
       <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-      <url>https://mnorberg-dev.github.io/favicon.ico</url>
-      <link>https://mnorberg-dev.github.io/favicon.ico</link>
+      <url>http://localhost:1313/favicon.ico</url>
+      <link>http://localhost:1313/favicon.ico</link>
     </image>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- 0.151.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://mnorberg-dev.github.io/tags/databricks/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/databricks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tracing with Databricks Mosaic AI Gateway: A Practical Guide</title>
+      <link>http://localhost:1313/posts/ai-gateway/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/ai-gateway/</guid>
+      <description>&lt;p&gt;Databricks Mosaic AI Gateway helps teams manage and govern how they use LLMs and AI agents. Out of the box, it includes features like permission and rate limiting, payload logging, usage tracking, AI guardrails, fallbacks, and traffic splitting. These tools give teams tighter control over their AI workloads — making it easier to manage access, monitor performance, and keep costs in check.&lt;/p&gt;
+&lt;p&gt;Although Mosaic AI Gateway comes with many powerful features, one capability is still missing: MLflow Tracing. Tracing is like logging with context — it doesn’t just capture the request and response, but also the intermediate steps that reveal what happened inside your AI system when something goes wrong. Without it, visibility into model behavior can be limited. As you’ll see, MLflow traces can be an invaluable tool when debugging or optimizing an LLM workflow.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Databricks Data Quality Expectations Guide</title>
-      <link>https://mnorberg-dev.github.io/posts/data-quality-expectations/</link>
+      <link>http://localhost:1313/posts/data-quality-expectations/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/posts/data-quality-expectations/</guid>
+      <guid>http://localhost:1313/posts/data-quality-expectations/</guid>
       <description>&lt;p&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; This presentation was originally created when the technology was called &lt;strong&gt;Delta Live Tables (DLT)&lt;/strong&gt;. Databricks has since rebranded it as &lt;strong&gt;Lakeflow Declarative Pipelines&lt;/strong&gt;. While the name has changed, many of the strategies and techniques for applying data quality rules remain the same. For the latest documentation, see the &lt;a href=&#34;https://docs.databricks.com/aws/en/dlt/&#34;&gt;Databricks Lakeflow Declarative Pipelines docs&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;Ensuring high data quality is critical for analytics, decision-making, and building reliable AI/ML models. Without it, organizations risk costly errors, unreliable insights, and ineffective models.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
-      <link>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</link>
+      <link>http://localhost:1313/posts/databricks-tab-label-tool/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/posts/databricks-tab-label-tool/</guid>
+      <guid>http://localhost:1313/posts/databricks-tab-label-tool/</guid>
       <description>&lt;p&gt;Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.&lt;/p&gt;
 &lt;p&gt;Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.&lt;/p&gt;</description>
     </item>

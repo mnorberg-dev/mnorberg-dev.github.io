@@ -2,57 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Matthew Norberg&#39;s Data Engineering Blog</title>
-    <link>https://mnorberg-dev.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Matthew Norberg&#39;s Data Engineering Blog</description>
     <image>
       <title>Matthew Norberg&#39;s Data Engineering Blog</title>
-      <url>https://mnorberg-dev.github.io/favicon.ico</url>
-      <link>https://mnorberg-dev.github.io/favicon.ico</link>
+      <url>http://localhost:1313/favicon.ico</url>
+      <link>http://localhost:1313/favicon.ico</link>
     </image>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- 0.151.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://mnorberg-dev.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Data Quality</title>
-      <link>https://mnorberg-dev.github.io/tags/data-quality/</link>
-      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/data-quality/</guid>
+      <title>Ai</title>
+      <link>http://localhost:1313/tags/ai/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ai/</guid>
       <description></description>
     </item>
     <item>
       <title>Databricks</title>
-      <link>https://mnorberg-dev.github.io/tags/databricks/</link>
+      <link>http://localhost:1313/tags/databricks/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/databricks/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tracing</title>
+      <link>http://localhost:1313/tags/tracing/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/tracing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Quality</title>
+      <link>http://localhost:1313/tags/data-quality/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/databricks/</guid>
+      <guid>http://localhost:1313/tags/data-quality/</guid>
       <description></description>
     </item>
     <item>
       <title>Expectations</title>
-      <link>https://mnorberg-dev.github.io/tags/expectations/</link>
+      <link>http://localhost:1313/tags/expectations/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/expectations/</guid>
+      <guid>http://localhost:1313/tags/expectations/</guid>
       <description></description>
     </item>
     <item>
       <title>Productivity</title>
-      <link>https://mnorberg-dev.github.io/tags/productivity/</link>
+      <link>http://localhost:1313/tags/productivity/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/productivity/</guid>
+      <guid>http://localhost:1313/tags/productivity/</guid>
       <description></description>
     </item>
     <item>
       <title>Tampermonkey</title>
-      <link>https://mnorberg-dev.github.io/tags/tampermonkey/</link>
+      <link>http://localhost:1313/tags/tampermonkey/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/tampermonkey/</guid>
+      <guid>http://localhost:1313/tags/tampermonkey/</guid>
       <description></description>
     </item>
     <item>
       <title>Tools</title>
-      <link>https://mnorberg-dev.github.io/tags/tools/</link>
+      <link>http://localhost:1313/tags/tools/</link>
       <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>https://mnorberg-dev.github.io/tags/tools/</guid>
+      <guid>http://localhost:1313/tags/tools/</guid>
       <description></description>
     </item>
   </channel>
