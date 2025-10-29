@@ -32,34 +32,34 @@ In short, this model gives you the best of both worlds: full Gateway functionali
 
 If you’re here just for the implementation, you can skip to the section on [ResponsesAgent](#attempt-3-responses-agent). But if you’re curious how I arrived at this solution, stick around, as the next sections cover the other approaches I tried, the dead ends I hit, and how they led me to this path.
 
-## Attempt 1: Foundational Models
+## Attempt 1: Foundation Models
 
 Like anyone learning a new system, I started at the beginning, the [Mosaic AI Gateway Introduction](https://learn.microsoft.com/en-us/azure/databricks/ai-gateway/) page. It includes a table showing which features each model type supports:
 
 ![Databricks Table](/ai-gateway/ai-gateway-table-edited.png)
 
-At first glance, **external model endpoints** seemed the most capable. However, for this walkthrough, I focused on **foundational models**. They’re easier for readers to follow since they don’t require setting up authentication or external service access. Aside from that, foundational and external models behave almost identically in configuration, serving, and Gateway features.
+At first glance, **external model endpoints** seemed the most capable. However, for this walkthrough, I focused on **foundation models**. They’re easier for readers to follow since they don’t require setting up authentication or external service access. Aside from that, foundation and external models behave almost identically in configuration, serving, and Gateway features.
 
-As a newcomer, I assumed I could host a foundational model and get tracing automatically. My first goal was to spin up an endpoint to see if this was possible.
+As a newcomer, I assumed I could host a foundation model and get tracing automatically. My first goal was to spin up an endpoint to see if this was possible.
 
 ### Creating a Foundational Model Endpoint
 
 When creating infrastructure in Databricks, there are usually multiple paths to the same result — Terraform, Python, SQL, or the UI. For investigative work like this, I prefer the UI. It makes it easy to explore configurations and verify behavior visually, even though in production you’d typically automate the process.
 
-To create an endpoint, go to **Serving → Create Serving Endpoint**, then choose **Foundational Models** in the *Served Entities* section. This opens the endpoint creation menu shown below. Working through it from top to bottom, first give your endpoint a name, then configure the *Served Entities* section.
+To create an endpoint, go to **Serving → Create Serving Endpoint**, then choose **Foundation Models** in the *Served Entities* section. This opens the endpoint creation menu shown below. Working through it from top to bottom, first give your endpoint a name, then configure the *Served Entities* section.
 
 ![Endpoint Options](/ai-gateway/endpoint-menu.png)
 
-Click **Select an Entity**, choose **Foundational Models** from the radio list, then click **Select a foundational model** in the box. You'll see a new pop-up menu listing both foundational and external models.
+Click **Select an Entity**, choose **Foundation Models** from the radio list, then click **Select a foundation model** in the box. You'll see a new pop-up menu listing both foundation and external models.
 
 ![Entity Menu Creation Guide](/ai-gateway/endpoint-menu-guide.png)
 
-This can be confusing at first because the pop-up menu is labeled Foundational Models, yet it also lists external providers. I’m calling this out for two reasons:
+This can be confusing at first because the pop-up menu is labeled Foundation Models, yet it also lists external providers. I’m calling this out for two reasons:
 
 1. If you'd like to configure an **external model**, this is where you’ll configure authentication and provider settings. Take note of the endpoint name, as you’ll reference it later when setting up your ResponsesAgent.
 2. It highlights how similar these two endpoint types really are. Authentication is the only major difference; otherwise, the setup flow is nearly identical.
 
-Once you’ve chosen a foundational model (in this case, I selected **GPT OSS 20B** for the foundational model endpoint demo, though I use a different model in the code examples later), you’ll see the configuration screen below.
+Once you’ve chosen a foundation model (in this case, I selected **GPT OSS 20B** for the foundation model endpoint demo, though I use a different model in the code examples later), you’ll see the configuration screen below.
 
 ![Model UI Options](/ai-gateway/model-ui-options.png)
 
@@ -82,11 +82,11 @@ I was skeptical of the ResponsesAgents at first. Initially, I thought *Why would
 
 ## Attempt 2: Custom Python Model
 
-If foundational models couldn’t generate traces directly, then I needed something that could. The solution was a wrapper model, a lightweight layer that receives a request, forwards it to the underlying model, and returns the response unchanged. The difference is that the wrapper can be configured to add tracing to each request by default.
+If foundation models couldn’t generate traces directly, then I needed something that could. The solution was a wrapper model, a lightweight layer that receives a request, forwards it to the underlying model, and returns the response unchanged. The difference is that the wrapper can be configured to add tracing to each request by default.
 
 Here's the plan:
 
-1. Build a small model class that wraps around our foundational model.
+1. Build a small model class that wraps around our foundation model.
 2. Configure the class so that tracing is enabled by default.
 3. Register the model in Unity Catalog.
 4. Deploy it as a Serving Endpoint, with full AI Gateway functionality and tracing.
@@ -98,7 +98,7 @@ This approach gives you the same Gateway functionality as before, but with compl
 Once I knew I needed a wrapper, the question became: *how should I define it in MLflow*? There were two clear paths:
 
 - **Custom Python Model** — Define your own the `PythonModel` class and implement your own prediction functions.
-- **Responses Agent Model** — Use the `ResponsesAgent` class to create a agent model that calls your foundational model under the hood.
+- **Responses Agent Model** — Use the `ResponsesAgent` class to create a agent model that calls your foundation model under the hood.
 
 As I mentioned before, I had my doubts about ResponsesAgents so I decided to start with the **Custom Python Model**. My goal wasn’t to build a full agent-based system, I just wanted to trace model calls. That made the **Custom Python Model** path seem like the most straightforward solution.
 
@@ -108,7 +108,7 @@ So I built the Python model — and, as you can probably guess, it worked, but n
 
 ### Implementing a Custom Python Model
 
-To create a custom model in MLflow, you define a class that inherits from `mlflow.pyfunc.PythonModel`. The key method is `predict()`, which receives input and returns output. In our case, it simply forwards each request to a foundational model and returns the response, acting as a transparent wrapper.
+To create a custom model in MLflow, you define a class that inherits from `mlflow.pyfunc.PythonModel`. The key method is `predict()`, which receives input and returns output. In our case, it simply forwards each request to a foundation model and returns the response, acting as a transparent wrapper.
 
 If you’d like to dig deeper, these are the main references I used:
 
@@ -179,9 +179,9 @@ mlflow.models.set_model(ModelWrapper())
 
 The `%%writefile` command writes this cell’s contents to the `model.py` file. This is required because the model registration step needs to read in the model from a Python file. We could have placed this code in the file manually and omited this cell from the notebook. However, the `%%writefile` command allows us to keep all the code self-contained within a single notebook.
 
-The `ModelWrapper` class inherits from `PythonModel`, the standard interface for custom MLflow models. Inside the constructor, we initialize a `WorkspaceClient`, which handles communication with existing serving endpoints. This client lets the wrapper forward requests to either a foundational model or an external endpoint already registered in Databricks.
+The `ModelWrapper` class inherits from `PythonModel`, the standard interface for custom MLflow models. Inside the constructor, we initialize a `WorkspaceClient`, which handles communication with existing serving endpoints. This client lets the wrapper forward requests to either a foundation model or an external endpoint already registered in Databricks.
 
-At this point, if you’d like to connect to an **external model** instead of a foundational one, follow these steps below:
+At this point, if you’d like to connect to an **external model** instead of a foundation model, follow these steps below:
 
 1. Follow the steps in Attempt 1 to create a serving endpoint for your external model (e.g., `external-model-endpoint`).
 2. Replace the `model` parameter in the `chat.completions.create()` call with the name of your external model.
@@ -578,7 +578,7 @@ from openai import OpenAI
 client = OpenAI()
 ```
 
-This approach works for external models that support the Responses API (though some older models don’t). However, it requires manual environment variable setup for authentication and access to an external model. For this guide, I chose to stay within Databricks’ built-in foundational models to keep things simpler.
+This approach works for external models that support the Responses API (though some older models don’t). However, it requires manual environment variable setup for authentication and access to an external model. For this guide, I chose to stay within Databricks’ built-in foundation models to keep things simpler.
 
 **Wrapping Up `predict()`**
 
@@ -678,7 +678,7 @@ I won’t demonstrate the REST endpoint here — there’s no meaningful differe
 
 It was a long journey to arrive at the **Responses Agent** approach, but hopefully one that made the reasoning clear.
 
-If you’ve followed along from the beginning, you’ve seen how a newcomer might start with foundational models, experiment with custom Python models, and eventually discover that Responses Agents offer the most reliable, traceable path forward.
+If you’ve followed along from the beginning, you’ve seen how a newcomer might start with foundation models, experiment with custom Python models, and eventually discover that Responses Agents offer the most reliable, traceable path forward.
 
 If you take away just a few things, let them be these:
 
