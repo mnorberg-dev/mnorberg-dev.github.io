@@ -2,8 +2,8 @@
 # Refer to the theme docs for more details about each of these parameters.
 # https://blowfish.page/docs/getting-started/
 
-theme = "blowfish" # UNCOMMENT THIS LINE
-baseURL = "https://your_domain.com/"
+theme = "blowfish"
+baseURL = "https://mnorberg-dev.github.io/"
 defaultContentLanguage = "en"
 
 enableRobotsTXT = true
