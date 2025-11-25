@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Expectations on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>http://localhost:1313/tags/expectations/</link>
+    <description>Recent content in Expectations on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
+    <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
+    <copyright>© 2025 Matthew Norberg</copyright>
+    <lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/expectations/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Databricks Data Quality Expectations Guide</title>
+      <link>http://localhost:1313/posts/data-quality-expectations/</link>
+      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/data-quality-expectations/</guid>
+      <description>Practical walkthrough for implementing data quality expectations in Databricks Delta Live Tables (Lakeflow Declarative Pipelines). Covers a four-step process to profile data, formalize and translate rules, quarantine noncompliant records, and balance strict versus permissive checks, with lessons learned and links to the talk, slides, and demo code.</description>
+      
+    </item>
+    
+  </channel>
+</rss>

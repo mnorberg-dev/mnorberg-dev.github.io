@@ -1,0 +1,23 @@
+disabled = false
+languageCode = "en"
+languageName = "English"
+weight = 1
+title = "Matthew Norberg's Data Engineering Blog"
+
+[params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2 January 2006"
+
+[params.author]
+  name = "Matthew Norberg"
+  email = "mattnorberg4@gmail.com"
+  image = "img/cover-image.jpeg"
+  imageQuality = 96
+  headline = "Exploring modern data engineering, technology, and lessons learned along the way"
+  bio = "Data engineer building AI applications, reliable pipelines, and practical tools."
+  links = [
+    { github = "https://github.com/mnorberg-dev" },
+    { linkedin = "https://www.linkedin.com/in/mnorberg24/" },
+  ]

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
+    <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
+    <copyright>© 2025 Matthew Norberg</copyright>
+    <lastBuildDate>Sun, 05 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Tracing with Databricks Mosaic AI Gateway: A Practical Guide</title>
+      <link>http://localhost:1313/posts/ai-gateway/</link>
+      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/ai-gateway/</guid>
+      <description>Step-by-step guide to enabling MLflow tracing with Databricks Mosaic AI Gateway. Details the recommended ResponsesAgent approach, examines alternative methods (foundation/external endpoints and custom Python models), and highlights the pitfalls that make the agent path preferable.</description>
+      
+    </item>
+    
+    <item>
+      <title>Databricks Data Quality Expectations Guide</title>
+      <link>http://localhost:1313/posts/data-quality-expectations/</link>
+      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/data-quality-expectations/</guid>
+      <description>Practical walkthrough for implementing data quality expectations in Databricks Delta Live Tables (Lakeflow Declarative Pipelines). Covers a four-step process to profile data, formalize and translate rules, quarantine noncompliant records, and balance strict versus permissive checks, with lessons learned and links to the talk, slides, and demo code.</description>
+      
+    </item>
+    
+    <item>
+      <title>The Databricks Tool You Didn&#39;t Know You Needed</title>
+      <link>http://localhost:1313/posts/databricks-tab-label-tool/</link>
+      <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/databricks-tab-label-tool/</guid>
+      <description>Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.</description>
+      
+    </item>
+    
+  </channel>
+</rss>
