@@ -9,156 +9,73 @@
 
 /* ---- Custom Chroma themes ---- */
 /* Light (GitHub) */
-.prose .chroma { color: #1f2328; background-color: #fff; }
-.prose .chroma .err { color: #f6f8fa; background-color: #82071e; }
-.prose .chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
-.prose .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
-.prose .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
-.prose .chroma .hl { background-color: #e5e5e5; }
-.prose .chroma .lnt,
-.prose .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: #7f7f7f; }
-.prose .chroma .line { display: flex; }
-.prose .chroma .k,
-.prose .chroma .kc,
-.prose .chroma .kd,
-.prose .chroma .kn,
-.prose .chroma .kp,
-.prose .chroma .kr,
-.prose .chroma .kt { color: #cf222e; }
-.prose .chroma .na,
-.prose .chroma .nc { color: #1f2328; }
-.prose .chroma .no,
-.prose .chroma .nd { color: #0550ae; }
-.prose .chroma .ni { color: #6639ba; }
-.prose .chroma .nl { color: #900; font-weight: bold; }
-.prose .chroma .nn { color: #24292e; }
-.prose .chroma .nx { color: #1f2328; }
-.prose .chroma .nt { color: #0550ae; }
-.prose .chroma .nb { color: #6639ba; }
-.prose .chroma .bp { color: #6a737d; }
-.prose .chroma .nv,
-.prose .chroma .vc,
-.prose .chroma .vg,
-.prose .chroma .vi,
-.prose .chroma .vm { color: #953800; }
-.prose .chroma .nf,
-.prose .chroma .fm { color: #6639ba; }
-.prose .chroma .s,
-.prose .chroma .sa,
-.prose .chroma .sb,
-.prose .chroma .sc,
-.prose .chroma .dl,
-.prose .chroma .sd,
-.prose .chroma .s2,
-.prose .chroma .se,
-.prose .chroma .sh,
-.prose .chroma .si,
-.prose .chroma .sx,
-.prose .chroma .s1 { color: #0a3069; }
-.prose .chroma .ss { color: #032f62; }
-.prose .chroma .m,
-.prose .chroma .mb,
-.prose .chroma .mf,
-.prose .chroma .mh,
-.prose .chroma .mi,
-.prose .chroma .il,
-.prose .chroma .mo { color: #0550ae; }
-.prose .chroma .o,
-.prose .chroma .ow { color: #0550ae; }
-.prose .chroma .p { color: #1f2328; }
-.prose .chroma .c,
-.prose .chroma .ch,
-.prose .chroma .cm,
-.prose .chroma .c1,
-.prose .chroma .cs,
-.prose .chroma .cp,
-.prose .chroma .cpf { color: #57606a; }
-.prose .chroma .gd { color: #82071e; background-color: #ffebe9; }
-.prose .chroma .ge { color: #1f2328; }
-.prose .chroma .gi { color: #116329; background-color: #dafbe1; }
-.prose .chroma .go { color: #1f2328; }
-.prose .chroma .gl { text-decoration: underline; }
-.prose .chroma .w { color: #fff; }
-
-/* Fix dark Chroma contrast (Dracula) */
-.dark .prose .chroma {
-  color: #f8f8f2;
-  background-color: #282a36 !important; /* out-prioritize Blowfish neutral bg */
-}
-
-.dark .prose .chroma .ln,
-.dark .prose .chroma .lnt {
-  color: #7f7f7f;
-}
-
-.dark .prose .chroma .line { display: flex; }
-
-/* Default readable text for anything not explicitly colored */
-.dark .prose .chroma .p,
-.dark .prose .chroma .n,
-.dark .prose .chroma .na,
-.dark .prose .chroma .nb,
-.dark .prose .chroma .bp,
-.dark .prose .chroma .nx,
-.dark .prose .chroma .py,
-.dark .prose .chroma .nt {
-  color: #f8f8f2;
-}
-
-/* Keep your Dracula accents */
-.dark .prose .chroma .k,
-.dark .prose .chroma .kc,
-.dark .prose .chroma .kn,
-.dark .prose .chroma .kp,
-.dark .prose .chroma .kr { color: #ff79c6; }
-.dark .prose .chroma .kd { color: #8be9fd; font-style: italic; }
-.dark .prose .chroma .kt { color: #8be9fd; }
-.dark .prose .chroma .na,
-.dark .prose .chroma .nc { color: #50fa7b; }
-.dark .prose .chroma .nl { color: #8be9fd; font-style: italic; }
-.dark .prose .chroma .nt { color: #ff79c6; }
-.dark .prose .chroma .nb { color: #8be9fd; font-style: italic; }
-.dark .prose .chroma .bp { font-style: italic; }
-.dark .prose .chroma .nv,
-.dark .prose .chroma .vc,
-.dark .prose .chroma .vg,
-.dark .prose .chroma .vi,
-.dark .prose .chroma .vm { color: #8be9fd; font-style: italic; }
-.dark .prose .chroma .nf,
-.dark .prose .chroma .fm { color: #50fa7b; }
-.dark .prose .chroma .s,
-.dark .prose .chroma .sa,
-.dark .prose .chroma .sb,
-.dark .prose .chroma .sc,
-.dark .prose .chroma .dl,
-.dark .prose .chroma .sd,
-.dark .prose .chroma .s2,
-.dark .prose .chroma .se,
-.dark .prose .chroma .sh,
-.dark .prose .chroma .si,
-.dark .prose .chroma .sx,
-.dark .prose .chroma .s1 { color: #f1fa8c; }
-.dark .prose .chroma .ss { color: #f1fa8c; }
-.dark .prose .chroma .m,
-.dark .prose .chroma .mb,
-.dark .prose .chroma .mf,
-.dark .prose .chroma .mh,
-.dark .prose .chroma .mi,
-.dark .prose .chroma .il,
-.dark .prose .chroma .mo { color: #bd93f9; }
-.dark .prose .chroma .o,
-.dark .prose .chroma .ow { color: #ff79c6; }
-.dark .prose .chroma .c,
-.dark .prose .chroma .ch,
-.dark .prose .chroma .cm,
-.dark .prose .chroma .c1,
-.dark .prose .chroma .cs { color: #6272a4; }
-.dark .prose .chroma .cp,
-.dark .prose .chroma .cpf { color: #ff79c6; }
-.dark .prose .chroma .gd { color: #f55; }
-.dark .prose .chroma .ge { text-decoration: underline; }
-.dark .prose .chroma .gh,
-.dark .prose .chroma .gu { font-weight: bold; }
-.dark .prose .chroma .gi { color: #50fa7b; font-weight: bold; }
-.dark .prose .chroma .go { color: #44475a; }
-.dark .prose .chroma .gl { text-decoration: underline; }
+html:not(.dark) .prose .chroma { color: #1f2328; background-color: #fff; }
+html:not(.dark) .prose .chroma .err { color: #f6f8fa; background-color: #82071e; }
+html:not(.dark) .prose .chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
+html:not(.dark) .prose .chroma .lntd { vertical-align: top; padding: 0; margin: 0; border: 0; }
+html:not(.dark) .prose .chroma .lntable { border-spacing: 0; padding: 0; margin: 0; border: 0; }
+html:not(.dark) .prose .chroma .hl { background-color: #e5e5e5; }
+html:not(.dark) .prose .chroma .lnt,
+html:not(.dark) .prose .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: #7f7f7f; }
+html:not(.dark) .prose .chroma .line { display: flex; }
+html:not(.dark) .prose .chroma .k,
+html:not(.dark) .prose .chroma .kc,
+html:not(.dark) .prose .chroma .kd,
+html:not(.dark) .prose .chroma .kn,
+html:not(.dark) .prose .chroma .kp,
+html:not(.dark) .prose .chroma .kr,
+html:not(.dark) .prose .chroma .kt { color: #cf222e; }
+html:not(.dark) .prose .chroma .na,
+html:not(.dark) .prose .chroma .nc { color: #1f2328; }
+html:not(.dark) .prose .chroma .no,
+html:not(.dark) .prose .chroma .nd { color: #0550ae; }
+html:not(.dark) .prose .chroma .ni { color: #6639ba; }
+html:not(.dark) .prose .chroma .nl { color: #900; font-weight: bold; }
+html:not(.dark) .prose .chroma .nn { color: #24292e; }
+html:not(.dark) .prose .chroma .nx { color: #1f2328; }
+html:not(.dark) .prose .chroma .nt { color: #0550ae; }
+html:not(.dark) .prose .chroma .nb { color: #6639ba; }
+html:not(.dark) .prose .chroma .bp { color: #6a737d; }
+html:not(.dark) .prose .chroma .nv,
+html:not(.dark) .prose .chroma .vc,
+html:not(.dark) .prose .chroma .vg,
+html:not(.dark) .prose .chroma .vi,
+html:not(.dark) .prose .chroma .vm { color: #953800; }
+html:not(.dark) .prose .chroma .nf,
+html:not(.dark) .prose .chroma .fm { color: #6639ba; }
+html:not(.dark) .prose .chroma .s,
+html:not(.dark) .prose .chroma .sa,
+html:not(.dark) .prose .chroma .sb,
+html:not(.dark) .prose .chroma .sc,
+html:not(.dark) .prose .chroma .dl,
+html:not(.dark) .prose .chroma .sd,
+html:not(.dark) .prose .chroma .s2,
+html:not(.dark) .prose .chroma .se,
+html:not(.dark) .prose .chroma .sh,
+html:not(.dark) .prose .chroma .si,
+html:not(.dark) .prose .chroma .sx,
+html:not(.dark) .prose .chroma .s1 { color: #0a3069; }
+html:not(.dark) .prose .chroma .ss { color: #032f62; }
+html:not(.dark) .prose .chroma .m,
+html:not(.dark) .prose .chroma .mb,
+html:not(.dark) .prose .chroma .mf,
+html:not(.dark) .prose .chroma .mh,
+html:not(.dark) .prose .chroma .mi,
+html:not(.dark) .prose .chroma .il,
+html:not(.dark) .prose .chroma .mo { color: #0550ae; }
+html:not(.dark) .prose .chroma .o,
+html:not(.dark) .prose .chroma .ow { color: #0550ae; }
+html:not(.dark) .prose .chroma .p { color: #1f2328; }
+html:not(.dark) .prose .chroma .c,
+html:not(.dark) .prose .chroma .ch,
+html:not(.dark) .prose .chroma .cm,
+html:not(.dark) .prose .chroma .c1,
+html:not(.dark) .prose .chroma .cs,
+html:not(.dark) .prose .chroma .cp,
+html:not(.dark) .prose .chroma .cpf { color: #57606a; }
+html:not(.dark) .prose .chroma .gd { color: #82071e; background-color: #ffebe9; }
+html:not(.dark) .prose .chroma .ge { color: #1f2328; }
+html:not(.dark) .prose .chroma .gi { color: #116329; background-color: #dafbe1; }
+html:not(.dark) .prose .chroma .go { color: #1f2328; }
+html:not(.dark) .prose .chroma .gl { text-decoration: underline; }
+html:not(.dark) .prose .chroma .w { color: #fff; }
