@@ -15,20 +15,20 @@
 
   
   
-    <title>The Databricks Tool You Didn&#39;t Know You Needed &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
-    <meta name="title" content="The Databricks Tool You Didn&#39;t Know You Needed &middot; Matthew Norberg&#39;s Data Engineering Blog">
+    <title>Creating AI Processing Pipelines: A Data-First Approach &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
+    <meta name="title" content="Creating AI Processing Pipelines: A Data-First Approach &middot; Matthew Norberg&#39;s Data Engineering Blog">
   
 
   
   
-    <meta name="description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+    <meta name="description" content="Write summary">
   
   
-    <meta name="keywords" content="databricks,tampermonkey,tools,productivity,">
+    <meta name="keywords" content="databricks,ai,inference-tables,">
   
   
   
-  <link rel="canonical" href="http://localhost:1313/posts/databricks-tab-label-tool/">
+  <link rel="canonical" href="http://localhost:1313/posts/inference-table-processing-tests/">
   
 
   
@@ -52,24 +52,23 @@
   
 
   
-  <meta property="og:url" content="http://localhost:1313/posts/databricks-tab-label-tool/">
+  <meta property="og:url" content="http://localhost:1313/posts/inference-table-processing-tests/">
   <meta property="og:site_name" content="Matthew Norberg&#39;s Data Engineering Blog">
-  <meta property="og:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-  <meta property="og:description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+  <meta property="og:title" content="Creating AI Processing Pipelines: A Data-First Approach">
+  <meta property="og:description" content="Write summary">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-09-16T00:00:00+00:00">
-    <meta property="article:modified_time" content="2025-09-16T00:00:00+00:00">
+    <meta property="article:published_time" content="2025-12-14T00:00:00+00:00">
+    <meta property="article:modified_time" content="2025-12-14T00:00:00+00:00">
     <meta property="article:tag" content="Databricks">
-    <meta property="article:tag" content="Tampermonkey">
-    <meta property="article:tag" content="Tools">
-    <meta property="article:tag" content="Productivity">
+    <meta property="article:tag" content="Ai">
+    <meta property="article:tag" content="Inference-Tables">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-  <meta name="twitter:description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+  <meta name="twitter:title" content="Creating AI Processing Pipelines: A Data-First Approach">
+  <meta name="twitter:description" content="Write summary">
 
   
   
@@ -218,26 +217,26 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "articleSection": "Posts",
-    "name": "The Databricks Tool You Didn\u0027t Know You Needed",
-    "headline": "The Databricks Tool You Didn\u0027t Know You Needed",
+    "name": "Creating AI Processing Pipelines: A Data-First Approach",
+    "headline": "Creating AI Processing Pipelines: A Data-First Approach",
     
-    "abstract": "Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev\/QA\/prod.",
+    "abstract": "Write summary",
     "inLanguage": "en",
-    "url" : "http:\/\/localhost:1313\/posts\/databricks-tab-label-tool\/",
+    "url" : "http:\/\/localhost:1313\/posts\/inference-table-processing-tests\/",
     "author" : {
       "@type": "Person",
       "name": "Matthew Norberg"
     },
     "copyrightYear": "2025",
-    "dateCreated": "2025-09-16T00:00:00\u002b00:00",
-    "datePublished": "2025-09-16T00:00:00\u002b00:00",
+    "dateCreated": "2025-12-14T00:00:00\u002b00:00",
+    "datePublished": "2025-12-14T00:00:00\u002b00:00",
     
-    "dateModified": "2025-09-16T00:00:00\u002b00:00",
+    "dateModified": "2025-12-14T00:00:00\u002b00:00",
     
-    "keywords": ["databricks","tampermonkey","tools","productivity"],
+    "keywords": ["databricks","ai","inference-tables"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1141"
+    "wordCount": "1688"
   }]
   </script>
 
@@ -526,7 +525,7 @@
     <header id="single_header" class="mt-5 max-w-prose">
       
       <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-        The Databricks Tool You Didn't Know You Needed
+        Creating AI Processing Pipelines: A Data-First Approach
       </h1>
       <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
         
@@ -574,7 +573,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-09-16T00:00:00&#43;00:00">16 September 2025</time>
+      <time datetime="2025-12-14T00:00:00&#43;00:00">14 December 2025</time>
     
 
     
@@ -706,21 +705,18 @@
     class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#the-problem-too-many-tabs-too-few-clues">The Problem: Too Many Tabs, Too Few Clues</a></li>
-    <li><a href="#but-wait-isnt-there-a-color-trick">But Wait, Isn’t There a Color Trick?</a></li>
-    <li><a href="#the-solution-tampermonkey-to-the-rescue">The Solution: Tampermonkey to the Rescue</a></li>
-    <li><a href="#how-to-set-it-up">How to Set It Up</a>
+    <li><a href="#the-inference-table-valuable-but-not-analysis-ready">The Inference Table: Valuable, but Not Analysis-Ready</a></li>
+    <li><a href="#the-real-goal-a-gold-quality-inference-dataset">The Real Goal: A Gold-Quality Inference Dataset</a></li>
+    <li><a href="#what-the-documentation-doesnt-emphasize">What the Documentation Doesn&rsquo;t Emphasize</a>
       <ul>
-        <li><a href="#1-install-tampermonkey">1. Install Tampermonkey</a></li>
-        <li><a href="#2-create-a-new-script">2. Create a New Script</a></li>
-        <li><a href="#3-add-the-script">3. Add the Script</a></li>
-        <li><a href="#4-configure-environment-domains">4. Configure Environment Domains</a></li>
-        <li><a href="#5-save-and-enable-the-script">5. Save and Enable the Script</a></li>
-        <li><a href="#6-enable-user-scripts-in-chrome">6. Enable User Scripts in Chrome</a></li>
-        <li><a href="#7-verify-installation">7. Verify installation</a></li>
+        <li><a href="#how-agent-error-handling-changes-your-data">How Agent Error Handling Changes Your Data</a></li>
       </ul>
     </li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
+    <li><a href="#testing-for-data-variability-not-model-correctness">Testing for Data Variability, Not Model Correctness</a></li>
+    <li><a href="#thinking-in-outcomes-not-prompts">Thinking in Outcomes, Not Prompts</a></li>
+    <li><a href="#the-five-inference-cases-you-should-intentionally-generate">The Five Inference Cases You Should Intentionally Generate</a></li>
+    <li><a href="#why-this-matters-for-your-pipelines">Why This Matters for Your Pipelines</a></li>
+    <li><a href="#what-this-post-is-and-is-not">What This Post Is (and Is Not)</a></li>
     <li><a href="#final-thoughts">Final Thoughts</a></li>
   </ul>
 </nav>
@@ -735,21 +731,18 @@
     class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#the-problem-too-many-tabs-too-few-clues">The Problem: Too Many Tabs, Too Few Clues</a></li>
-    <li><a href="#but-wait-isnt-there-a-color-trick">But Wait, Isn’t There a Color Trick?</a></li>
-    <li><a href="#the-solution-tampermonkey-to-the-rescue">The Solution: Tampermonkey to the Rescue</a></li>
-    <li><a href="#how-to-set-it-up">How to Set It Up</a>
+    <li><a href="#the-inference-table-valuable-but-not-analysis-ready">The Inference Table: Valuable, but Not Analysis-Ready</a></li>
+    <li><a href="#the-real-goal-a-gold-quality-inference-dataset">The Real Goal: A Gold-Quality Inference Dataset</a></li>
+    <li><a href="#what-the-documentation-doesnt-emphasize">What the Documentation Doesn&rsquo;t Emphasize</a>
       <ul>
-        <li><a href="#1-install-tampermonkey">1. Install Tampermonkey</a></li>
-        <li><a href="#2-create-a-new-script">2. Create a New Script</a></li>
-        <li><a href="#3-add-the-script">3. Add the Script</a></li>
-        <li><a href="#4-configure-environment-domains">4. Configure Environment Domains</a></li>
-        <li><a href="#5-save-and-enable-the-script">5. Save and Enable the Script</a></li>
-        <li><a href="#6-enable-user-scripts-in-chrome">6. Enable User Scripts in Chrome</a></li>
-        <li><a href="#7-verify-installation">7. Verify installation</a></li>
+        <li><a href="#how-agent-error-handling-changes-your-data">How Agent Error Handling Changes Your Data</a></li>
       </ul>
     </li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
+    <li><a href="#testing-for-data-variability-not-model-correctness">Testing for Data Variability, Not Model Correctness</a></li>
+    <li><a href="#thinking-in-outcomes-not-prompts">Thinking in Outcomes, Not Prompts</a></li>
+    <li><a href="#the-five-inference-cases-you-should-intentionally-generate">The Five Inference Cases You Should Intentionally Generate</a></li>
+    <li><a href="#why-this-matters-for-your-pipelines">Why This Matters for Your Pipelines</a></li>
+    <li><a href="#what-this-post-is-and-is-not">What This Post Is (and Is Not)</a></li>
     <li><a href="#final-thoughts">Final Thoughts</a></li>
   </ul>
 </nav>
@@ -868,328 +861,186 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          <p>Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.</p>
-<p>Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.</p>
-<p>👉 If you’d rather skip ahead and get straight to the solution, I’ve published the script (with setup instructions) in this <a
-  href="https://github.com/mnorberg-dev/databricks-tools"
-    target="_blank"
-  >GitHub repo</a>.</p>
+          <p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks calls, an inference table.</p>
+<p>At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.</p>
+<p>In practice, though, having the data and being able to use the data are two very different things.</p>
+<p>This post is about how to think about AI processing pipelines from a data-first perspective, and why the most important work happens before you write a single line of pipeline code.</p>
 
-<h2 class="relative group">The Problem: Too Many Tabs, Too Few Clues
-    <div id="the-problem-too-many-tabs-too-few-clues" class="anchor"></div>
+<h2 class="relative group">The Inference Table: Valuable, but Not Analysis-Ready
+    <div id="the-inference-table-valuable-but-not-analysis-ready" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-problem-too-many-tabs-too-few-clues" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-inference-table-valuable-but-not-analysis-ready" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Many organizations using Databricks have multiple workspaces to represent different environments—think <code>dev</code>, <code>qa</code>, and <code>prod</code>. Some even have additional splits like staging or sandbox.</p>
-<p>If you’re working across all of them, here’s the problem: <strong>your browser tabs all look the same.</strong></p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Too Many Tabs"
-    src="./many-tabs.png"
-    ></figure>
-<blockquote>
-<p>Note: URLs in images are redacted, but in your environment, the redacted portions will appear as GUIDs.</p>
-</blockquote>
-<p>Inside the workspace, the situation isn’t much better. It&rsquo;s not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:</p>
+<p>The inference table stores each request and its corresponding response in the request and response columns. Both are stored as strings containing deeply nested JSON.</p>
+<p>Inside those JSON blobs is everything you might want to analyze:</p>
+<ul>
+<li>Input, completion, and total token counts</li>
+<li>Prompt and content filter results (especially relevant with Azure OpenAI)</li>
+<li>User or caller identity</li>
+<li>Error information</li>
+<li>MLflow tracing metadata</li>
+</ul>
+<p>The inference table captures all of this data, but it isn’t structured for answering questions. As soon as you start asking things like how many tokens are being consumed, which requests are triggering safety or content filters, or why certain requests failed, you quickly realize that the inference table is a logging table, not an analytics table. It’s optimized for completeness, not usability.</p>
+<p>For data engineers, this usually means building a Bronze → Silver → Gold pipeline that extracts and normalizes these values into well-typed columns that downstream tools like AI/BI or Genie can consume.</p>
+<p>That’s where things get interesting.</p>
+
+<h2 class="relative group">The Real Goal: A Gold-Quality Inference Dataset
+    <div id="the-real-goal-a-gold-quality-inference-dataset" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-real-goal-a-gold-quality-inference-dataset" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>What we ultimately want is straightforward:</p>
+<ul>
+<li>One row per logical request</li>
+<li>Stable, well-typed columns</li>
+<li>Predictable null behavior</li>
+<li>Easy aggregation and filtering</li>
+</ul>
+<p>More concretely, this means pulling the most important fields out of the raw request and response JSON and promoting them to first-class columns. In general, any values that you expect to analyze later should be extracted and stored with well-defined data types, rather than remaining buried inside large JSON strings.</p>
+<p>Token usage is a good example. Instead of parsing token counts out of JSON at query time, it’s far more useful to expose them directly as numeric columns—such as input tokens, output tokens, and total tokens—so they can be easily filtered, aggregated, and monitored over time.</p>
+<p>Once you have this kind of structure in place, everything opens up. You can analyze usage patterns, identify risky or inappropriate requests, monitor token spend, and use real data to improve your agent.</p>
+<p>But there’s a catch that isn’t obvious at first.</p>
+<p>You can’t design that gold table correctly until you understand every shape your inference data can take.</p>
+
+<h2 class="relative group">What the Documentation Doesn&rsquo;t Emphasize
+    <div id="what-the-documentation-doesnt-emphasize" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-the-documentation-doesnt-emphasize" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>One of the lessons I learned the hard way is that the structure of the inference table is not fixed.</p>
+<p>In practice, it varies based on three factors:</p>
 <ol>
-<li><strong>The domain name.</strong> Every environment has a URL like <code>adb-&lt;long string of numbers&gt;</code>. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like <code>google.com</code> instead of memorizing IP addresses.</li>
-<li><strong>A small piece of text in the top-right corner.</strong> Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. It’s easy to miss, and if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.</li>
+<li>Which inference endpoint is called (predict or predict_stream)</li>
+<li>Whether the underlying model throws an error</li>
+<li>How your agent code handles that error, if one occurs</li>
 </ol>
-<p>The end result? Confusion, context-switching, and the very real risk of running a query in <code>prod</code> that you meant for <code>dev</code>.</p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Small Workspace Indicator"
-    src="./workspace-indicator.png"
-    ></figure>
+<p>The first distinction is easy to overlook. A request made to predict returns a single response, while a request made to predict_stream returns content incrementally. As a result, the JSON written to the response column has a different shape depending on which endpoint is used.</p>
+<p>The second and third factors are related but distinct. Whether the model throws an error determines that something went wrong. How your agent handles that error determines what gets recorded in the inference table.</p>
 
-<h2 class="relative group">But Wait, Isn’t There a Color Trick?
-    <div id="but-wait-isnt-there-a-color-trick" class="anchor"></div>
+<h3 class="relative group">How Agent Error Handling Changes Your Data
+    <div id="how-agent-error-handling-changes-your-data" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#but-wait-isnt-there-a-color-trick" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#how-agent-error-handling-changes-your-data" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>In early versions of our agent, we didn’t explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in our stack. From a control-flow perspective, this worked fine.</p>
+<p>From a data perspective, it didn’t.</p>
+<p>The inference rows associated with these failures contained very little information. Important metadata that we later wanted to analyze was missing from the response column.</p>
+<p>Eventually, we changed the agent to catch these errors and return a custom error message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The response column now contained much richer information that had been missing in the earlier implementation.</p>
+<p>The key point isn’t how you handle errors in your agent. It’s that agent implementation choices directly affect the structure and completeness of your inference data.</p>
+
+<h2 class="relative group">Testing for Data Variability, Not Model Correctness
+    <div id="testing-for-data-variability-not-model-correctness" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#testing-for-data-variability-not-model-correctness" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Some people solve this by assigning different themes—say, dark mode for <code>prod</code> and light mode for <code>dev</code>. Clever idea, but it falls apart quickly:</p>
+<p>Up to this point, the focus has been on why inference data varies: different endpoints, different failure modes, and different agent implementations all contribute to changes in the structure of what gets written to the inference table.</p>
+<p>This is where testing comes in—but not in the way it’s often discussed.</p>
+<p>At this stage, you’re not trying to validate whether the agent gives “good” answers. You’re trying to intentionally generate inference data that covers the full range of outcomes your pipelines will need to handle. This is the essence of a data-first approach to building AI processing pipelines.</p>
+<p>The goal of testing here is to populate the inference table with representative rows: successful requests, failed requests, streamed responses, partial responses, and everything in between. Once those rows exist, you can design and build your processing pipelines with confidence, knowing they’ve been exercised against real variability rather than idealized assumptions.</p>
+<p>This approach flips the usual order of operations. Instead of writing a pipeline and discovering later that it breaks—or quietly produces bad data—you first create a diverse set of inference records, then build a pipeline that can reliably process all of them into the gold-quality dataset described earlier.</p>
+<p>When you reach that point, you don’t just have a working pipeline. You have a robust one, shaped by the actual behaviors of the system rather than by guesswork.</p>
+
+<h2 class="relative group">Thinking in Outcomes, Not Prompts
+    <div id="thinking-in-outcomes-not-prompts" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#thinking-in-outcomes-not-prompts" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The key mental shift is to stop thinking in terms of the questions you would normally ask an agent and start thinking in terms of the outcomes produced by the model during inference.</p>
+<p>At this stage, you’re not trying to exercise the agent the way a well-behaved user would. You’re trying to exercise it the way your data pipeline will experience it when it&rsquo;s populated with real production data. That often means deliberately asking questions designed to fail, to be blocked, or to behave in unexpected ways. In practice, you almost have to pretend you’re a bad actor and intentionally probe the edges of what the model will and won’t do.</p>
+<p>In Databricks, two dimensions matter most:</p>
 <ul>
-<li>There are only two color schemes available and many organizations have three workspaces meaning one environment will inevitably match another.</li>
-<li>If two or more environments share a metastore, changing one changes the other.</li>
-<li>And let’s be honest: some developers simply refuse to use a theme they don’t like.</li>
+<li>Whether you’re calling predict or predict_stream</li>
+<li>Whether the request succeeds, fails, or partially succeeds</li>
 </ul>
-<p>So while the color trick can work in a pinch, it’s not a real solution.</p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Dark Theme"
-    src="./dark-theme.png"
-    ></figure>
-<blockquote>
-<p>To activate dark mode, navigate to Settings → User Preferences → “Prefer Dark.”</p>
-<p>If you don’t enable this setting, your environment theme will default to match the light theme shown in the images above.</p>
-</blockquote>
+<p>When you look at inference through this lens, you can map model behavior into a small, finite set of outcomes that are worth testing explicitly.</p>
+<p>The key mental shift is to stop thinking in terms of questions you ask the agent and start thinking in terms of outcomes produced by inference.</p>
 
-<h2 class="relative group">The Solution: Tampermonkey to the Rescue
-    <div id="the-solution-tampermonkey-to-the-rescue" class="anchor"></div>
+<h2 class="relative group">The Five Inference Cases You Should Intentionally Generate
+    <div id="the-five-inference-cases-you-should-intentionally-generate" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-solution-tampermonkey-to-the-rescue" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-five-inference-cases-you-should-intentionally-generate" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Enter <strong>Tampermonkey</strong>, a browser extension that lets you run custom JavaScript whenever you visit a matching URL.</p>
-<p>With a short script, you can automatically label your Databricks browser tabs with an emoji + text identifier for each environment. Suddenly, <code>dev</code>, <code>qa</code>, and <code>prod</code> are crystal clear.</p>
-<p>It’s simple, lightweight, and makes a huge difference:</p>
-<ul>
-<li>Faster navigation between environments</li>
-<li>Reduced risk of editing the wrong workspace</li>
-<li>A quality-of-life boost you’ll wonder how you lived without</li>
-</ul>
-<p>And best of all: <strong>little to no performance impact</strong>. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.  Below, I&rsquo;ve provided an image illustrating what your dev environment will look like after setting up the Tamper Monkey script for yourself.</p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Tamper Monkey In Action"
-    src="./label-in-action.png"
-    ></figure>
-
-<h2 class="relative group">How to Set It Up
-    <div id="how-to-set-it-up" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#how-to-set-it-up" aria-label="Anchor">#</a>
-    </span>
-    
-</h2>
-<p>Getting your Databricks tabs labeled automatically is quick and easy. You’ll need to:</p>
+<p>Before writing your processing pipelines, you should make sure your inference table contains all five of the following cases.</p>
 <ol>
-<li>Install Tampermonkey</li>
-<li>Create a new script</li>
-<li>Paste in the code</li>
-<li>Configure your environment domains</li>
-<li>Save and enable the script</li>
-<li>Enable user scripts in your browser (Chrome only)</li>
-<li>Verify it’s working</li>
+<li>
+<p>Predict + Valid Request</p>
+<p>A single response returned all at once, with complete metadata. This becomes your baseline schema.</p>
+</li>
+<li>
+<p>Predict + Blocked Request</p>
+<p>An inappropriate or disallowed prompt that fails immediately.
+The response structure changes, and certain fields may be missing or altered.</p>
+</li>
+<li>
+<p>Predict Stream + Valid Request</p>
+<p>A successful streaming response, delivered in chunks. This will be your baseline schema for streaming requests.</p>
+</li>
+<li>
+<p>Predict Stream + Immediately Blocked Request</p>
+<p>A streaming request that fails before any chunks are returned. This is similar to non-streaming requests that cause an error immediately, but have a different schema in the response column.</p>
+</li>
+<li>
+<p>Predict Stream + Partially Blocked Request</p>
+<p>The most subtle case.  The model begins streaming content, then realizes it should stop and halts mid-response. This results in partial output and incomplete metadata.</p>
+<p>If you don’t test this case explicitly, it will eventually find you in production.</p>
+</li>
 </ol>
-<blockquote>
-<p>Note: These instructions are written for Google Chrome, but the steps can be adapted to other browsers that support Tampermonkey.</p>
-</blockquote>
-<p>Follow the steps below.</p>
 
-<h3 class="relative group">1. Install Tampermonkey
-    <div id="1-install-tampermonkey" class="anchor"></div>
+<h2 class="relative group">Why This Matters for Your Pipelines
+    <div id="why-this-matters-for-your-pipelines" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#1-install-tampermonkey" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>Download Tampermonkey for your browser from <a
-  href="https://www.tampermonkey.net/"
-    target="_blank"
-  >tampermonkey.net</a>.</li>
-<li>Restart your browser after installation.</li>
-</ul>
-
-<h3 class="relative group">2. Create a New Script
-    <div id="2-create-a-new-script" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#2-create-a-new-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>Open the Tampermonkey extension → Dashboard → “Create a new script.”</li>
-<li>Delete the boilerplate code so the editor is blank.</li>
-</ul>
-
-<h3 class="relative group">3. Add the Script
-    <div id="3-add-the-script" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#3-add-the-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<p>Copy and paste the following code into the new script:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// ==UserScript==
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @name         Databricks Tab Emoji Label
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @namespace    http://tampermonkey.net/
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @version      1.5
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @description  Add emoji and label to Databricks tab title based on environment
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @author       Matthew Norberg
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @match        https://&lt;your-domain-here&gt;.azuredatabricks.net/*
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @grant        none
-</span></span></span><span class="line"><span class="cl"><span class="c1">// ==/UserScript==
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">updateTitle</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1">// Define your environment domains here
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">devDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">qaDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">prodDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">devDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;DEV&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🟢&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">qaDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;QA&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🟡&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">prodDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;PROD&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🔴&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;OTHER&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;⚪&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">title</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="sb">`[</span><span class="si">${</span><span class="nx">emoji</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">label</span><span class="si">}</span><span class="sb">]`</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">document</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="sb">`[</span><span class="si">${</span><span class="nx">emoji</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">label</span><span class="si">}</span><span class="sb">] </span><span class="si">${</span><span class="nb">document</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">// Initial run
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">// Monitor for URL changes in SPA
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">let</span> <span class="nx">lastUrl</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">currentUrl</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">currentUrl</span> <span class="o">!==</span> <span class="nx">lastUrl</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">lastUrl</span> <span class="o">=</span> <span class="nx">currentUrl</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">2000</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span> <span class="p">{</span><span class="nx">subtree</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">childList</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">})();</span>
-</span></span></code></pre></div>
-<h3 class="relative group">4. Configure Environment Domains
-    <div id="4-configure-environment-domains" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#4-configure-environment-domains" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<p>Near the top of the script, replace the placeholders with your actual environment domains:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">devDomain</span> <span class="o">=</span> <span class="s1">&#39;your-dev-domain&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">qaDomain</span> <span class="o">=</span> <span class="s1">&#39;your-qa-domain&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">prodDomain</span> <span class="o">=</span> <span class="s1">&#39;your-prod-domain&#39;</span><span class="p">;</span>
-</span></span></code></pre></div>
-<h3 class="relative group">5. Save and Enable the Script
-    <div id="5-save-and-enable-the-script" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#5-save-and-enable-the-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Save your changes (File → Save).</p>
-</li>
-<li>
-<p>Make sure the script toggle in Tampermonkey is turned on (green).</p>
-</li>
-</ul>
-
-<h3 class="relative group">6. Enable User Scripts in Chrome
-    <div id="6-enable-user-scripts-in-chrome" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#6-enable-user-scripts-in-chrome" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Go to <code>chrome://extensions</code> → find Tampermonkey → click <strong>Details</strong>.</p>
-</li>
-<li>
-<p>Make sure <strong>Allow user scripts</strong> is enabled.</p>
-</li>
-</ul>
-<blockquote>
-<p>Note: Other browsers may have different settings for allowing user scripts—adapt accordingly.</p>
-</blockquote>
-
-<h3 class="relative group">7. Verify installation
-    <div id="7-verify-installation" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#7-verify-installation" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Open your Databricks environment in a new tab.</p>
-</li>
-<li>
-<p>After a few seconds, your tab title should display the correct emoji + environment label.</p>
-</li>
-</ul>
-
-<h2 class="relative group">Troubleshooting
-    <div id="troubleshooting" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#troubleshooting" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#why-this-matters-for-your-pipelines" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p><strong>Tab title doesn’t update right away</strong></p>
+<p>Each of these cases can produce a different response shape. If your pipeline only accounts for the “normal” ones, you’ll either:</p>
 <ul>
-<li>
-<p>The script intentionally waits <strong>3 seconds</strong> after page load before applying changes.</p>
-</li>
-<li>
-<p>Without this delay, the title gets updated but is overwritten during the web page loading process.</p>
-</li>
-<li>
-<p>In testing, <strong>3 seconds worked well</strong>, but you can adjust this by editing the <code>setTimeout</code> call in the code:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
-</span></span></code></pre></div></li>
+<li>Break when new data arrives, or</li>
+<li>Produce incomplete analytics without realizing it</li>
 </ul>
-<p><strong>Still not working?</strong></p>
-<p>Double-check that:</p>
-<ul>
-<li>The script is enabled in Tampermonkey.</li>
-<li>Your domains are correctly set in both the variables and the @match lines.</li>
-<li>“Allow user scripts” is enabled in your browser’s extension settings.</li>
-</ul>
+<p>By deliberately generating all five cases up front, you can design your Bronze, Silver, and Gold tables with confidence that they’ll hold up as usage grows and behavior evolves.</p>
+
+<h2 class="relative group">What This Post Is (and Is Not)
+    <div id="what-this-post-is-and-is-not" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-this-post-is-and-is-not" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>This post is about taking a data-first approach to building AI processing pipelines by intentionally populating the inference table with representative test data. The focus is on what kinds of inference outcomes you need to generate so that your pipelines can be designed to handle real-world variability, rather than idealized assumptions. It is not a guide to writing pipeline code.</p>
+<p>If this approach resonates, a natural follow-up is a deeper dive into how to design and implement the actual processing pipelines once you understand the shapes and edge cases present in your inference data.</p>
 
 <h2 class="relative group">Final Thoughts
     <div id="final-thoughts" class="anchor"></div>
@@ -1200,12 +1051,11 @@
     </span>
     
 </h2>
-<p>It’s a small tweak, but it solves a surprisingly big problem. If you’re juggling multiple Databricks environments, this little script will save you from confusion—and maybe even prevent a mistake or two.</p>
-<p>Sometimes the best tools aren’t the big, complicated ones. They’re the tiny hacks that make your day smoother.</p>
-<p>👉 You can grab the full script and step-by-step setup instructions in the <code>databricks-tools-repo</code> <a
-  href="https://github.com/mnorberg-dev/databricks-tools"
-    target="_blank"
-  >here</a>.</p>
+<p>AI agents don’t just generate answers—they generate data. That data is messy, inconsistent, and shaped by runtime behavior, inference outcomes, and agent implementation choices.</p>
+<p>If you start by writing processing pipelines first and only later discover the range of schemas and data shapes that appear in the inference table, you’ll likely end up refactoring, rewriting, and second-guessing your design.</p>
+<p>A data-first approach flips that sequence.</p>
+<p>Rather than beginning with pipeline code, you start by intentionally populating the inference table with representative outcomes and observing how those outcomes are recorded. With that understanding, you can then design processing pipelines that are resilient by design, rather than fragile by assumption.</p>
+<p>Do that, and you make the data easier to work with—not just for your future self, but for data analysts and others downstream who rely on these tables to understand how your AI systems are actually being used.</p>
 
           
           
@@ -1233,8 +1083,8 @@
           type="text/javascript"
           src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
           integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
-          data-oid="views_posts/databricks-tamper-monkey/index.md"
-          data-oid-likes="likes_posts/databricks-tamper-monkey/index.md"></script>
+          data-oid="views_posts/databricks-ai-inference-pipeline-testing/index.md"
+          data-oid-likes="likes_posts/databricks-ai-inference-pipeline-testing/index.md"></script>
       
     </section>
 
