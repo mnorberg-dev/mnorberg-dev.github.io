@@ -22,6 +22,16 @@
     </item>
     
     <item>
+      <title>Data Engineering</title>
+      <link>http://localhost:1313/tags/data-engineering/</link>
+      <pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/tags/data-engineering/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
       <title>Databricks</title>
       <link>http://localhost:1313/tags/databricks/</link>
       <pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate>
@@ -32,71 +42,11 @@
     </item>
     
     <item>
-      <title>Inference-Tables</title>
-      <link>http://localhost:1313/tags/inference-tables/</link>
-      <pubDate>Sun, 14 Dec 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/inference-tables/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Tracing</title>
-      <link>http://localhost:1313/tags/tracing/</link>
-      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/tracing/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
       <title>Data Quality</title>
       <link>http://localhost:1313/tags/data-quality/</link>
       <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
       <guid>http://localhost:1313/tags/data-quality/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Expectations</title>
-      <link>http://localhost:1313/tags/expectations/</link>
-      <pubDate>Sun, 21 Sep 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/expectations/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Productivity</title>
-      <link>http://localhost:1313/tags/productivity/</link>
-      <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/productivity/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Tampermonkey</title>
-      <link>http://localhost:1313/tags/tampermonkey/</link>
-      <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/tampermonkey/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Tools</title>
-      <link>http://localhost:1313/tags/tools/</link>
-      <pubDate>Tue, 16 Sep 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/tags/tools/</guid>
       <description></description>
       
     </item>

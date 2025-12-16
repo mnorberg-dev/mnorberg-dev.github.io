@@ -24,7 +24,7 @@
     <meta name="description" content="Write summary">
   
   
-    <meta name="keywords" content="databricks,ai,inference-tables,">
+    <meta name="keywords" content="databricks,ai,data engineering,">
   
   
   
@@ -63,7 +63,7 @@
     <meta property="article:modified_time" content="2025-12-14T00:00:00+00:00">
     <meta property="article:tag" content="Databricks">
     <meta property="article:tag" content="Ai">
-    <meta property="article:tag" content="Inference-Tables">
+    <meta property="article:tag" content="Data Engineering">
 
   
   <meta name="twitter:card" content="summary">
@@ -233,10 +233,10 @@
     
     "dateModified": "2025-12-14T00:00:00\u002b00:00",
     
-    "keywords": ["databricks","ai","inference-tables"],
+    "keywords": ["databricks","ai","data engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1688"
+    "wordCount": "1999"
   }]
   </script>
 
@@ -716,7 +716,6 @@
     <li><a href="#thinking-in-outcomes-not-prompts">Thinking in Outcomes, Not Prompts</a></li>
     <li><a href="#the-five-inference-cases-you-should-intentionally-generate">The Five Inference Cases You Should Intentionally Generate</a></li>
     <li><a href="#why-this-matters-for-your-pipelines">Why This Matters for Your Pipelines</a></li>
-    <li><a href="#what-this-post-is-and-is-not">What This Post Is (and Is Not)</a></li>
     <li><a href="#final-thoughts">Final Thoughts</a></li>
   </ul>
 </nav>
@@ -742,7 +741,6 @@
     <li><a href="#thinking-in-outcomes-not-prompts">Thinking in Outcomes, Not Prompts</a></li>
     <li><a href="#the-five-inference-cases-you-should-intentionally-generate">The Five Inference Cases You Should Intentionally Generate</a></li>
     <li><a href="#why-this-matters-for-your-pipelines">Why This Matters for Your Pipelines</a></li>
-    <li><a href="#what-this-post-is-and-is-not">What This Post Is (and Is Not)</a></li>
     <li><a href="#final-thoughts">Final Thoughts</a></li>
   </ul>
 </nav>
@@ -861,10 +859,12 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          <p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks calls, an inference table.</p>
+          <p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks refers to as an inference table.</p>
 <p>At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.</p>
-<p>In practice, though, having the data and being able to use the data are two very different things.</p>
-<p>This post is about how to think about AI processing pipelines from a data-first perspective, and why the most important work happens before you write a single line of pipeline code.</p>
+<p>In practice, though, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.</p>
+<p>However, adding more pipelines also increases the complexity of your data stack. Each new step introduces assumptions about how the model behaves and what the data will look like, and those assumptions need to hold up in production.</p>
+<p>This is where many data teams run into trouble. Processing pipelines are often designed around how the model is expected to behave, without a full view of the range of outcomes the system can actually produce. Only later do differences in response structure, failure modes, and streaming behavior start to surface—often after those pipelines are already in use.</p>
+<p>This post takes a data-first approach to building AI processing pipelines. Rather than focusing on implementation, it examines how inference data varies in practice, how agent behavior shapes what gets recorded in the inference table, and which inference outcomes you should intentionally generate so downstream pipelines can handle real-world variability from the start.</p>
 
 <h2 class="relative group">The Inference Table: Valuable, but Not Analysis-Ready
     <div id="the-inference-table-valuable-but-not-analysis-ready" class="anchor"></div>
@@ -875,7 +875,7 @@
     </span>
     
 </h2>
-<p>The inference table stores each request and its corresponding response in the request and response columns. Both are stored as strings containing deeply nested JSON.</p>
+<p>The inference table stores each request and its corresponding response in the <code>request</code> and <code>response</code> columns. Both are stored as strings containing deeply nested JSON.</p>
 <p>Inside those JSON blobs is everything you might want to analyze:</p>
 <ul>
 <li>Input, completion, and total token counts</li>
@@ -885,7 +885,8 @@
 <li>MLflow tracing metadata</li>
 </ul>
 <p>The inference table captures all of this data, but it isn’t structured for answering questions. As soon as you start asking things like how many tokens are being consumed, which requests are triggering safety or content filters, or why certain requests failed, you quickly realize that the inference table is a logging table, not an analytics table. It’s optimized for completeness, not usability.</p>
-<p>For data engineers, this usually means building a Bronze → Silver → Gold pipeline that extracts and normalizes these values into well-typed columns that downstream tools like AI/BI or Genie can consume.</p>
+<p>PICTURE HERE OF RAW JSON</p>
+<p>For data engineers, this usually means building a Bronze → Silver → Gold pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.</p>
 <p>That’s where things get interesting.</p>
 
 <h2 class="relative group">The Real Goal: A Gold-Quality Inference Dataset
@@ -901,14 +902,13 @@
 <ul>
 <li>One row per logical request</li>
 <li>Stable, well-typed columns</li>
-<li>Predictable null behavior</li>
 <li>Easy aggregation and filtering</li>
 </ul>
-<p>More concretely, this means pulling the most important fields out of the raw request and response JSON and promoting them to first-class columns. In general, any values that you expect to analyze later should be extracted and stored with well-defined data types, rather than remaining buried inside large JSON strings.</p>
-<p>Token usage is a good example. Instead of parsing token counts out of JSON at query time, it’s far more useful to expose them directly as numeric columns—such as input tokens, output tokens, and total tokens—so they can be easily filtered, aggregated, and monitored over time.</p>
+<p>More concretely, this means pulling the most important fields from the raw <code>request</code> and <code>response</code> JSON and promoting them to first-class columns. In general, any values that you expect to analyze later should be extracted and stored with well-defined data types, rather than remaining buried inside large JSON strings.</p>
+<p>Token usage is a good example. While token counts can be extracted from a JSON string at query time, doing so leads to long, noisy queries that are hard to read and reason about. It is far cleaner to extract values like input tokens, output tokens, and total tokens from the response JSON and store them as well-typed numeric columns, making them easy to filter, aggregate, and monitor over time.</p>
 <p>Once you have this kind of structure in place, everything opens up. You can analyze usage patterns, identify risky or inappropriate requests, monitor token spend, and use real data to improve your agent.</p>
 <p>But there’s a catch that isn’t obvious at first.</p>
-<p>You can’t design that gold table correctly until you understand every shape your inference data can take.</p>
+<p>You can’t design the processing pipeline that produces the gold table to be both correct and resilient until you understand every shape your inference data can take.</p>
 
 <h2 class="relative group">What the Documentation Doesn&rsquo;t Emphasize
     <div id="what-the-documentation-doesnt-emphasize" class="anchor"></div>
@@ -922,12 +922,12 @@
 <p>One of the lessons I learned the hard way is that the structure of the inference table is not fixed.</p>
 <p>In practice, it varies based on three factors:</p>
 <ol>
-<li>Which inference endpoint is called (predict or predict_stream)</li>
+<li>Which inference endpoint is called (<code>predict</code> or <code>predict_stream</code>)</li>
 <li>Whether the underlying model throws an error</li>
 <li>How your agent code handles that error, if one occurs</li>
 </ol>
-<p>The first distinction is easy to overlook. A request made to predict returns a single response, while a request made to predict_stream returns content incrementally. As a result, the JSON written to the response column has a different shape depending on which endpoint is used.</p>
-<p>The second and third factors are related but distinct. Whether the model throws an error determines that something went wrong. How your agent handles that error determines what gets recorded in the inference table.</p>
+<p>The first distinction is easy to overlook. A request made to <code>predict</code> returns a single response, while a request made to <code>predict_stream</code> returns content incrementally. As a result, the JSON written to the <code>response</code> column has a different shape depending on which endpoint is used.</p>
+<p>The second and third factors are related but distinct. Whether the model throws an error indicates that something went wrong. How your agent handles that error determines what gets recorded in the inference table.</p>
 
 <h3 class="relative group">How Agent Error Handling Changes Your Data
     <div id="how-agent-error-handling-changes-your-data" class="anchor"></div>
@@ -938,10 +938,10 @@
     </span>
     
 </h3>
-<p>In early versions of our agent, we didn’t explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in our stack. From a control-flow perspective, this worked fine.</p>
+<p>In early versions of the AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.</p>
 <p>From a data perspective, it didn’t.</p>
-<p>The inference rows associated with these failures contained very little information. Important metadata that we later wanted to analyze was missing from the response column.</p>
-<p>Eventually, we changed the agent to catch these errors and return a custom error message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The response column now contained much richer information that had been missing in the earlier implementation.</p>
+<p>The inference rows associated with these failures contained very little information. Important metadata that we later wanted to analyze was missing from the <code>response</code> column.</p>
+<p>Eventually, the agent was updated to catch these errors and return a custom message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The <code>response</code> column now contained much richer information that had been missing in the earlier implementation.</p>
 <p>The key point isn’t how you handle errors in your agent. It’s that agent implementation choices directly affect the structure and completeness of your inference data.</p>
 
 <h2 class="relative group">Testing for Data Variability, Not Model Correctness
@@ -953,7 +953,7 @@
     </span>
     
 </h2>
-<p>Up to this point, the focus has been on why inference data varies: different endpoints, different failure modes, and different agent implementations all contribute to changes in the structure of what gets written to the inference table.</p>
+<p>Up to this point, the focus has been on why inference data varies: differences between non-streaming and streaming inference requests, whether a request succeeds or fails, and how the agent handles those outcomes all influence the structure of what gets written to the inference table.</p>
 <p>This is where testing comes in—but not in the way it’s often discussed.</p>
 <p>At this stage, you’re not trying to validate whether the agent gives “good” answers. You’re trying to intentionally generate inference data that covers the full range of outcomes your pipelines will need to handle. This is the essence of a data-first approach to building AI processing pipelines.</p>
 <p>The goal of testing here is to populate the inference table with representative rows: successful requests, failed requests, streamed responses, partial responses, and everything in between. Once those rows exist, you can design and build your processing pipelines with confidence, knowing they’ve been exercised against real variability rather than idealized assumptions.</p>
@@ -971,13 +971,14 @@
 </h2>
 <p>The key mental shift is to stop thinking in terms of the questions you would normally ask an agent and start thinking in terms of the outcomes produced by the model during inference.</p>
 <p>At this stage, you’re not trying to exercise the agent the way a well-behaved user would. You’re trying to exercise it the way your data pipeline will experience it when it&rsquo;s populated with real production data. That often means deliberately asking questions designed to fail, to be blocked, or to behave in unexpected ways. In practice, you almost have to pretend you’re a bad actor and intentionally probe the edges of what the model will and won’t do.</p>
-<p>In Databricks, two dimensions matter most:</p>
+<p>An important side effect of this kind of testing is that it can surface issues beyond data shape alone. If a prompt that is intentionally designed to be blocked or rejected instead succeeds, that’s a signal worth paying attention to. In other words, if the model responds to something it clearly shouldn’t, that’s not just a testing artifact—it’s a finding.</p>
+<p>Those cases are worth bringing back to the broader team, whether that means tightening guardrails, adjusting prompts, or revisiting how the agent is configured. Even though the primary goal here is data readiness, this kind of testing can also reveal gaps that should be addressed before the agent sees wider use.</p>
+<p>Once you step back and focus on inference outcomes rather than individual prompts, two dimensions tend to matter most:</p>
 <ul>
-<li>Whether you’re calling predict or predict_stream</li>
+<li>Whether you’re calling <code>predict</code> or <code>predict_stream</code></li>
 <li>Whether the request succeeds, fails, or partially succeeds</li>
 </ul>
-<p>When you look at inference through this lens, you can map model behavior into a small, finite set of outcomes that are worth testing explicitly.</p>
-<p>The key mental shift is to stop thinking in terms of questions you ask the agent and start thinking in terms of outcomes produced by inference.</p>
+<p>When you look at inference data through this lens, you can map model behavior into a small, finite set of outcomes that are worth testing explicitly.</p>
 
 <h2 class="relative group">The Five Inference Cases You Should Intentionally Generate
     <div id="the-five-inference-cases-you-should-intentionally-generate" class="anchor"></div>
@@ -991,28 +992,38 @@
 <p>Before writing your processing pipelines, you should make sure your inference table contains all five of the following cases.</p>
 <ol>
 <li>
-<p>Predict + Valid Request</p>
-<p>A single response returned all at once, with complete metadata. This becomes your baseline schema.</p>
+<p><strong>Predict + Valid Request</strong></p>
+<p>A single response returned all at once, with complete metadata. This becomes your baseline schema for non-streaming requests.</p>
+<p><em>Example prompt:</em><br>
+“Explain the difference between a primary key and a foreign key in a relational database.”</p>
 </li>
 <li>
-<p>Predict + Blocked Request</p>
-<p>An inappropriate or disallowed prompt that fails immediately.
-The response structure changes, and certain fields may be missing or altered.</p>
+<p><strong>Predict + Blocked Request</strong></p>
+<p>An inappropriate or disallowed prompt that fails immediately. The response structure changes, and certain fields may be missing or altered compared to the happy path.</p>
+<p><em>Example prompt:</em><br>
+“How do I rob a bank without getting caught?”</p>
 </li>
 <li>
-<p>Predict Stream + Valid Request</p>
-<p>A successful streaming response, delivered in chunks. This will be your baseline schema for streaming requests.</p>
+<p><strong>Predict Stream + Valid Request</strong></p>
+<p>A successful streaming response, delivered in chunks. This becomes your baseline schema for streaming requests.</p>
+<p><em>Example prompt:</em><br>
+“Write a detailed explanation of how distributed systems handle fault tolerance.”</p>
 </li>
 <li>
-<p>Predict Stream + Immediately Blocked Request</p>
-<p>A streaming request that fails before any chunks are returned. This is similar to non-streaming requests that cause an error immediately, but have a different schema in the response column.</p>
+<p><strong>Predict Stream + Immediately Blocked Request</strong></p>
+<p>A streaming request that fails before any chunks are returned. This is similar to non-streaming requests that cause an error immediately, but has a different schema in the <code>response</code> column.</p>
+<p><em>Example prompt:</em><br>
+“Give me step-by-step instructions to build a weapon.”</p>
 </li>
 <li>
-<p>Predict Stream + Partially Blocked Request</p>
-<p>The most subtle case.  The model begins streaming content, then realizes it should stop and halts mid-response. This results in partial output and incomplete metadata.</p>
+<p><strong>Predict Stream + Partially Blocked Request</strong></p>
+<p>The most subtle case. The model begins streaming content, then realizes it should stop and halts mid-response. This results in partial output and incomplete metadata.</p>
+<p><em>Example prompt:</em><br>
+“Tell me a fictional story about planning a crime, including how it might be carried out.”</p>
 <p>If you don’t test this case explicitly, it will eventually find you in production.</p>
 </li>
 </ol>
+<p>Once all five of these cases exist in your inference table, you have the raw material needed to build processing pipelines that won’t break or silently fail when real usage begins.</p>
 
 <h2 class="relative group">Why This Matters for Your Pipelines
     <div id="why-this-matters-for-your-pipelines" class="anchor"></div>
@@ -1023,24 +1034,12 @@ The response structure changes, and certain fields may be missing or altered.</p
     </span>
     
 </h2>
-<p>Each of these cases can produce a different response shape. If your pipeline only accounts for the “normal” ones, you’ll either:</p>
+<p>Each of these cases can produce a different response shape. If your pipeline only accounts for the “normal” ones, it’ll either:</p>
 <ul>
 <li>Break when new data arrives, or</li>
-<li>Produce incomplete analytics without realizing it</li>
+<li>Produce incomplete analytics without realizing it.</li>
 </ul>
 <p>By deliberately generating all five cases up front, you can design your Bronze, Silver, and Gold tables with confidence that they’ll hold up as usage grows and behavior evolves.</p>
-
-<h2 class="relative group">What This Post Is (and Is Not)
-    <div id="what-this-post-is-and-is-not" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-this-post-is-and-is-not" aria-label="Anchor">#</a>
-    </span>
-    
-</h2>
-<p>This post is about taking a data-first approach to building AI processing pipelines by intentionally populating the inference table with representative test data. The focus is on what kinds of inference outcomes you need to generate so that your pipelines can be designed to handle real-world variability, rather than idealized assumptions. It is not a guide to writing pipeline code.</p>
-<p>If this approach resonates, a natural follow-up is a deeper dive into how to design and implement the actual processing pipelines once you understand the shapes and edge cases present in your inference data.</p>
 
 <h2 class="relative group">Final Thoughts
     <div id="final-thoughts" class="anchor"></div>
