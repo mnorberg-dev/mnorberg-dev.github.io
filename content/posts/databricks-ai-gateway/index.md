@@ -3,8 +3,7 @@ title: "Tracing with Databricks Mosaic AI Gateway: A Practical Guide"
 date: 2025-10-05
 summary: "Step-by-step guide to enabling MLflow tracing with Databricks Mosaic AI Gateway. Details the recommended ResponsesAgent approach, examines alternative methods (foundation/external endpoints and custom Python models), and highlights the pitfalls that make the agent path preferable."
 draft: false
-tags: ["databricks", "ai", "tracing"]
-categories: ["engineering"]
+tags: ["databricks", "ai"]
 slug: "ai-gateway"
 author: "Matthew Norberg"
 ---

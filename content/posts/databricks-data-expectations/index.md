@@ -3,8 +3,7 @@ title: "Databricks Data Quality Expectations Guide"
 date: 2025-09-21
 summary: "Practical walkthrough for implementing data quality expectations in Databricks Delta Live Tables (Lakeflow Declarative Pipelines). Covers a four-step process to profile data, formalize and translate rules, quarantine noncompliant records, and balance strict versus permissive checks, with lessons learned and links to the talk, slides, and demo code." 
 draft: false
-tags: ["databricks", "data quality", "expectations"]
-categories: ["engineering"]
+tags: ["databricks", "data quality"]
 slug: "data-quality-expectations"
 author: "Matthew Norberg"
 ---

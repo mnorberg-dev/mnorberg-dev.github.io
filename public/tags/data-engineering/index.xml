@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ai on Matthew Norberg&#39;s Data Engineering Blog</title>
-    <link>http://localhost:1313/tags/ai/</link>
-    <description>Recent content in Ai on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <title>Data Engineering on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>http://localhost:1313/tags/data-engineering/</link>
+    <description>Recent content in Data Engineering on Matthew Norberg&#39;s Data Engineering Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
     <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
     <copyright>© 2025 Matthew Norberg</copyright>
-    <lastBuildDate>Sun, 14 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/data-engineering/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Creating AI Processing Pipelines: A Data-First Approach</title>
@@ -18,16 +18,6 @@
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
       <guid>http://localhost:1313/posts/inference-table-processing-tests/</guid>
       <description>Databricks Mosaic AI Gateway captures rich AI agent request and response data, but not in a format suitable for analysis. Turning that data into insights requires processing pipelines, and before building them, you need to understand the different shapes inference data can take. This post argues for a data-first approach that intentionally generates and examines real inference cases before designing pipelines that have to survive production.</description>
-      
-    </item>
-    
-    <item>
-      <title>Tracing with Databricks Mosaic AI Gateway: A Practical Guide</title>
-      <link>http://localhost:1313/posts/ai-gateway/</link>
-      <pubDate>Sun, 05 Oct 2025 00:00:00 +0000</pubDate>
-      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/posts/ai-gateway/</guid>
-      <description>Step-by-step guide to enabling MLflow tracing with Databricks Mosaic AI Gateway. Details the recommended ResponsesAgent approach, examines alternative methods (foundation/external endpoints and custom Python models), and highlights the pitfalls that make the agent path preferable.</description>
       
     </item>
     

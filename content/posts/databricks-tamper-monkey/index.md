@@ -3,8 +3,7 @@ title: "The Databricks Tool You Didn't Know You Needed"
 date: 2025-09-16
 summary: "Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod."
 draft: false
-tags: ["databricks", "tampermonkey", "tools", "productivity"]
-categories: ["engineering"]
+tags: ["databricks"]
 slug: "databricks-tab-label-tool"
 author: "Matthew Norberg"
 ---
