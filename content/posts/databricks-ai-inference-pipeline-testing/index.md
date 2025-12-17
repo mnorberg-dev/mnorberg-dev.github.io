@@ -1,7 +1,7 @@
 ---
 title: "Creating AI Processing Pipelines: A Data-First Approach"
 date: 2025-12-14
-summary: "Write summary"
+summary: "Databricks Mosaic AI Gateway captures rich AI agent request and response data, but not in a format suitable for analysis. Turning that data into insights requires processing pipelines, and before building them, you need to understand the different shapes inference data can take. This post argues for a data-first approach that intentionally generates and examines real inference cases before designing pipelines that have to survive production."
 draft: false
 tags: ["databricks", "ai", "data engineering"]
 slug: "inference-table-processing-tests"
@@ -16,7 +16,7 @@ In practice, though, having the data and being able to use it are very different
 
 However, adding more pipelines also increases the complexity of your data stack. Each new step introduces assumptions about how the model behaves and what the data will look like, and those assumptions need to hold up in production.
 
-This is where many data teams run into trouble. Processing pipelines are often designed around how the model is expected to behave, without a full view of the range of outcomes the system can actually produce. Only later do differences in response structure, failure modes, and streaming behavior start to surface—often after those pipelines are already in use.
+This is where many data teams run into trouble. Processing pipelines are often designed for how the model is expected to behave, without considering the full range of outcomes. Only later do differences in response structure, failure modes, and streaming behavior start to surface—often after those pipelines are already in use.
 
 This post takes a data-first approach to building AI processing pipelines. Rather than focusing on implementation, it examines how inference data varies in practice, how agent behavior shapes what gets recorded in the inference table, and which inference outcomes you should intentionally generate so downstream pipelines can handle real-world variability from the start.
 
@@ -33,11 +33,9 @@ Inside those JSON blobs is everything you might want to analyze:
 
 The inference table captures all of this data, but it isn’t structured for answering questions. As soon as you start asking things like how many tokens are being consumed, which requests are triggering safety or content filters, or why certain requests failed, you quickly realize that the inference table is a logging table, not an analytics table. It’s optimized for completeness, not usability.
 
-PICTURE HERE OF RAW JSON
+For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.
 
-For data engineers, this usually means building a Bronze → Silver → Gold pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.
-
-That’s where things get interesting.
+> **Note**: I’m not including a screenshot of the raw inference table here because the free Databricks tier doesn’t persist Mosaic AI Gateway requests to an inference table. You’ll have to take my word for it, but the request and response columns are stored as large, deeply nested JSON strings.
 
 ## The Real Goal: A Gold-Quality Inference Dataset
 
@@ -58,7 +56,7 @@ You can’t design the processing pipeline that produces the gold table to be bo
 
 ## What the Documentation Doesn't Emphasize
 
-One of the lessons I learned the hard way is that the structure of the inference table is not fixed.
+One of the lessons I learned the hard way is that the JSON written to the `response` column is not a fixed shape
 
 In practice, it varies based on three factors:
 
@@ -82,29 +80,21 @@ Eventually, the agent was updated to catch these errors and return a custom mess
 
 The key point isn’t how you handle errors in your agent. It’s that agent implementation choices directly affect the structure and completeness of your inference data.
 
-## Testing for Data Variability, Not Model Correctness
+## Generating Representative Inference Outcomes
 
-Up to this point, the focus has been on why inference data varies: differences between non-streaming and streaming inference requests, whether a request succeeds or fails, and how the agent handles those outcomes all influence the structure of what gets written to the inference table.
+Up to this point, we’ve focused on why inference data varies. The endpoint you call (`predict` vs `predict_stream`), whether a request succeeds or fails, and how your agent handles errors all influence what gets recorded in the inference table.
 
-This is where testing comes in—but not in the way it’s often discussed.
+The next step is to send deliberately varied requests, not because you care about the answers, but because you care about the inference rows they produce. This often feels like you’re testing the model. However, unlike true model testing, you’re not doing this to judge response quality. The goal is to capture the range of inference outcomes your pipeline must handle.
 
-At this stage, you’re not trying to validate whether the agent gives “good” answers. You’re trying to intentionally generate inference data that covers the full range of outcomes your pipelines will need to handle. This is the essence of a data-first approach to building AI processing pipelines.
+In practical terms, you’re trying to populate the inference table with representative cases: successful requests, blocked requests, streamed responses, partially streamed responses, and everything in between. Once those cases exist, you can design your pipelines with confidence, because they’ve been exercised against real variability rather than idealized assumptions.
 
-The goal of testing here is to populate the inference table with representative rows: successful requests, failed requests, streamed responses, partial responses, and everything in between. Once those rows exist, you can design and build your processing pipelines with confidence, knowing they’ve been exercised against real variability rather than idealized assumptions.
+### Thinking in Outcomes, Not Prompts
 
-This approach flips the usual order of operations. Instead of writing a pipeline and discovering later that it breaks—or quietly produces bad data—you first create a diverse set of inference records, then build a pipeline that can reliably process all of them into the gold-quality dataset described earlier.
+The key mental shift is to stop thinking in terms of the questions you would normally ask an agent and start thinking in terms of the possible outcomes produced by the model during inference.
 
-When you reach that point, you don’t just have a working pipeline. You have a robust one, shaped by the actual behaviors of the system rather than by guesswork.
+Instead of interacting with the agent like a well-behaved user, you want to deliberately make requests that trigger different outcomes and edge cases. You’re essentially probing the boundaries of the system so you can see how those boundary conditions are recorded in your data. 
 
-## Thinking in Outcomes, Not Prompts
-
-The key mental shift is to stop thinking in terms of the questions you would normally ask an agent and start thinking in terms of the outcomes produced by the model during inference.
-
-At this stage, you’re not trying to exercise the agent the way a well-behaved user would. You’re trying to exercise it the way your data pipeline will experience it when it's populated with real production data. That often means deliberately asking questions designed to fail, to be blocked, or to behave in unexpected ways. In practice, you almost have to pretend you’re a bad actor and intentionally probe the edges of what the model will and won’t do.
-
-An important side effect of this kind of testing is that it can surface issues beyond data shape alone. If a prompt that is intentionally designed to be blocked or rejected instead succeeds, that’s a signal worth paying attention to. In other words, if the model responds to something it clearly shouldn’t, that’s not just a testing artifact—it’s a finding.
-
-Those cases are worth bringing back to the broader team, whether that means tightening guardrails, adjusting prompts, or revisiting how the agent is configured. Even though the primary goal here is data readiness, this kind of testing can also reveal gaps that should be addressed before the agent sees wider use.
+> **Note:** This kind of testing can surface more than schema differences in the inference table. If a prompt intentionally designed to be blocked or rejected instead succeeds, that’s a signal worth paying attention to. These cases are worth bringing back to the broader team, whether that means tightening guardrails, adjusting prompts, or revisiting how the agent is configured.
 
 Once you step back and focus on inference outcomes rather than individual prompts, two dimensions tend to matter most:
 
