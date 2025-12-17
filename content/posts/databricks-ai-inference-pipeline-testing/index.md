@@ -33,9 +33,108 @@ Inside those JSON blobs is everything you might want to analyze:
 
 The inference table captures all of this data, but it isn’t structured for answering questions. As soon as you start asking things like how many tokens are being consumed, which requests are triggering safety or content filters, or why certain requests failed, you quickly realize that the inference table is a logging table, not an analytics table. It’s optimized for completeness, not usability.
 
-For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.
+Here’s a simplified example of what a single `response` value can look like in the inference table:
 
-> **Note**: I’m not including a screenshot of the raw inference table here because the free Databricks tier doesn’t persist Mosaic AI Gateway requests to an inference table. You’ll have to take my word for it, but the request and response columns are stored as large, deeply nested JSON strings.
+```json
+{
+    "object": "response",
+    "output": [
+        {
+            "type": "message",
+            "id": "<redacted>",
+            "content": [
+                {
+                    "text": "Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... ",
+                    "type": "output_text"
+                }
+            ],
+            "role": "assistant"
+        }
+    ],
+    "id": "<redacted>",
+    "databricks_output": {
+        "trace": {
+            "info": {
+                "trace_id": "<redacted>",
+                "client_request_id": "<redacted>",
+                "trace_location": {
+                    "type": "MLFLOW_EXPERIMENT",
+                    "mlflow_experiment": {
+                        "experiment_id": "<redacted>"
+                    }
+                },
+                "request_time": "2025-12-02T16:52:20.818Z",
+                "state": "OK",
+                "trace_metadata": {
+                    "mlflow.modelId": "<redacted>",
+                    "mlflow.trace_schema.version": "3",
+                    "mlflow.trace.tokenUsage": "{\"input_tokens\": 27, \"output_tokens\": 641, \"total_tokens\": 668}",
+                    "mlflow.databricks.modelServingEndpointName": "",
+                    "app_version_id": "<redacted>",
+                    "is_truncated": false
+                },
+                "request_preview": "What is a good apple pie recipe to use on Thanksgiving",
+                "response_preview": "Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... ",
+                "execution_duration_ms": 5098
+            },
+            "data": {
+                "spans": [
+                    {
+                        "trace_id": "<redacted>",
+                        "span_id": "<redacted>",
+                        "parent_span_id": null,
+                        "name": "predict",
+                        "start_time_unix_nano": 1764694340818061307,
+                        "end_time_unix_nano": 1764694345916778373,
+                        "events": [],
+                        "status": {
+                            "code": "STATUS_CODE_OK",
+                            "message": ""
+                        },
+                        "attributes": {
+                            "mlflow.traceRequestId": "\"<redacted>\"",
+                            "mlflow.spanType": "\"AGENT\"",
+                            "mlflow.spanFunctionName": "\"predict\"",
+                            "mlflow.spanInputs": "{\"request\": {\"tool_choice\": null, \"truncation\": null, \"max_output_tokens\": null, \"metadata\": null, \"parallel_tool_calls\": null, \"tools\": null, \"reasoning\": null, \"store\": null, \"stream\": null, \"temperature\": null, \"text\": null, \"top_p\": null, \"user\": null, \"input\": [{\"status\": null, \"content\": \"You are a helpful assistant\", \"role\": \"system\", \"type\": \"message\"}, {\"status\": null, \"content\": \"What is a good apple pie recipe to use on Thanksgiving\", \"role\": \"user\", \"type\": \"message\"}], \"custom_inputs\": null, \"context\": null}}",
+                            "mlflow.spanOutputs": "{\"tool_choice\": null, \"truncation\": null, \"id\": null, \"created_at\": null, \"error\": null, \"incomplete_details\": null, \"instructions\": null, \"metadata\": null, \"model\": null, \"object\": \"response\", \"output\": [{\"type\": \"message\", \"id\": \"chatcmpl-CiNtsLfe8NQUxjuBRL9Xt3lalBLBp\", \"content\": [{\"text\": \"Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \", \"type\": \"output_text\"}], \"role\": \"assistant\"}], \"parallel_tool_calls\": null, \"temperature\": null, \"tools\": null, \"top_p\": null, \"max_output_tokens\": null, \"previous_response_id\": null, \"reasoning\": null, \"status\": null, \"text\": null, \"usage\": null, \"user\": null, \"custom_outputs\": null}"
+                        }
+                    },
+                    {
+                        "trace_id": "<redacted>",
+                        "span_id": "<redacted>",
+                        "parent_span_id": "<redacted>",
+                        "name": "Completions",
+                        "start_time_unix_nano": 1764694340819104621,
+                        "end_time_unix_nano": 1764694345916576447,
+                        "events": [],
+                        "status": {
+                            "code": "STATUS_CODE_OK",
+                            "message": ""
+                        },
+                        "attributes": {
+                            "mlflow.traceRequestId": "\"<redacted>\"",
+                            "mlflow.spanType": "\"CHAT_MODEL\"",
+                            "mlflow.spanInputs": "{\"model\": \"<redacted>\", \"messages\": [{\"content\": \"You are a helpful assistant\", \"role\": \"system\"}, {\"content\": \"What is a good apple pie recipe to use on Thanksgiving\", \"role\": \"user\"}], \"temperature\": 0.5, \"max_completion_tokens\": null, \"stream\": false}",
+                            "model": "\"<redacted>\"",
+                            "temperature": "0.5",
+                            "max_completion_tokens": "null",
+                            "stream": "false",
+                            "mlflow.message.format": "\"openai\"",
+                            "mlflow.chat.tokenUsage": "{\"input_tokens\": 27, \"output_tokens\": 641, \"total_tokens\": 668}",
+                            "mlflow.spanOutputs": "{\"id\": \"<redacted>\", \"choices\": [{\"finish_reason\": \"stop\", \"index\": 0, \"logprobs\": null, \"message\": {\"content\": \"Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \", \"refusal\": null, \"role\": \"assistant\", \"annotations\": [], \"audio\": null, \"function_call\": null, \"tool_calls\": null}, \"content_filter_results\": {\"hate\": {\"filtered\": false, \"severity\": \"safe\"}, \"protected_material_code\": {\"filtered\": false, \"detected\": false}, \"protected_material_text\": {\"filtered\": false, \"detected\": false}, \"self_harm\": {\"filtered\": false, \"severity\": \"safe\"}, \"sexual\": {\"filtered\": false, \"severity\": \"safe\"}, \"violence\": {\"filtered\": false, \"severity\": \"safe\"}}}], \"created\": 1764694340, \"model\": \"gpt-4.1-2025-04-14\", \"object\": \"chat.completion\", \"service_tier\": null, \"system_fingerprint\": \"fp_f99638a8d7\", \"usage\": {\"completion_tokens\": 641, \"prompt_tokens\": 27, \"total_tokens\": 668, \"completion_tokens_details\": {\"accepted_prediction_tokens\": 0, \"audio_tokens\": 0, \"reasoning_tokens\": 0, \"rejected_prediction_tokens\": 0}, \"prompt_tokens_details\": {\"audio_tokens\": 0, \"cached_tokens\": 0}}, \"prompt_filter_results\": [{\"prompt_index\": 0, \"content_filter_results\": {\"hate\": {\"filtered\": false, \"severity\": \"safe\"}, \"jailbreak\": {\"filtered\": false, \"detected\": false}, \"self_harm\": {\"filtered\": false, \"severity\": \"safe\"}, \"sexual\": {\"filtered\": false, \"severity\": \"safe\"}, \"violence\": {\"filtered\": false, \"severity\": \"safe\"}}}]}"
+                        }
+                    }
+                ]
+            }
+        },
+        "databricks_request_id": "<redacted>"
+    }
+}
+```
+
+> **Note:** IDs are redacted and the assistant output is truncated for readability. This example comes from a predict request. Streaming responses (predict_stream) are typically larger and harder to present cleanly in a blog post. 
+
+For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.
 
 ## The Real Goal: A Gold-Quality Inference Dataset
 
@@ -68,9 +167,121 @@ The first distinction is easy to overlook. A request made to `predict` returns a
 
 The second and third factors are related but distinct. Whether the model throws an error indicates that something went wrong. How your agent handles that error determines what gets recorded in the inference table.
 
+Here’s a concrete example of how the `response` JSON can differ for a request made to the `predict` endpoint when the underlying model throws an error:
+
+```json
+{
+    "object": "response",
+    "output": [
+        {
+            "type": "message",
+            "id": "flagged",
+            "content": [
+                {
+                    "text": "This question has been flagged as inappropriate",
+                    "type": "output_text"
+                }
+            ],
+            "role": "assistant"
+        }
+    ],
+    "id": "<redacted>",
+    "databricks_output": {
+        "trace": {
+            "info": {
+                "trace_id": "<redacted>",
+                "client_request_id": "<redacted>",
+                "trace_location": {
+                    "type": "MLFLOW_EXPERIMENT",
+                    "mlflow_experiment": {
+                        "experiment_id": "<redacted>"
+                    }
+                },
+                "request_time": "2025-12-17T20:45:43.536Z",
+                "state": "OK",
+                "trace_metadata": {
+                    "mlflow.databricks.modelServingEndpointName": "",
+                    "mlflow.trace_schema.version": "3",
+                    "mlflow.modelId": "<redacted>",
+                    "app_version_id": "<redacted>",
+                    "is_truncated": false
+                },
+                "request_preview": "How do I rob a bank without getting caught?",
+                "response_preview": "This question has been flagged as inappropriate",
+                "execution_duration_ms": 464
+            },
+            "data": {
+                "spans": [
+                    {
+                        "trace_id": "<redacted>",
+                        "span_id": "<redacted>",
+                        "parent_span_id": null,
+                        "name": "predict",
+                        "start_time_unix_nano": 1766004343536444701,
+                        "end_time_unix_nano": 1766004344000597938,
+                        "events": [],
+                        "status": {
+                            "code": "STATUS_CODE_OK",
+                            "message": ""
+                        },
+                        "attributes": {
+                            "mlflow.traceRequestId": "\"<redacted>\"",
+                            "mlflow.spanType": "\"AGENT\"",
+                            "mlflow.spanFunctionName": "\"predict\"",
+                            "mlflow.spanInputs": "{\"request\": {\"tool_choice\": null, \"truncation\": null, \"max_output_tokens\": null, \"metadata\": null, \"parallel_tool_calls\": null, \"tools\": null, \"reasoning\": null, \"store\": null, \"stream\": null, \"temperature\": null, \"text\": null, \"top_p\": null, \"user\": null, \"input\": [{\"status\": null, \"content\": \"You are a helpful assistant\", \"role\": \"system\", \"type\": \"message\"}, {\"status\": null, \"content\": \"How do I rob a bank without getting caught?\", \"role\": \"user\", \"type\": \"message\"}], \"custom_inputs\": null, \"context\": null}}",
+                            "mlflow.spanOutputs": "{\"tool_choice\": null, \"truncation\": null, \"id\": null, \"created_at\": null, \"error\": null, \"incomplete_details\": null, \"instructions\": null, \"metadata\": null, \"model\": null, \"object\": \"response\", \"output\": [{\"type\": \"message\", \"id\": \"flagged\", \"content\": [{\"text\": \"This question has been flagged as inappropriate\", \"type\": \"output_text\"}], \"role\": \"assistant\"}], \"parallel_tool_calls\": null, \"temperature\": null, \"tools\": null, \"top_p\": null, \"max_output_tokens\": null, \"previous_response_id\": null, \"reasoning\": null, \"status\": null, \"text\": null, \"usage\": null, \"user\": null, \"custom_outputs\": null}"
+                        }
+                    },
+                    {
+                        "trace_id": "<redacted>",
+                        "span_id": "<redacted>",
+                        "parent_span_id": "<redacted>",
+                        "name": "Completions",
+                        "start_time_unix_nano": 1766004343537162020,
+                        "end_time_unix_nano": 1766004344000358635,
+                        "events": [
+                            {
+                                "name": "exception",
+                                "time_unix_nano": 1766004344000273,
+                                "attributes": {
+                                    "exception.message": "Error code: 400 - {'error_code': 'BAD_REQUEST', 'message': '{\"external_model_provider\":\"openai\",\"external_model_error\":{\"error\":{\"param\":\"prompt\",\"code\":\"content_filter\",\"innererror\":{\"code\":\"ResponsibleAIPolicyViolation\",\"content_filter_result\":{\"jailbreak\":{\"filtered\":false,\"detected\":false},\"violence\":{\"filtered\":true,\"severity\":\"medium\"},\"sexual\":{\"filtered\":false,\"severity\":\"safe\"},\"hate\":{\"filtered\":false,\"severity\":\"safe\"},\"self_harm\":{\"filtered\":false,\"severity\":\"safe\"}}},\"status\":400,\"message\":\"The response was filtered due to the prompt triggering Azure OpenAI\\'s content management policy. Please modify your prompt and retry. To learn more about our content filtering policies please read our documentation: https://go.microsoft.com/fwlink/?linkid=2198766\",\"type\":null}}}'}",
+                                    "exception.type": "BadRequestError",
+                                    "exception.stacktrace": "<redacted>"
+                                }
+                            }
+                        ],
+                        "status": {
+                            "code": "STATUS_CODE_ERROR",
+                            "message": ""
+                        },
+                        "attributes": {
+                            "mlflow.traceRequestId": "\"<redacted>\"",
+                            "mlflow.spanType": "\"CHAT_MODEL\"",
+                            "mlflow.spanInputs": "{\"model\": \"<redacted>\", \"messages\": [{\"content\": \"You are a helpful assistant\", \"role\": \"system\"}, {\"content\": \"How do I rob a bank without getting caught?\", \"role\": \"user\"}], \"temperature\": 0.5, \"max_completion_tokens\": null, \"stream\": false}",
+                            "model": "\"<redacted>\"",
+                            "temperature": "0.5",
+                            "max_completion_tokens": "null",
+                            "stream": "false",
+                            "mlflow.message.format": "\"openai\""
+                        }
+                    }
+                ]
+            }
+        },
+        "databricks_request_id": "<redacted>"
+    }
+}
+```
+
+Compare this error response to the successful example in the previous section. The table columns are the same, but the JSON shape inside `response` changes in ways your processing pipelines need to account for. 
+
+Let’s take a closer look at the two JSON blocks. Even though both come from calls to the same endpoint, you’ll see that some of the information you’ll want to extract appears in different locations. For example, prompt filter results and content filter results don’t show up at the same path in each block, even though they’re exactly the kinds of fields you’ll want to analyze and normalize.
+
+That matters because it affects how you write your extraction logic. If you assume the filter results always appear where they do in the successful response, pipelines that extract prompt and content filter information will either return nulls when those fields aren’t actually null, or throw errors, depending on how your code is written.
+
 ### How Agent Error Handling Changes Your Data
 
-In early versions of the AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.
+In early versions of my AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.
 
 From a data perspective, it didn’t.
 

@@ -236,7 +236,7 @@
     "keywords": ["databricks","ai","data engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1853"
+    "wordCount": "2934"
   }]
   </script>
 
@@ -891,10 +891,105 @@
 <li>MLflow tracing metadata</li>
 </ul>
 <p>The inference table captures all of this data, but it isn’t structured for answering questions. As soon as you start asking things like how many tokens are being consumed, which requests are triggering safety or content filters, or why certain requests failed, you quickly realize that the inference table is a logging table, not an analytics table. It’s optimized for completeness, not usability.</p>
-<p>For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.</p>
-<blockquote>
-<p><strong>Note</strong>: I’m not including a screenshot of the raw inference table here because the free Databricks tier doesn’t persist Mosaic AI Gateway requests to an inference table. You’ll have to take my word for it, but the request and response columns are stored as large, deeply nested JSON strings.</p>
+<p>Here’s a simplified example of what a single <code>response</code> value can look like in the inference table:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;object&#34;</span><span class="p">:</span> <span class="s2">&#34;response&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;output&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;message&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;content&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... &#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;output_text&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;databricks_output&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;trace&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;info&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;client_request_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_location&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;MLFLOW_EXPERIMENT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow_experiment&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;experiment_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;request_time&#34;</span><span class="p">:</span> <span class="s2">&#34;2025-12-02T16:52:20.818Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;state&#34;</span><span class="p">:</span> <span class="s2">&#34;OK&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_metadata&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.modelId&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.trace_schema.version&#34;</span><span class="p">:</span> <span class="s2">&#34;3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.trace.tokenUsage&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;input_tokens\&#34;: 27, \&#34;output_tokens\&#34;: 641, \&#34;total_tokens\&#34;: 668}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.databricks.modelServingEndpointName&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;app_version_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;is_truncated&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;request_preview&#34;</span><span class="p">:</span> <span class="s2">&#34;What is a good apple pie recipe to use on Thanksgiving&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;response_preview&#34;</span><span class="p">:</span> <span class="s2">&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... &#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;execution_duration_ms&#34;</span><span class="p">:</span> <span class="mi">5098</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;spans&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;parent_span_id&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;predict&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;start_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1764694340818061307</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;end_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1764694345916778373</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;events&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;code&#34;</span><span class="p">:</span> <span class="s2">&#34;STATUS_CODE_OK&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;attributes&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.traceRequestId&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanType&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;AGENT\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanFunctionName&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;predict\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanInputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;request\&#34;: {\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;metadata\&#34;: null, \&#34;parallel_tool_calls\&#34;: null, \&#34;tools\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;store\&#34;: null, \&#34;stream\&#34;: null, \&#34;temperature\&#34;: null, \&#34;text\&#34;: null, \&#34;top_p\&#34;: null, \&#34;user\&#34;: null, \&#34;input\&#34;: [{\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;You are a helpful assistant\&#34;, \&#34;role\&#34;: \&#34;system\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}, {\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;What is a good apple pie recipe to use on Thanksgiving\&#34;, \&#34;role\&#34;: \&#34;user\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}], \&#34;custom_inputs\&#34;: null, \&#34;context\&#34;: null}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanOutputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;id\&#34;: null, \&#34;created_at\&#34;: null, \&#34;error\&#34;: null, \&#34;incomplete_details\&#34;: null, \&#34;instructions\&#34;: null, \&#34;metadata\&#34;: null, \&#34;model\&#34;: null, \&#34;object\&#34;: \&#34;response\&#34;, \&#34;output\&#34;: [{\&#34;type\&#34;: \&#34;message\&#34;, \&#34;id\&#34;: \&#34;chatcmpl-CiNtsLfe8NQUxjuBRL9Xt3lalBLBp\&#34;, \&#34;content\&#34;: [{\&#34;text\&#34;: \&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \&#34;, \&#34;type\&#34;: \&#34;output_text\&#34;}], \&#34;role\&#34;: \&#34;assistant\&#34;}], \&#34;parallel_tool_calls\&#34;: null, \&#34;temperature\&#34;: null, \&#34;tools\&#34;: null, \&#34;top_p\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;previous_response_id\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;status\&#34;: null, \&#34;text\&#34;: null, \&#34;usage\&#34;: null, \&#34;user\&#34;: null, \&#34;custom_outputs\&#34;: null}&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;parent_span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Completions&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;start_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1764694340819104621</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;end_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1764694345916576447</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;events&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;code&#34;</span><span class="p">:</span> <span class="s2">&#34;STATUS_CODE_OK&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;attributes&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.traceRequestId&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanType&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;CHAT_MODEL\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanInputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;model\&#34;: \&#34;&lt;redacted&gt;\&#34;, \&#34;messages\&#34;: [{\&#34;content\&#34;: \&#34;You are a helpful assistant\&#34;, \&#34;role\&#34;: \&#34;system\&#34;}, {\&#34;content\&#34;: \&#34;What is a good apple pie recipe to use on Thanksgiving\&#34;, \&#34;role\&#34;: \&#34;user\&#34;}], \&#34;temperature\&#34;: 0.5, \&#34;max_completion_tokens\&#34;: null, \&#34;stream\&#34;: false}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;model&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;temperature&#34;</span><span class="p">:</span> <span class="s2">&#34;0.5&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;max_completion_tokens&#34;</span><span class="p">:</span> <span class="s2">&#34;null&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;stream&#34;</span><span class="p">:</span> <span class="s2">&#34;false&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.message.format&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;openai\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.chat.tokenUsage&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;input_tokens\&#34;: 27, \&#34;output_tokens\&#34;: 641, \&#34;total_tokens\&#34;: 668}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanOutputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;id\&#34;: \&#34;&lt;redacted&gt;\&#34;, \&#34;choices\&#34;: [{\&#34;finish_reason\&#34;: \&#34;stop\&#34;, \&#34;index\&#34;: 0, \&#34;logprobs\&#34;: null, \&#34;message\&#34;: {\&#34;content\&#34;: \&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \&#34;, \&#34;refusal\&#34;: null, \&#34;role\&#34;: \&#34;assistant\&#34;, \&#34;annotations\&#34;: [], \&#34;audio\&#34;: null, \&#34;function_call\&#34;: null, \&#34;tool_calls\&#34;: null}, \&#34;content_filter_results\&#34;: {\&#34;hate\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;protected_material_code\&#34;: {\&#34;filtered\&#34;: false, \&#34;detected\&#34;: false}, \&#34;protected_material_text\&#34;: {\&#34;filtered\&#34;: false, \&#34;detected\&#34;: false}, \&#34;self_harm\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;sexual\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;violence\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}}}], \&#34;created\&#34;: 1764694340, \&#34;model\&#34;: \&#34;gpt-4.1-2025-04-14\&#34;, \&#34;object\&#34;: \&#34;chat.completion\&#34;, \&#34;service_tier\&#34;: null, \&#34;system_fingerprint\&#34;: \&#34;fp_f99638a8d7\&#34;, \&#34;usage\&#34;: {\&#34;completion_tokens\&#34;: 641, \&#34;prompt_tokens\&#34;: 27, \&#34;total_tokens\&#34;: 668, \&#34;completion_tokens_details\&#34;: {\&#34;accepted_prediction_tokens\&#34;: 0, \&#34;audio_tokens\&#34;: 0, \&#34;reasoning_tokens\&#34;: 0, \&#34;rejected_prediction_tokens\&#34;: 0}, \&#34;prompt_tokens_details\&#34;: {\&#34;audio_tokens\&#34;: 0, \&#34;cached_tokens\&#34;: 0}}, \&#34;prompt_filter_results\&#34;: [{\&#34;prompt_index\&#34;: 0, \&#34;content_filter_results\&#34;: {\&#34;hate\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;jailbreak\&#34;: {\&#34;filtered\&#34;: false, \&#34;detected\&#34;: false}, \&#34;self_harm\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;sexual\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}, \&#34;violence\&#34;: {\&#34;filtered\&#34;: false, \&#34;severity\&#34;: \&#34;safe\&#34;}}}]}&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;databricks_request_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><blockquote>
+<p><strong>Note:</strong> IDs are redacted and the assistant output is truncated for readability. This example comes from a predict request. Streaming responses (predict_stream) are typically larger and harder to present cleanly in a blog post.</p>
 </blockquote>
+<p>For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.</p>
 
 <h2 class="relative group">The Real Goal: A Gold-Quality Inference Dataset
     <div id="the-real-goal-a-gold-quality-inference-dataset" class="anchor"></div>
@@ -935,6 +1030,111 @@
 </ol>
 <p>The first distinction is easy to overlook. A request made to <code>predict</code> returns a single response, while a request made to <code>predict_stream</code> returns content incrementally. As a result, the JSON written to the <code>response</code> column has a different shape depending on which endpoint is used.</p>
 <p>The second and third factors are related but distinct. Whether the model throws an error indicates that something went wrong. How your agent handles that error determines what gets recorded in the inference table.</p>
+<p>Here’s a concrete example of how the <code>response</code> JSON can differ for a request made to the <code>predict</code> endpoint when the underlying model throws an error:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;object&#34;</span><span class="p">:</span> <span class="s2">&#34;response&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;output&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;message&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;flagged&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;content&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;This question has been flagged as inappropriate&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;output_text&#34;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">],</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;databricks_output&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;trace&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;info&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;client_request_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_location&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;MLFLOW_EXPERIMENT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow_experiment&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;experiment_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;request_time&#34;</span><span class="p">:</span> <span class="s2">&#34;2025-12-17T20:45:43.536Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;state&#34;</span><span class="p">:</span> <span class="s2">&#34;OK&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;trace_metadata&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.databricks.modelServingEndpointName&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.trace_schema.version&#34;</span><span class="p">:</span> <span class="s2">&#34;3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;mlflow.modelId&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;app_version_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="nt">&#34;is_truncated&#34;</span><span class="p">:</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">                <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;request_preview&#34;</span><span class="p">:</span> <span class="s2">&#34;How do I rob a bank without getting caught?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;response_preview&#34;</span><span class="p">:</span> <span class="s2">&#34;This question has been flagged as inappropriate&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;execution_duration_ms&#34;</span><span class="p">:</span> <span class="mi">464</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;spans&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;parent_span_id&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;predict&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;start_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1766004343536444701</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;end_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1766004344000597938</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;events&#34;</span><span class="p">:</span> <span class="p">[],</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;code&#34;</span><span class="p">:</span> <span class="s2">&#34;STATUS_CODE_OK&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;attributes&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.traceRequestId&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanType&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;AGENT\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanFunctionName&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;predict\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanInputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;request\&#34;: {\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;metadata\&#34;: null, \&#34;parallel_tool_calls\&#34;: null, \&#34;tools\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;store\&#34;: null, \&#34;stream\&#34;: null, \&#34;temperature\&#34;: null, \&#34;text\&#34;: null, \&#34;top_p\&#34;: null, \&#34;user\&#34;: null, \&#34;input\&#34;: [{\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;You are a helpful assistant\&#34;, \&#34;role\&#34;: \&#34;system\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}, {\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;How do I rob a bank without getting caught?\&#34;, \&#34;role\&#34;: \&#34;user\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}], \&#34;custom_inputs\&#34;: null, \&#34;context\&#34;: null}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanOutputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;id\&#34;: null, \&#34;created_at\&#34;: null, \&#34;error\&#34;: null, \&#34;incomplete_details\&#34;: null, \&#34;instructions\&#34;: null, \&#34;metadata\&#34;: null, \&#34;model\&#34;: null, \&#34;object\&#34;: \&#34;response\&#34;, \&#34;output\&#34;: [{\&#34;type\&#34;: \&#34;message\&#34;, \&#34;id\&#34;: \&#34;flagged\&#34;, \&#34;content\&#34;: [{\&#34;text\&#34;: \&#34;This question has been flagged as inappropriate\&#34;, \&#34;type\&#34;: \&#34;output_text\&#34;}], \&#34;role\&#34;: \&#34;assistant\&#34;}], \&#34;parallel_tool_calls\&#34;: null, \&#34;temperature\&#34;: null, \&#34;tools\&#34;: null, \&#34;top_p\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;previous_response_id\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;status\&#34;: null, \&#34;text\&#34;: null, \&#34;usage\&#34;: null, \&#34;user\&#34;: null, \&#34;custom_outputs\&#34;: null}&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;trace_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;parent_span_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Completions&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;start_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1766004343537162020</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;end_time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1766004344000358635</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;events&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">                            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;exception&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                <span class="nt">&#34;time_unix_nano&#34;</span><span class="p">:</span> <span class="mi">1766004344000273</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                <span class="nt">&#34;attributes&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nt">&#34;exception.message&#34;</span><span class="p">:</span> <span class="s2">&#34;Error code: 400 - {&#39;error_code&#39;: &#39;BAD_REQUEST&#39;, &#39;message&#39;: &#39;{\&#34;external_model_provider\&#34;:\&#34;openai\&#34;,\&#34;external_model_error\&#34;:{\&#34;error\&#34;:{\&#34;param\&#34;:\&#34;prompt\&#34;,\&#34;code\&#34;:\&#34;content_filter\&#34;,\&#34;innererror\&#34;:{\&#34;code\&#34;:\&#34;ResponsibleAIPolicyViolation\&#34;,\&#34;content_filter_result\&#34;:{\&#34;jailbreak\&#34;:{\&#34;filtered\&#34;:false,\&#34;detected\&#34;:false},\&#34;violence\&#34;:{\&#34;filtered\&#34;:true,\&#34;severity\&#34;:\&#34;medium\&#34;},\&#34;sexual\&#34;:{\&#34;filtered\&#34;:false,\&#34;severity\&#34;:\&#34;safe\&#34;},\&#34;hate\&#34;:{\&#34;filtered\&#34;:false,\&#34;severity\&#34;:\&#34;safe\&#34;},\&#34;self_harm\&#34;:{\&#34;filtered\&#34;:false,\&#34;severity\&#34;:\&#34;safe\&#34;}}},\&#34;status\&#34;:400,\&#34;message\&#34;:\&#34;The response was filtered due to the prompt triggering Azure OpenAI\\&#39;s content management policy. Please modify your prompt and retry. To learn more about our content filtering policies please read our documentation: https://go.microsoft.com/fwlink/?linkid=2198766\&#34;,\&#34;type\&#34;:null}}}&#39;}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nt">&#34;exception.type&#34;</span><span class="p">:</span> <span class="s2">&#34;BadRequestError&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                    <span class="nt">&#34;exception.stacktrace&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">                                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">],</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;status&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;code&#34;</span><span class="p">:</span> <span class="s2">&#34;STATUS_CODE_ERROR&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;message&#34;</span><span class="p">:</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">                        <span class="nt">&#34;attributes&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.traceRequestId&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanType&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;CHAT_MODEL\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanInputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;model\&#34;: \&#34;&lt;redacted&gt;\&#34;, \&#34;messages\&#34;: [{\&#34;content\&#34;: \&#34;You are a helpful assistant\&#34;, \&#34;role\&#34;: \&#34;system\&#34;}, {\&#34;content\&#34;: \&#34;How do I rob a bank without getting caught?\&#34;, \&#34;role\&#34;: \&#34;user\&#34;}], \&#34;temperature\&#34;: 0.5, \&#34;max_completion_tokens\&#34;: null, \&#34;stream\&#34;: false}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;model&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;&lt;redacted&gt;\&#34;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;temperature&#34;</span><span class="p">:</span> <span class="s2">&#34;0.5&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;max_completion_tokens&#34;</span><span class="p">:</span> <span class="s2">&#34;null&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;stream&#34;</span><span class="p">:</span> <span class="s2">&#34;false&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.message.format&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;openai\&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">                        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;databricks_request_id&#34;</span><span class="p">:</span> <span class="s2">&#34;&lt;redacted&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Compare this error response to the successful example in the previous section. The table columns are the same, but the JSON shape inside <code>response</code> changes in ways your processing pipelines need to account for.</p>
+<p>Let’s take a closer look at the two JSON blocks. Even though both come from calls to the same endpoint, you’ll see that some of the information you’ll want to extract appears in different locations. For example, prompt filter results and content filter results don’t show up at the same path in each block, even though they’re exactly the kinds of fields you’ll want to analyze and normalize.</p>
+<p>That matters because it affects how you write your extraction logic. If you assume the filter results always appear where they do in the successful response, pipelines that extract prompt and content filter information will either return nulls when those fields aren’t actually null, or throw errors, depending on how your code is written.</p>
 
 <h3 class="relative group">How Agent Error Handling Changes Your Data
     <div id="how-agent-error-handling-changes-your-data" class="anchor"></div>
@@ -945,7 +1145,7 @@
     </span>
     
 </h3>
-<p>In early versions of the AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.</p>
+<p>In early versions of my AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.</p>
 <p>From a data perspective, it didn’t.</p>
 <p>The inference rows associated with these failures contained very little information. Important metadata that we later wanted to analyze was missing from the <code>response</code> column.</p>
 <p>Eventually, the agent was updated to catch these errors and return a custom message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The <code>response</code> column now contained much richer information that had been missing in the earlier implementation.</p>
