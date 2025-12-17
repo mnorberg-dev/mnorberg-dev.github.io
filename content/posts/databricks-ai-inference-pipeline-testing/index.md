@@ -12,7 +12,7 @@ When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very 
 
 At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.
 
-In practice, though, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.
+In reality, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.
 
 However, adding more pipelines also increases the complexity of your data stack. Each new step introduces assumptions about how the model behaves and what the data will look like, and those assumptions need to hold up in production.
 
@@ -52,7 +52,7 @@ Once you have this kind of structure in place, everything opens up. You can anal
 
 But there’s a catch that isn’t obvious at first.
 
-You can’t design the processing pipeline that produces the gold table to be both correct and resilient until you understand every shape your inference data can take.
+You can’t design processing pipelines that produce gold-quality tables to be both correct and resilient until you understand every shape your inference data can take.
 
 ## What the Documentation Doesn't Emphasize
 

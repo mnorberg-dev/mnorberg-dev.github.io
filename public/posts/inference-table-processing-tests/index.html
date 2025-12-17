@@ -236,7 +236,7 @@
     "keywords": ["databricks","ai","data engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1856"
+    "wordCount": "1853"
   }]
   </script>
 
@@ -867,7 +867,7 @@
         <div class="article-content max-w-prose mb-20">
           <p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks refers to as an inference table.</p>
 <p>At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.</p>
-<p>In practice, though, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.</p>
+<p>In reality, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.</p>
 <p>However, adding more pipelines also increases the complexity of your data stack. Each new step introduces assumptions about how the model behaves and what the data will look like, and those assumptions need to hold up in production.</p>
 <p>This is where many data teams run into trouble. Processing pipelines are often designed for how the model is expected to behave, without considering the full range of outcomes. Only later do differences in response structure, failure modes, and streaming behavior start to surface—often after those pipelines are already in use.</p>
 <p>This post takes a data-first approach to building AI processing pipelines. Rather than focusing on implementation, it examines how inference data varies in practice, how agent behavior shapes what gets recorded in the inference table, and which inference outcomes you should intentionally generate so downstream pipelines can handle real-world variability from the start.</p>
@@ -915,7 +915,7 @@
 <p>Token usage is a good example. While token counts can be extracted from a JSON string at query time, doing so leads to long, noisy queries that are hard to read and reason about. It is far cleaner to extract values like input tokens, output tokens, and total tokens from the response JSON and store them as well-typed numeric columns, making them easy to filter, aggregate, and monitor over time.</p>
 <p>Once you have this kind of structure in place, everything opens up. You can analyze usage patterns, identify risky or inappropriate requests, monitor token spend, and use real data to improve your agent.</p>
 <p>But there’s a catch that isn’t obvious at first.</p>
-<p>You can’t design the processing pipeline that produces the gold table to be both correct and resilient until you understand every shape your inference data can take.</p>
+<p>You can’t design processing pipelines that produce gold-quality tables to be both correct and resilient until you understand every shape your inference data can take.</p>
 
 <h2 class="relative group">What the Documentation Doesn&rsquo;t Emphasize
     <div id="what-the-documentation-doesnt-emphasize" class="anchor"></div>
