@@ -297,6 +297,8 @@ That matters because it affects how you write your extraction logic. If you assu
 
 ### How Agent Error Handling Changes Your Data
 
+The third factor, how your agent handles errors, matters more than most teams expect because it can change what gets recorded in the inference table.
+
 In early versions of my AI chat agent, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.
 
 From a data perspective, it didn’t.
@@ -305,7 +307,7 @@ The inference rows associated with these failures contained very little informat
 
 Eventually, the agent was updated to catch these errors and return a custom message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The `response` column now contained much richer information that had been missing in the earlier implementation.
 
-The key point isn’t how you handle errors in your agent. It’s that agent implementation choices directly affect the structure and completeness of your inference data.
+The key point isn’t how you handle errors in your agent. It’s that implementation choices directly affect the structure and completeness of your inference data
 
 ## Generating Representative Inference Outcomes
 
@@ -375,7 +377,7 @@ Once all five of these cases exist in your inference table, you have the raw mat
 
 ## Why This Matters for Your Pipelines
 
-Each of these cases can produce a different response shape. If your pipeline only accounts for the “normal” ones, it’ll either:
+Each of these cases can produce a different response shape. In this post, we’ve already seen how the `predict` response shape differs between a successful request and a failed one; now consider that there are three more inference cases your pipelines may need to handle as well. If your pipeline only accounts for the “normal” ones, it’ll either:
 
 - Break when new data arrives, or
 - Produce incomplete analytics without realizing it.
