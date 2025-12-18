@@ -1,6 +1,6 @@
 ---
 title: "Creating AI Processing Pipelines: A Data-First Approach"
-date: 2025-12-14
+date: 2025-12-17
 summary: "Databricks Mosaic AI Gateway captures rich AI agent request and response data, but not in a format suitable for analysis. Turning that data into insights requires processing pipelines, and before building them, you need to understand the different shapes inference data can take. This post argues for a data-first approach that intentionally generates and examines real inference cases before designing pipelines that have to survive production."
 draft: false
 tags: ["databricks", "ai", "data engineering"]
