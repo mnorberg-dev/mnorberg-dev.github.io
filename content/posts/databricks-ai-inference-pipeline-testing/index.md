@@ -281,7 +281,7 @@ That matters because it affects how you write your extraction logic. If you assu
 
 ### How Agent Error Handling Changes Your Data
 
-In early versions of my AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.
+In early versions of my AI chat agent, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.
 
 From a data perspective, it didn’t.
 
