@@ -236,7 +236,7 @@
     "keywords": ["databricks","ai","data engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "2934"
+    "wordCount": "2994"
   }]
   </script>
 
@@ -865,7 +865,18 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          <p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks refers to as an inference table.</p>
+          <!-- Enables word wrapping in code cell blocks for this article only -->
+<style>
+  .article-content pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .article-content pre code {
+    white-space: pre-wrap;
+  }
+</style>
+<p>When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks refers to as an inference table.</p>
 <p>At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.</p>
 <p>In reality, having the data and being able to use it are very different things. Turning inference table data into something you can reliably analyze means building additional processing pipelines to extract, normalize, and structure the data.</p>
 <p>However, adding more pipelines also increases the complexity of your data stack. Each new step introduces assumptions about how the model behaves and what the data will look like, and those assumptions need to hold up in production.</p>
@@ -952,7 +963,7 @@
 </span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanType&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;AGENT\&#34;&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanFunctionName&#34;</span><span class="p">:</span> <span class="s2">&#34;\&#34;predict\&#34;&#34;</span><span class="p">,</span>
 </span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanInputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;request\&#34;: {\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;metadata\&#34;: null, \&#34;parallel_tool_calls\&#34;: null, \&#34;tools\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;store\&#34;: null, \&#34;stream\&#34;: null, \&#34;temperature\&#34;: null, \&#34;text\&#34;: null, \&#34;top_p\&#34;: null, \&#34;user\&#34;: null, \&#34;input\&#34;: [{\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;You are a helpful assistant\&#34;, \&#34;role\&#34;: \&#34;system\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}, {\&#34;status\&#34;: null, \&#34;content\&#34;: \&#34;What is a good apple pie recipe to use on Thanksgiving\&#34;, \&#34;role\&#34;: \&#34;user\&#34;, \&#34;type\&#34;: \&#34;message\&#34;}], \&#34;custom_inputs\&#34;: null, \&#34;context\&#34;: null}}&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanOutputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;id\&#34;: null, \&#34;created_at\&#34;: null, \&#34;error\&#34;: null, \&#34;incomplete_details\&#34;: null, \&#34;instructions\&#34;: null, \&#34;metadata\&#34;: null, \&#34;model\&#34;: null, \&#34;object\&#34;: \&#34;response\&#34;, \&#34;output\&#34;: [{\&#34;type\&#34;: \&#34;message\&#34;, \&#34;id\&#34;: \&#34;chatcmpl-CiNtsLfe8NQUxjuBRL9Xt3lalBLBp\&#34;, \&#34;content\&#34;: [{\&#34;text\&#34;: \&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \&#34;, \&#34;type\&#34;: \&#34;output_text\&#34;}], \&#34;role\&#34;: \&#34;assistant\&#34;}], \&#34;parallel_tool_calls\&#34;: null, \&#34;temperature\&#34;: null, \&#34;tools\&#34;: null, \&#34;top_p\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;previous_response_id\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;status\&#34;: null, \&#34;text\&#34;: null, \&#34;usage\&#34;: null, \&#34;user\&#34;: null, \&#34;custom_outputs\&#34;: null}&#34;</span>
+</span></span><span class="line"><span class="cl">                            <span class="nt">&#34;mlflow.spanOutputs&#34;</span><span class="p">:</span> <span class="s2">&#34;{\&#34;tool_choice\&#34;: null, \&#34;truncation\&#34;: null, \&#34;id\&#34;: null, \&#34;created_at\&#34;: null, \&#34;error\&#34;: null, \&#34;incomplete_details\&#34;: null, \&#34;instructions\&#34;: null, \&#34;metadata\&#34;: null, \&#34;model\&#34;: null, \&#34;object\&#34;: \&#34;response\&#34;, \&#34;output\&#34;: [{\&#34;type\&#34;: \&#34;message\&#34;, \&#34;id\&#34;: \&#34;&lt;redacted&gt;\&#34;, \&#34;content\&#34;: [{\&#34;text\&#34;: \&#34;Absolutely! Here\u2019s a classic, crowd-pleasing **Apple Pie Recipe** perfect for Thanksgiving. It features a flaky crust and ... \&#34;, \&#34;type\&#34;: \&#34;output_text\&#34;}], \&#34;role\&#34;: \&#34;assistant\&#34;}], \&#34;parallel_tool_calls\&#34;: null, \&#34;temperature\&#34;: null, \&#34;tools\&#34;: null, \&#34;top_p\&#34;: null, \&#34;max_output_tokens\&#34;: null, \&#34;previous_response_id\&#34;: null, \&#34;reasoning\&#34;: null, \&#34;status\&#34;: null, \&#34;text\&#34;: null, \&#34;usage\&#34;: null, \&#34;user\&#34;: null, \&#34;custom_outputs\&#34;: null}&#34;</span>
 </span></span><span class="line"><span class="cl">                        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">},</span>
 </span></span><span class="line"><span class="cl">                    <span class="p">{</span>
@@ -987,7 +998,8 @@
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><blockquote>
-<p><strong>Note:</strong> IDs are redacted and the assistant output is truncated for readability. This example comes from a predict request. Streaming responses (predict_stream) are typically larger and harder to present cleanly in a blog post.</p>
+<p><strong>Note:</strong> IDs are redacted and the assistant output is truncated for readability. This example comes from a <code>predict</code> request. Streaming responses (<code>predict_stream</code>) are typically larger and harder to present cleanly in a blog post.</p>
+<p>Code blocks are also line-wrapped in this post so it’s easier to see the full paths and values, even though it makes the JSON look a little less neat.</p>
 </blockquote>
 <p>For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.</p>
 
@@ -1134,6 +1146,9 @@
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Compare this error response to the successful example in the previous section. The table columns are the same, but the JSON shape inside <code>response</code> changes in ways your processing pipelines need to account for.</p>
 <p>Let’s take a closer look at the two JSON blocks. Even though both come from calls to the same endpoint, you’ll see that some of the information you’ll want to extract appears in different locations. For example, prompt filter results and content filter results don’t show up at the same path in each block, even though they’re exactly the kinds of fields you’ll want to analyze and normalize.</p>
+<blockquote>
+<p><strong>Note:</strong> The extraction challenge isn’t only that fields move around. Many of the interesting values are stored as strings containing escaped JSON, so you end up parsing JSON, then parsing JSON again inside it.</p>
+</blockquote>
 <p>That matters because it affects how you write your extraction logic. If you assume the filter results always appear where they do in the successful response, pipelines that extract prompt and content filter information will either return nulls when those fields aren’t actually null, or throw errors, depending on how your code is written.</p>
 
 <h3 class="relative group">How Agent Error Handling Changes Your Data
@@ -1145,7 +1160,7 @@
     </span>
     
 </h3>
-<p>In early versions of my AI agent responsible for processing requests, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.</p>
+<p>In early versions of my AI chat agent, the code did not explicitly handle model errors. When the underlying model rejected a request, the error information was simply passed along to the next layer in the stack. From a control-flow perspective, this worked fine.</p>
 <p>From a data perspective, it didn’t.</p>
 <p>The inference rows associated with these failures contained very little information. Important metadata that we later wanted to analyze was missing from the <code>response</code> column.</p>
 <p>Eventually, the agent was updated to catch these errors and return a custom message downstream. While this didn’t change the fact that the request failed, it had a significant impact on the data captured in the inference table. The <code>response</code> column now contained much richer information that had been missing in the earlier implementation.</p>

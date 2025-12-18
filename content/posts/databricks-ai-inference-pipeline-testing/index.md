@@ -8,6 +8,18 @@ slug: "inference-table-processing-tests"
 author: "Matthew Norberg"
 ---
 
+<!-- Enables word wrapping in code cell blocks for this article only -->
+<style>
+  .article-content pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .article-content pre code {
+    white-space: pre-wrap;
+  }
+</style>
+
 When you deploy an AI agent in Databricks using the Mosaic AI Gateway, one very nice thing happens automatically: every request to your agent, along with the corresponding response, is logged for you. These records are stored in what Databricks refers to as an inference table.
 
 At first glance, it feels like you’ve achieved agent observability. Each request and response is stored for you by default, without the developer needing to write any additional logging code.
@@ -132,7 +144,9 @@ Here’s a simplified example of what a single `response` value can look like in
 }
 ```
 
-> **Note:** IDs are redacted and the assistant output is truncated for readability. This example comes from a predict request. Streaming responses (predict_stream) are typically larger and harder to present cleanly in a blog post. 
+> **Note:** IDs are redacted and the assistant output is truncated for readability. This example comes from a `predict` request. Streaming responses (`predict_stream`) are typically larger and harder to present cleanly in a blog post. 
+> 
+> Code blocks are also line-wrapped in this post so it’s easier to see the full paths and values, even though it makes the JSON look a little less neat.
 
 For data engineers, this usually means building a data pipeline that extracts and normalizes these values into well-typed columns. Those tables can then be wired up to tools like Genie, which uses an LLM to answer questions over the data, or surfaced through downstream analytic dashboards.
 
@@ -276,6 +290,8 @@ Here’s a concrete example of how the `response` JSON can differ for a request 
 Compare this error response to the successful example in the previous section. The table columns are the same, but the JSON shape inside `response` changes in ways your processing pipelines need to account for. 
 
 Let’s take a closer look at the two JSON blocks. Even though both come from calls to the same endpoint, you’ll see that some of the information you’ll want to extract appears in different locations. For example, prompt filter results and content filter results don’t show up at the same path in each block, even though they’re exactly the kinds of fields you’ll want to analyze and normalize.
+
+> **Note:** The extraction challenge isn’t only that fields move around. Many of the interesting values are stored as strings containing escaped JSON, so you end up parsing JSON, then parsing JSON again inside it.
 
 That matters because it affects how you write your extraction logic. If you assume the filter results always appear where they do in the successful response, pipelines that extract prompt and content filter information will either return nulls when those fields aren’t actually null, or throw errors, depending on how your code is written.
 
