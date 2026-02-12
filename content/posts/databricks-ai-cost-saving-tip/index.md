@@ -1,7 +1,7 @@
 ---
 title: "The Hidden Cost of Databricks AI Agent Redeploys"
-date: 2026-02-08
-summary: "TBD"
+date: 2026-02-12
+summary: "Redeploying AI agents in Databricks can quietly increase serving costs in ways that aren’t immediately obvious. Each call to `agents.deploy()` creates a new agent version, and even versions receiving 0% of traffic may still consume compute resources. In this post, I walk through how we uncovered this behavior, the hypotheses we tested, and the experiment that confirmed it. Cleaning up unused agent versions ultimately reduced our serving costs by roughly 50%."
 draft: false
 tags: ["databricks", "ai", "data engineering"]
 slug: "ai-agent-cost-savings"
@@ -32,8 +32,6 @@ These weren’t fundamentally different systems. They were variations on the sam
 ## The Red Flag: Development Was More Expensive Than Production
 
 The real red flag appeared when we compared environments. 
-
-In several cases, the same agent deployed to dev, QA, and prod showed dramatically different costs—and counterintuitively, production was cheaper than development, despite handling more requests.
 
 In several cases, the same agent deployed to dev, QA, and Prod showed dramatically different costs. Even more counterintuitive, production was cheaper (sometimes significantly cheaper) than development, despite handling more requests. 
 
@@ -143,13 +141,9 @@ agents.deploy(
 )
 ```
 
-If you’ve read some of my earlier posts, this code will look familiar. The first block registers the model in Unity Catalog. The second deploys an agent endpoint that serves the latest model version.
+The first block registers the model in Unity Catalog. The second deploys an agent endpoint that serves the latest model version.
 
-Once the deploy starts, you'll see a new endpoint appear in the serving endpoints UI with a state value of 'Creating' and a wheel on the Pending tab.
-
-![Pending Endpoint](./pending-status.png)
-
-After the deployment completes, the endpoint becomes Ready, and you'll see that 100% of traffic is routed to version 1 of the model.
+After the deployment completes, the endpoint enters a Ready state. In the serving endpoints UI, you’ll see that 100% of traffic is routed to version 1 of the model.
 
 ![Version 1](./version-one.png)
 
@@ -185,17 +179,13 @@ Each time we updated the model and redeployed the agent, we added another versio
 
 Let’s pause briefly to clarify an important detail.
 
-In the free edition of Databricks, the `scale_to_zero` option must be enabled; otherwise model deployment fails (guess they can't give everything away for free). In a professional environment, this is often not the case — and that distinction turns out to be critical.
+In the free edition of Databricks, the `scale_to_zero` option must be enabled; otherwise model deployment fails (they can't give everything away for free). In professional environments, this parameter is not required and is often intentionally left disabled to avoid cold-start delays and keep agents responsive.
 
 In the image below, you can see a CPU utilization graph showing the moment when version 2 takes over. CPU usage for version 1 drops to zero while CPU usage for version 2 begins to rise.
 
 ![CPU Usage Graph](./cpu-usage.png)
 
-However, the reason CPU usage for version 1 drops to zero here is only because `scale_to_zero=True` is set.
-
-In our professional environment, we intentionally did not enable `scale_to_zero`. That wasn't an oversight. It was a deliberate choice to keep agents responsive and avoid cold-start delays after periods of inactivity.
-
-The consequence of that choice is important. Unlike the free Databricks environment shown earlier, older versions in our professional environment did not scale down. Instead, we saw one CPU usage line per model version, each consuming resources even though only the newest version was handling requests.
+The reason CPU usage drops to zero is that `scale_to_zero=True` is enabled. In our professional environment, where we intentionally left this setting disabled, older versions remained active. As a result, we observed one CPU usage line per model version, each consuming resources even though only the latest version was handling requests.
 
 We were literally paying to keep old agent versions alive, even though they weren’t doing any work.
 
