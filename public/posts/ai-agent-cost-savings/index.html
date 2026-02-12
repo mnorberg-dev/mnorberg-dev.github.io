@@ -15,20 +15,20 @@
 
   
   
-    <title>The Databricks Tool You Didn&#39;t Know You Needed &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
-    <meta name="title" content="The Databricks Tool You Didn&#39;t Know You Needed &middot; Matthew Norberg&#39;s Data Engineering Blog">
+    <title>The Hidden Cost of Databricks AI Agent Redeploys &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
+    <meta name="title" content="The Hidden Cost of Databricks AI Agent Redeploys &middot; Matthew Norberg&#39;s Data Engineering Blog">
   
 
   
   
-    <meta name="description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+    <meta name="description" content="TBD">
   
   
-    <meta name="keywords" content="databricks,">
+    <meta name="keywords" content="databricks,ai,data engineering,">
   
   
   
-  <link rel="canonical" href="http://localhost:1313/posts/databricks-tab-label-tool/">
+  <link rel="canonical" href="http://localhost:1313/posts/ai-agent-cost-savings/">
   
 
   
@@ -52,21 +52,23 @@
   
 
   
-  <meta property="og:url" content="http://localhost:1313/posts/databricks-tab-label-tool/">
+  <meta property="og:url" content="http://localhost:1313/posts/ai-agent-cost-savings/">
   <meta property="og:site_name" content="Matthew Norberg&#39;s Data Engineering Blog">
-  <meta property="og:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-  <meta property="og:description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+  <meta property="og:title" content="The Hidden Cost of Databricks AI Agent Redeploys">
+  <meta property="og:description" content="TBD">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-09-16T00:00:00+00:00">
-    <meta property="article:modified_time" content="2025-09-16T00:00:00+00:00">
+    <meta property="article:published_time" content="2026-02-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-08T00:00:00+00:00">
     <meta property="article:tag" content="Databricks">
+    <meta property="article:tag" content="Ai">
+    <meta property="article:tag" content="Data Engineering">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="The Databricks Tool You Didn&#39;t Know You Needed">
-  <meta name="twitter:description" content="Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev/QA/prod.">
+  <meta name="twitter:title" content="The Hidden Cost of Databricks AI Agent Redeploys">
+  <meta name="twitter:description" content="TBD">
 
   
   
@@ -215,26 +217,26 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "articleSection": "Posts",
-    "name": "The Databricks Tool You Didn\u0027t Know You Needed",
-    "headline": "The Databricks Tool You Didn\u0027t Know You Needed",
+    "name": "The Hidden Cost of Databricks AI Agent Redeploys",
+    "headline": "The Hidden Cost of Databricks AI Agent Redeploys",
     
-    "abstract": "Explains how to clearly distinguish Databricks environments by adding environment-specific labels to browser tabs with a Tampermonkey userscript. Outlines the risk of identical tab titles, provides the script with domain placeholders, and gives step-by-step setup and troubleshooting guidance for dev\/QA\/prod.",
+    "abstract": "TBD",
     "inLanguage": "en",
-    "url" : "http:\/\/localhost:1313\/posts\/databricks-tab-label-tool\/",
+    "url" : "http:\/\/localhost:1313\/posts\/ai-agent-cost-savings\/",
     "author" : {
       "@type": "Person",
       "name": "Matthew Norberg"
     },
-    "copyrightYear": "2025",
-    "dateCreated": "2025-09-16T00:00:00\u002b00:00",
-    "datePublished": "2025-09-16T00:00:00\u002b00:00",
+    "copyrightYear": "2026",
+    "dateCreated": "2026-02-08T00:00:00\u002b00:00",
+    "datePublished": "2026-02-08T00:00:00\u002b00:00",
     
-    "dateModified": "2025-09-16T00:00:00\u002b00:00",
+    "dateModified": "2026-02-08T00:00:00\u002b00:00",
     
-    "keywords": ["databricks"],
+    "keywords": ["databricks","ai","data engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1141"
+    "wordCount": "1969"
   }]
   </script>
 
@@ -523,7 +525,7 @@
     <header id="single_header" class="mt-5 max-w-prose">
       
       <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-        The Databricks Tool You Didn't Know You Needed
+        The Hidden Cost of Databricks AI Agent Redeploys
       </h1>
       <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
         
@@ -571,7 +573,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-09-16T00:00:00&#43;00:00">16 September 2025</time>
+      <time datetime="2026-02-08T00:00:00&#43;00:00">8 February 2026</time>
     
 
     
@@ -703,22 +705,20 @@
     class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#the-problem-too-many-tabs-too-few-clues">The Problem: Too Many Tabs, Too Few Clues</a></li>
-    <li><a href="#but-wait-isnt-there-a-color-trick">But Wait, Isn’t There a Color Trick?</a></li>
-    <li><a href="#the-solution-tampermonkey-to-the-rescue">The Solution: Tampermonkey to the Rescue</a></li>
-    <li><a href="#how-to-set-it-up">How to Set It Up</a>
-      <ul>
-        <li><a href="#1-install-tampermonkey">1. Install Tampermonkey</a></li>
-        <li><a href="#2-create-a-new-script">2. Create a New Script</a></li>
-        <li><a href="#3-add-the-script">3. Add the Script</a></li>
-        <li><a href="#4-configure-environment-domains">4. Configure Environment Domains</a></li>
-        <li><a href="#5-save-and-enable-the-script">5. Save and Enable the Script</a></li>
-        <li><a href="#6-enable-user-scripts-in-chrome">6. Enable User Scripts in Chrome</a></li>
-        <li><a href="#7-verify-installation">7. Verify installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
-    <li><a href="#final-thoughts">Final Thoughts</a></li>
+    <li><a href="#tldr--the-cost-saving-tip">TL;DR — The Cost-Saving Tip</a></li>
+    <li><a href="#the-mystery-similar-agents-very-different-costs">The Mystery: Similar Agents, Very Different Costs</a></li>
+    <li><a href="#the-red-flag-development-was-more-expensive-than-production">The Red Flag: Development Was More Expensive Than Production</a></li>
+    <li><a href="#our-first-approach-revisiting-the-documentation">Our First Approach: Revisiting the Documentation</a></li>
+    <li><a href="#hypothesis-1-streaming-v-non-streaming-agents">Hypothesis #1: Streaming v. Non-Streaming Agents</a></li>
+    <li><a href="#hypothesis-2-external-models-vs-foundation-models">Hypothesis #2: External Models vs. Foundation Models</a></li>
+    <li><a href="#the-breakthrough-inspecting-endpoint-configurations">The Breakthrough: Inspecting Endpoint Configurations</a></li>
+    <li><a href="#agent-deployment-functionality">Agent Deployment Functionality</a></li>
+    <li><a href="#what-happens-on-redeploy">What Happens on Redeploy</a></li>
+    <li><a href="#the-critical-detail-0-traffic-does-not-mean-0-cost">The Critical Detail: 0% Traffic Does Not Mean 0% Cost</a></li>
+    <li><a href="#the-experiment-that-confirmed-it">The Experiment That Confirmed It</a></li>
+    <li><a href="#why-development-was-more-expensive-than-production">Why Development Was More Expensive Than Production</a></li>
+    <li><a href="#what-can-we-do">What Can We Do?</a></li>
+    <li><a href="#final-takeaway">Final Takeaway</a></li>
   </ul>
 </nav>
   </div>
@@ -732,22 +732,20 @@
     class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#the-problem-too-many-tabs-too-few-clues">The Problem: Too Many Tabs, Too Few Clues</a></li>
-    <li><a href="#but-wait-isnt-there-a-color-trick">But Wait, Isn’t There a Color Trick?</a></li>
-    <li><a href="#the-solution-tampermonkey-to-the-rescue">The Solution: Tampermonkey to the Rescue</a></li>
-    <li><a href="#how-to-set-it-up">How to Set It Up</a>
-      <ul>
-        <li><a href="#1-install-tampermonkey">1. Install Tampermonkey</a></li>
-        <li><a href="#2-create-a-new-script">2. Create a New Script</a></li>
-        <li><a href="#3-add-the-script">3. Add the Script</a></li>
-        <li><a href="#4-configure-environment-domains">4. Configure Environment Domains</a></li>
-        <li><a href="#5-save-and-enable-the-script">5. Save and Enable the Script</a></li>
-        <li><a href="#6-enable-user-scripts-in-chrome">6. Enable User Scripts in Chrome</a></li>
-        <li><a href="#7-verify-installation">7. Verify installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#troubleshooting">Troubleshooting</a></li>
-    <li><a href="#final-thoughts">Final Thoughts</a></li>
+    <li><a href="#tldr--the-cost-saving-tip">TL;DR — The Cost-Saving Tip</a></li>
+    <li><a href="#the-mystery-similar-agents-very-different-costs">The Mystery: Similar Agents, Very Different Costs</a></li>
+    <li><a href="#the-red-flag-development-was-more-expensive-than-production">The Red Flag: Development Was More Expensive Than Production</a></li>
+    <li><a href="#our-first-approach-revisiting-the-documentation">Our First Approach: Revisiting the Documentation</a></li>
+    <li><a href="#hypothesis-1-streaming-v-non-streaming-agents">Hypothesis #1: Streaming v. Non-Streaming Agents</a></li>
+    <li><a href="#hypothesis-2-external-models-vs-foundation-models">Hypothesis #2: External Models vs. Foundation Models</a></li>
+    <li><a href="#the-breakthrough-inspecting-endpoint-configurations">The Breakthrough: Inspecting Endpoint Configurations</a></li>
+    <li><a href="#agent-deployment-functionality">Agent Deployment Functionality</a></li>
+    <li><a href="#what-happens-on-redeploy">What Happens on Redeploy</a></li>
+    <li><a href="#the-critical-detail-0-traffic-does-not-mean-0-cost">The Critical Detail: 0% Traffic Does Not Mean 0% Cost</a></li>
+    <li><a href="#the-experiment-that-confirmed-it">The Experiment That Confirmed It</a></li>
+    <li><a href="#why-development-was-more-expensive-than-production">Why Development Was More Expensive Than Production</a></li>
+    <li><a href="#what-can-we-do">What Can We Do?</a></li>
+    <li><a href="#final-takeaway">Final Takeaway</a></li>
   </ul>
 </nav>
   </div>
@@ -865,344 +863,334 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          <p>Databricks is quickly becoming one of the most popular data lakehouse platforms out there. Its popularity is growing fast, and for many developers, a significant portion of the job happens directly in the browser inside their Databricks workspace.</p>
-<p>Yes, I know—there are popular extensions that let you develop code outside of Databricks. Many folks swear by the VS Code extension because they prefer working in their favorite editor. But at the end of the day, you’re still going to spend time in the browser making sure your code runs as expected.</p>
-<p>👉 If you’d rather skip ahead and get straight to the solution, I’ve published the script (with setup instructions) in this <a
-  href="https://github.com/mnorberg-dev/databricks-tools"
-    target="_blank"
-  >GitHub repo</a>.</p>
-
-<h2 class="relative group">The Problem: Too Many Tabs, Too Few Clues
-    <div id="the-problem-too-many-tabs-too-few-clues" class="anchor"></div>
+          
+<h2 class="relative group">TL;DR — The Cost-Saving Tip
+    <div id="tldr--the-cost-saving-tip" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-problem-too-many-tabs-too-few-clues" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#tldr--the-cost-saving-tip" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Many organizations using Databricks have multiple workspaces to represent different environments—think <code>dev</code>, <code>qa</code>, and <code>prod</code>. Some even have additional splits like staging or sandbox.</p>
-<p>If you’re working across all of them, here’s the problem: <strong>your browser tabs all look the same.</strong></p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Too Many Tabs"
-    src="./many-tabs.png"
-    ></figure>
-<blockquote>
-<p>Note: URLs in images are redacted, but in your environment, the redacted portions will appear as GUIDs.</p>
-</blockquote>
-<p>Inside the workspace, the situation isn’t much better. It&rsquo;s not easy to determine which environment you are in. Technically, each environment does identify itself in two places though:</p>
+<p>If you’re deploying AI agents in Databricks using the Responses Agent Framework, clean up your old agent versions.</p>
+<p>Every redeploy creates a new agent version associated with the endpoint. Even if those older versions receive 0% of traffic, Databricks still allocates compute to keep them alive. Over time, those unused versions can silently drive up your costs.</p>
+<p>Deleting unused versions cut our agent serving costs by ~50%.</p>
+
+<h2 class="relative group">The Mystery: Similar Agents, Very Different Costs
+    <div id="the-mystery-similar-agents-very-different-costs" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-mystery-similar-agents-very-different-costs" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>This story begins as a colleague and I were monitoring our AI agent costs using a Databricks cost dashboard we&rsquo;d set up for our serving endpoints to keep an eye on spend.</p>
+<p>That’s when we noticed something strange.</p>
+<p>Some agent endpoints were significantly more expensive than others, even though:</p>
+<ul>
+<li>They followed the same overall structure and deployment pattern</li>
+<li>The more expensive agents weren&rsquo;t doing significantly more computation than the cheaper ones</li>
+</ul>
+<p>These weren’t fundamentally different systems. They were variations on the same pattern. Yet the cost differences were hard to ignore.</p>
+
+<h2 class="relative group">The Red Flag: Development Was More Expensive Than Production
+    <div id="the-red-flag-development-was-more-expensive-than-production" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-red-flag-development-was-more-expensive-than-production" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The real red flag appeared when we compared environments.</p>
+<p>In several cases, the same agent deployed to dev, QA, and prod showed dramatically different costs—and counterintuitively, production was cheaper than development, despite handling more requests.</p>
+<p>In several cases, the same agent deployed to dev, QA, and Prod showed dramatically different costs. Even more counterintuitive, production was cheaper (sometimes significantly cheaper) than development, despite handling more requests.</p>
+<p>This immediately told us this wasn&rsquo;t a straightforward usage problem. If production traffic was higher but the baseline cost was lower, then something structural, not workload-driven, had to be influencing the spend.</p>
+
+<h2 class="relative group">Our First Approach: Revisiting the Documentation
+    <div id="our-first-approach-revisiting-the-documentation" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#our-first-approach-revisiting-the-documentation" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Our first step was to revisit the documentation.</p>
+<p>To Databricks’ credit, the documentation around agent deployment and serving endpoints is strong, especially given how new this functionality is. However, it didn&rsquo;t answer the question we were trying to solve.</p>
+<p>We couldn’t find anything that explained why similarly structured agents, deployed across different environments, could have such large cost discrepancies, or what underlying factors might cause that behavior.</p>
+<p>That&rsquo;s not a knock on the docs. It&rsquo;s more a reflection of how cutting-edge this part of the platform is. When features are this new, operational details only surface once people start running them at scale.</p>
+<p>With no clear explanation to point us in the right direction, the only option left was to start forming hypotheses and testing them against real data.</p>
+
+<h2 class="relative group">Hypothesis #1: Streaming v. Non-Streaming Agents
+    <div id="hypothesis-1-streaming-v-non-streaming-agents" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#hypothesis-1-streaming-v-non-streaming-agents" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Our first theory was that streaming agents might be more expensive than non-streaming ones.</p>
+<p>It sounded reasonable:</p>
+<ul>
+<li>Streaming keeps connections open longer</li>
+<li>It feels like it should consume more resources</li>
+<li>The billing model isn’t always obvious</li>
+</ul>
+<p>To test this, we compared the cost of non-streaming agents with streaming-enabled agents that had comparable usage patterns.</p>
+<p>What we found was that the non-streaming endpoints tracked almost identically in cost to their streaming counterparts. There was no meaningful difference that suggested streaming itself was driving higher costs.</p>
+<p>Result: ❌ Not the culprit.</p>
+
+<h2 class="relative group">Hypothesis #2: External Models vs. Foundation Models
+    <div id="hypothesis-2-external-models-vs-foundation-models" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#hypothesis-2-external-models-vs-foundation-models" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Some of our agents relied on Databricks-hosted foundation models, while others routed requests to external models, specifically GPT models hosted in Azure Foundry.</p>
+<p>Our theory was that agents invoking external models were more expensive because each request had to leave Databricks, call an externally hosted model, and then return the response. That extra hop felt like a natural place for additional cost.</p>
+<p>At a high level, those agents worked like this:</p>
 <ol>
-<li><strong>The domain name.</strong> Every environment has a URL like <code>adb-&lt;long string of numbers&gt;</code>. But let’s be honest—nobody remembers arbitrary GUIDs. It’s the same reason DNS exists: humans prefer names like <code>google.com</code> instead of memorizing IP addresses.</li>
-<li><strong>A small piece of text in the top-right corner.</strong> Sure, it’s there, but after seeing it hundreds of times, your brain starts ignoring it. It’s easy to miss, and if you’re juggling multiple tabs, you can’t even see that text without clicking into each one.</li>
+<li>The agent receives a request</li>
+<li>The agent calls an Azure-hosted GPT model</li>
+<li>The agent processes the response</li>
+<li>The agent returns the final result</li>
 </ol>
-<p>The end result? Confusion, context-switching, and the very real risk of running a query in <code>prod</code> that you meant for <code>dev</code>.</p>
-<figure><img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="Small Workspace Indicator"
-    src="./workspace-indicator.png"
-    ></figure>
-
-<h2 class="relative group">But Wait, Isn’t There a Color Trick?
-    <div id="but-wait-isnt-there-a-color-trick" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#but-wait-isnt-there-a-color-trick" aria-label="Anchor">#</a>
-    </span>
-    
-</h2>
-<p>Some people solve this by assigning different themes—say, dark mode for <code>prod</code> and light mode for <code>dev</code>. Clever idea, but it falls apart quickly:</p>
+<p>This hypothesis seemed plausible because our most expensive agent utilized an external model.  It felt like we figured out why some agents were more costly than others.</p>
+<p>But then we looked more closely at our production environment where we had two agents with comparable usage:</p>
 <ul>
-<li>There are only two color schemes available and many organizations have three workspaces meaning one environment will inevitably match another.</li>
-<li>If two or more environments share a metastore, changing one changes the other.</li>
-<li>And let’s be honest: some developers simply refuse to use a theme they don’t like.</li>
+<li>One calling an external model hosted in Azure Foundry</li>
+<li>One using a Databricks-hosted foundation model</li>
 </ul>
-<p>So while the color trick can work in a pinch, it’s not a real solution.</p>
+<p>Despite the difference in model type, their costs were nearly identical. That single comparison was enough to disprove the theory.</p>
+<p>Conclusion: ❌ External models were not the primary cost driver.</p>
+
+<h2 class="relative group">The Breakthrough: Inspecting Endpoint Configurations
+    <div id="the-breakthrough-inspecting-endpoint-configurations" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-breakthrough-inspecting-endpoint-configurations" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>At this point, we were stumped.</p>
+<p>We had walked through our most obvious theories and tested them against real endpoints with real cost data. None of them explained what we were seeing, and we didn’t have another clear hypothesis to test.</p>
+<p>So instead of proposing a new hypothesis, we changed tactics. We began inspecting the serving endpoints themselves, going slowly and methodically through the configuration details to see if there was something we had missed.</p>
+<p>That’s when we noticed something we had previously overlooked.</p>
+
+<h2 class="relative group">Agent Deployment Functionality
+    <div id="agent-deployment-functionality" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#agent-deployment-functionality" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>It turned out that the root cause of our higher costs had nothing to do with streaming, traffic volume, or model selection.</p>
+<p>Instead, it came down to the default behavior of the <code>agents.deploy()</code> function we were using to create and update our endpoints in Databricks.</p>
+<p>Below is a simplified version of the deployment pattern we were using. If this looks familiar, it’s because I’ve covered this exact workflow in an earlier post (<em>Tracing with Databricks Mosaic AI Gateway</em>). For a deeper walkthrough, I&rsquo;d recommend starting there.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">mlflow</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.types.responses</span> <span class="kn">import</span> <span class="n">ResponsesAgentRequest</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mlflow.models.resources</span> <span class="kn">import</span> <span class="n">DatabricksServingEndpoint</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">model</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">UC_LOCATION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;workspace.default.mn-ai-agent-demo&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">example</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;You are a helpful assistant.&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="s2">&#34;What is the fibonacci sequence&#34;</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">logged_agent_info</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">pyfunc</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">name</span><span class="o">=</span><span class="s2">&#34;mn-ai-agent-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">python_model</span><span class="o">=</span><span class="s2">&#34;model.py&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">input_example</span><span class="o">=</span><span class="n">ResponsesAgentRequest</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">example</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">        <span class="n">registered_model_name</span><span class="o">=</span><span class="n">UC_LOCATION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">resources</span><span class="o">=</span><span class="p">[</span><span class="n">DatabricksServingEndpoint</span><span class="p">(</span><span class="n">endpoint_name</span><span class="o">=</span><span class="s2">&#34;databricks-meta-llama-3-1-8b-instruct&#34;</span><span class="p">)],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># COMMAND ----------</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">databricks</span> <span class="kn">import</span> <span class="n">agents</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">agents</span><span class="o">.</span><span class="n">deploy</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">UC_LOCATION</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">model_version</span><span class="o">=</span><span class="n">logged_agent_info</span><span class="o">.</span><span class="n">registered_model_version</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">scale_to_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><p>If you’ve read some of my earlier posts, this code will look familiar. The first block registers the model in Unity Catalog. The second deploys an agent endpoint that serves the latest model version.</p>
+<p>Once the deploy starts, you&rsquo;ll see a new endpoint appear in the serving endpoints UI with a state value of &lsquo;Creating&rsquo; and a wheel on the Pending tab.</p>
 <figure><img
     class="my-0 rounded-md"
     loading="lazy"
     decoding="async"
     fetchpriority="low"
-    alt="Dark Theme"
-    src="./dark-theme.png"
+    alt="Pending Endpoint"
+    src="./pending-status.png"
     ></figure>
-<blockquote>
-<p>To activate dark mode, navigate to Settings → User Preferences → “Prefer Dark.”</p>
-<p>If you don’t enable this setting, your environment theme will default to match the light theme shown in the images above.</p>
-</blockquote>
+<p>After the deployment completes, the endpoint becomes Ready, and you&rsquo;ll see that 100% of traffic is routed to version 1 of the model.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Version 1"
+    src="./version-one.png"
+    ></figure>
+<p>So far, everything looks exactly as expected.</p>
 
-<h2 class="relative group">The Solution: Tampermonkey to the Rescue
-    <div id="the-solution-tampermonkey-to-the-rescue" class="anchor"></div>
+<h2 class="relative group">What Happens on Redeploy
+    <div id="what-happens-on-redeploy" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-solution-tampermonkey-to-the-rescue" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-happens-on-redeploy" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Enter <strong>Tampermonkey</strong>, a browser extension that lets you run custom JavaScript whenever you visit a matching URL.</p>
-<p>With a short script, you can automatically label your Databricks browser tabs with an emoji + text identifier for each environment. Suddenly, <code>dev</code>, <code>qa</code>, and <code>prod</code> are crystal clear.</p>
-<p>It’s simple, lightweight, and makes a huge difference:</p>
+<p>Now let&rsquo;s say the endpoint isn&rsquo;t quite right. Maybe you found a bug that needs fixing, added a new feature, or want to tweak the system prompt to improve response quality.</p>
+<p>To apply any of these changes, you update <code>model.py</code> and rerun the same deployment code. This registers a new model version and redeploys the agent.</p>
+<p>After the redeploy completes, the traffic configuration now looks like this:</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Version 2"
+    src="./version-two.png"
+    ></figure>
+<p>In the image above, you can see that version 2 is getting 100% of the traffic while version 1 gets 0%.</p>
+<p>By default, this pattern continues. Each new redeploy sends 100% of traffic to the latest version and 0% to all previous versions.</p>
+<p>In fact, the abiltiy to send traffic to different model versions can be very useful. It allows you to:</p>
 <ul>
-<li>Faster navigation between environments</li>
-<li>Reduced risk of editing the wrong workspace</li>
-<li>A quality-of-life boost you’ll wonder how you lived without</li>
+<li>Gradually roll out new versions of your agent</li>
+<li>Run A/B tests</li>
+<li>Send portions of traffic to different base models (e.g., GPT-5.1 vs GPT-5.2)</li>
 </ul>
-<p>And best of all: <strong>little to no performance impact</strong>. I’ve been running this script for weeks, and my browser hasn’t skipped a beat.  Below, I&rsquo;ve provided an image illustrating what your dev environment will look like after setting up the Tamper Monkey script for yourself.</p>
+<p>But while this capability is powerful, there&rsquo;s a critical catch that can quietly drive up your costs.</p>
+
+<h2 class="relative group">The Critical Detail: 0% Traffic Does Not Mean 0% Cost
+    <div id="the-critical-detail-0-traffic-does-not-mean-0-cost" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-critical-detail-0-traffic-does-not-mean-0-cost" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>What we didn’t realize at first is that older versions are still active and allocated compute, even when they receive no traffic.</p>
+<p>Each time we updated the model and redeployed the agent, we added another version to the serving endpoint. Traffic moved entirely to the newest version, but the older versions continued running — quietly consuming resources and costing money, despite doing no useful work.</p>
+<p>Let’s pause briefly to clarify an important detail.</p>
+<p>In the free edition of Databricks, the <code>scale_to_zero</code> option must be enabled; otherwise model deployment fails (guess they can&rsquo;t give everything away for free). In a professional environment, this is often not the case — and that distinction turns out to be critical.</p>
+<p>In the image below, you can see a CPU utilization graph showing the moment when version 2 takes over. CPU usage for version 1 drops to zero while CPU usage for version 2 begins to rise.</p>
 <figure><img
     class="my-0 rounded-md"
     loading="lazy"
     decoding="async"
     fetchpriority="low"
-    alt="Tamper Monkey In Action"
-    src="./label-in-action.png"
+    alt="CPU Usage Graph"
+    src="./cpu-usage.png"
     ></figure>
+<p>However, the reason CPU usage for version 1 drops to zero here is only because <code>scale_to_zero=True</code> is set.</p>
+<p>In our professional environment, we intentionally did not enable <code>scale_to_zero</code>. That wasn&rsquo;t an oversight. It was a deliberate choice to keep agents responsive and avoid cold-start delays after periods of inactivity.</p>
+<p>The consequence of that choice is important. Unlike the free Databricks environment shown earlier, older versions in our professional environment did not scale down. Instead, we saw one CPU usage line per model version, each consuming resources even though only the newest version was handling requests.</p>
+<p>We were literally paying to keep old agent versions alive, even though they weren’t doing any work.</p>
 
-<h2 class="relative group">How to Set It Up
-    <div id="how-to-set-it-up" class="anchor"></div>
+<h2 class="relative group">The Experiment That Confirmed It
+    <div id="the-experiment-that-confirmed-it" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#how-to-set-it-up" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-experiment-that-confirmed-it" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Getting your Databricks tabs labeled automatically is quick and easy. You’ll need to:</p>
-<ol>
-<li>Install Tampermonkey</li>
-<li>Create a new script</li>
-<li>Paste in the code</li>
-<li>Configure your environment domains</li>
-<li>Save and enable the script</li>
-<li>Enable user scripts in your browser (Chrome only)</li>
-<li>Verify it’s working</li>
-</ol>
-<blockquote>
-<p>Note: These instructions are written for Google Chrome, but the steps can be adapted to other browsers that support Tampermonkey.</p>
-</blockquote>
-<p>Follow the steps below.</p>
+<p>To validate the theory, we ran a simple experiment.</p>
+<p>We removed the unused agent versions from the serving endpoint and left only the active version receiving traffic. Then we monitored the cost dashboard over the following days.</p>
+<p>The impact was substantial. After deleting the extra model versions, our spending dropped significantly. We observed roughly a 50% reduction in cost, without changing any code or altering traffic patterns.</p>
+<p>The only thing we did was clean up unused versions</p>
 
-<h3 class="relative group">1. Install Tampermonkey
-    <div id="1-install-tampermonkey" class="anchor"></div>
+<h2 class="relative group">Why Development Was More Expensive Than Production
+    <div id="why-development-was-more-expensive-than-production" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#1-install-tampermonkey" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#why-development-was-more-expensive-than-production" aria-label="Anchor">#</a>
     </span>
     
-</h3>
+</h2>
+<p>With this discovery, we finally understood why running the same agent cost significantly more in dev than in production.</p>
+<p>In production:</p>
 <ul>
-<li>Download Tampermonkey for your browser from <a
-  href="https://www.tampermonkey.net/"
+<li>Deployments are infrequent</li>
+<li>Changes are deliberate</li>
+<li>Version counts stay low</li>
+</ul>
+<p>In development:</p>
+<ul>
+<li>Deploy</li>
+<li>Test</li>
+<li>Fix</li>
+<li>Deploy again</li>
+<li>Repeat… often</li>
+</ul>
+<p>While production might have one or two active versions, development could easily accumulate two or three times as many versions—all receiving 0% traffic, all consuming compute, and all costing money.</p>
+
+<h2 class="relative group">What Can We Do?
+    <div id="what-can-we-do" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-can-we-do" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The good news is that fixing this is straightforward.</p>
+<p>In the serving endpoint UI, you can remove older versions by navigating to the endpoint configuration and deleting unused versions so that only the active one remains.</p>
+<figure><img
+    class="my-0 rounded-md"
+    loading="lazy"
+    decoding="async"
+    fetchpriority="low"
+    alt="Endpoint Settings Menu"
+    src="./endpoint-settings.png"
+    ></figure>
+<p>The bad news is that there’s currently no way to automate this cleanup through the Databricks SDK.</p>
+<p>It may be possible to do this via the REST API by updating the serving endpoint configuration directly using the <a
+  href="https://docs.databricks.com/api/workspace/servingendpoints/updateconfig"
     target="_blank"
-  >tampermonkey.net</a>.</li>
-<li>Restart your browser after installation.</li>
-</ul>
+  >update config endpoint</a>. You could try calling this API from the deployment notebook using the <code>requests</code> library after the call to <code>agents.deploy()</code>.</p>
+<p>One important caveat though: endpoint updates take time, often around 15 minutes, and it&rsquo;s unclear how Databricks handles multiple updates issued back-to-back. For example, if you call the REST API immediately after <code>agents.deploy()</code> while the deployment is still in progress, the behavior is uncertain. That&rsquo;s something you&rsquo;d want to test carefully before relying on it in production. It might even make a great topic for a follow-up post.</p>
+<p>For now, this is a manual step, and it&rsquo;s an easy one to overlook. Unless you explicitly want to split traffic across versions, leaving old versions around just burns money. Ideally, the SDK would offer a way to automatically clean up old versions during deployment, but until that functionality is added, you&rsquo;ll either need to build your own solution (the REST API approach above would probably be the easiest path) or simply stay aware of it and clean up versions periodically.</p>
 
-<h3 class="relative group">2. Create a New Script
-    <div id="2-create-a-new-script" class="anchor"></div>
+<h2 class="relative group">Final Takeaway
+    <div id="final-takeaway" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#2-create-a-new-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>Open the Tampermonkey extension → Dashboard → “Create a new script.”</li>
-<li>Delete the boilerplate code so the editor is blank.</li>
-</ul>
-
-<h3 class="relative group">3. Add the Script
-    <div id="3-add-the-script" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#3-add-the-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<p>Copy and paste the following code into the new script:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// ==UserScript==
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @name         Databricks Tab Emoji Label
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @namespace    http://tampermonkey.net/
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @version      1.5
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @description  Add emoji and label to Databricks tab title based on environment
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @author       Matthew Norberg
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @match        https://&lt;your-domain-here&gt;.azuredatabricks.net/*
-</span></span></span><span class="line"><span class="cl"><span class="c1">// @grant        none
-</span></span></span><span class="line"><span class="cl"><span class="c1">// ==/UserScript==
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
-</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">updateTitle</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="c1">// Define your environment domains here
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">let</span> <span class="nx">devDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">qaDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">prodDomain</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">devDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;DEV&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🟢&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">qaDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;QA&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🟡&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="nx">prodDomain</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;PROD&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;🔴&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">label</span> <span class="o">=</span> <span class="s1">&#39;OTHER&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">emoji</span> <span class="o">=</span> <span class="s1">&#39;⚪&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">document</span><span class="p">.</span><span class="nx">title</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="sb">`[</span><span class="si">${</span><span class="nx">emoji</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">label</span><span class="si">}</span><span class="sb">]`</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">document</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="sb">`[</span><span class="si">${</span><span class="nx">emoji</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">label</span><span class="si">}</span><span class="sb">] </span><span class="si">${</span><span class="nb">document</span><span class="p">.</span><span class="nx">title</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">// Initial run
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">// Monitor for URL changes in SPA
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">let</span> <span class="nx">lastUrl</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">currentUrl</span> <span class="o">=</span> <span class="nx">location</span><span class="p">.</span><span class="nx">href</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">currentUrl</span> <span class="o">!==</span> <span class="nx">lastUrl</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">lastUrl</span> <span class="o">=</span> <span class="nx">currentUrl</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">            <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">2000</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}).</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">,</span> <span class="p">{</span><span class="nx">subtree</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">childList</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="p">})();</span>
-</span></span></code></pre></div>
-<h3 class="relative group">4. Configure Environment Domains
-    <div id="4-configure-environment-domains" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#4-configure-environment-domains" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<p>Near the top of the script, replace the placeholders with your actual environment domains:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">devDomain</span> <span class="o">=</span> <span class="s1">&#39;your-dev-domain&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">qaDomain</span> <span class="o">=</span> <span class="s1">&#39;your-qa-domain&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">prodDomain</span> <span class="o">=</span> <span class="s1">&#39;your-prod-domain&#39;</span><span class="p">;</span>
-</span></span></code></pre></div>
-<h3 class="relative group">5. Save and Enable the Script
-    <div id="5-save-and-enable-the-script" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#5-save-and-enable-the-script" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Save your changes (File → Save).</p>
-</li>
-<li>
-<p>Make sure the script toggle in Tampermonkey is turned on (green).</p>
-</li>
-</ul>
-
-<h3 class="relative group">6. Enable User Scripts in Chrome
-    <div id="6-enable-user-scripts-in-chrome" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#6-enable-user-scripts-in-chrome" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Go to <code>chrome://extensions</code> → find Tampermonkey → click <strong>Details</strong>.</p>
-</li>
-<li>
-<p>Make sure <strong>Allow user scripts</strong> is enabled.</p>
-</li>
-</ul>
-<blockquote>
-<p>Note: Other browsers may have different settings for allowing user scripts—adapt accordingly.</p>
-</blockquote>
-
-<h3 class="relative group">7. Verify installation
-    <div id="7-verify-installation" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#7-verify-installation" aria-label="Anchor">#</a>
-    </span>
-    
-</h3>
-<ul>
-<li>
-<p>Open your Databricks environment in a new tab.</p>
-</li>
-<li>
-<p>After a few seconds, your tab title should display the correct emoji + environment label.</p>
-</li>
-</ul>
-
-<h2 class="relative group">Troubleshooting
-    <div id="troubleshooting" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#troubleshooting" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#final-takeaway" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p><strong>Tab title doesn’t update right away</strong></p>
+<p>If you’re deploying AI agents in Databricks:</p>
 <ul>
-<li>
-<p>The script intentionally waits <strong>3 seconds</strong> after page load before applying changes.</p>
-</li>
-<li>
-<p>Without this delay, the title gets updated but is overwritten during the web page loading process.</p>
-</li>
-<li>
-<p>In testing, <strong>3 seconds worked well</strong>, but you can adjust this by editing the <code>setTimeout</code> call in the code:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">setTimeout</span><span class="p">(</span><span class="nx">updateTitle</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
-</span></span></code></pre></div></li>
+<li>Redeploys stack versions by default</li>
+<li>Old versions still consume compute</li>
+<li>Development environments accumulate versions quickly</li>
+<li>Costs can grow silently if you’re not paying attention</li>
 </ul>
-<p><strong>Still not working?</strong></p>
-<p>Double-check that:</p>
-<ul>
-<li>The script is enabled in Tampermonkey.</li>
-<li>Your domains are correctly set in both the variables and the @match lines.</li>
-<li>“Allow user scripts” is enabled in your browser’s extension settings.</li>
-</ul>
-
-<h2 class="relative group">Final Thoughts
-    <div id="final-thoughts" class="anchor"></div>
-    
-    <span
-        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#final-thoughts" aria-label="Anchor">#</a>
-    </span>
-    
-</h2>
-<p>It’s a small tweak, but it solves a surprisingly big problem. If you’re juggling multiple Databricks environments, this little script will save you from confusion—and maybe even prevent a mistake or two.</p>
-<p>Sometimes the best tools aren’t the big, complicated ones. They’re the tiny hacks that make your day smoother.</p>
-<p>👉 You can grab the full script and step-by-step setup instructions in the <code>databricks-tools-repo</code> <a
-  href="https://github.com/mnorberg-dev/databricks-tools"
-    target="_blank"
-  >here</a>.</p>
+<p>Cleaning up unused agent versions is one of the simplest cost-saving steps you can take — and one of the easiest to miss.</p>
+<p>Hopefully, this saves you the same head-scratching moment we had when our dev environment started costing more than production.</p>
 
           
           
@@ -1230,8 +1218,8 @@
           type="text/javascript"
           src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
           integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
-          data-oid="views_posts/databricks-tamper-monkey/index.md"
-          data-oid-likes="likes_posts/databricks-tamper-monkey/index.md"></script>
+          data-oid="views_posts/databricks-ai-cost-saving-tip/index.md"
+          data-oid-likes="likes_posts/databricks-ai-cost-saving-tip/index.md"></script>
       
     </section>
 
