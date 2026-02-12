@@ -17,7 +17,7 @@
       <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
       <guid>http://localhost:1313/posts/ai-agent-cost-savings/</guid>
-      <description>TBD</description>
+      <description>Redeploying AI agents in Databricks can quietly increase serving costs in ways that aren’t immediately obvious. Each call to &lt;code&gt;agents.deploy()&lt;/code&gt; creates a new agent version, and even versions receiving 0% of traffic may still consume compute resources. In this post, I walk through how we uncovered this behavior, the hypotheses we tested, and the experiment that confirmed it. Cleaning up unused agent versions ultimately reduced our serving costs by roughly 50%.</description>
       
     </item>
     
