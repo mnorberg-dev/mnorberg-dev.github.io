@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mlflow on Matthew Norberg&#39;s Data Engineering Blog</title>
+    <link>http://localhost:1313/tags/mlflow/</link>
+    <description>Recent content in Mlflow on Matthew Norberg&#39;s Data Engineering Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
+    <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
+    <copyright>© 2026 Matthew Norberg</copyright>
+    <lastBuildDate>Sun, 05 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/mlflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Boston Code Camp Recap: Building AI Agents in Databricks</title>
+      <link>http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/</link>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/</guid>
+      <description>A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.</description>
+      
+    </item>
+    
+  </channel>
+</rss>
