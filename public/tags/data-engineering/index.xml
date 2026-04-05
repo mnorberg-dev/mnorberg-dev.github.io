@@ -9,12 +9,22 @@
     <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
     <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
     <copyright>© 2026 Matthew Norberg</copyright>
-    <lastBuildDate>Sun, 08 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/data-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/data-engineering/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Boston Code Camp Recap: Building AI Agents in Databricks</title>
+      <link>http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/</link>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/</guid>
+      <description>A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.</description>
+      
+    </item>
     
     <item>
       <title>The Hidden Cost of Databricks AI Agent Redeploys</title>
       <link>http://localhost:1313/posts/ai-agent-cost-savings/</link>
-      <pubDate>Sun, 08 Feb 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 12 Feb 2026 00:00:00 +0000</pubDate>
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
       <guid>http://localhost:1313/posts/ai-agent-cost-savings/</guid>
       <description>Redeploying AI agents in Databricks can quietly increase serving costs in ways that aren’t immediately obvious. Each call to &lt;code&gt;agents.deploy()&lt;/code&gt; creates a new agent version, and even versions receiving 0% of traffic may still consume compute resources. In this post, I walk through how we uncovered this behavior, the hypotheses we tested, and the experiment that confirmed it. Cleaning up unused agent versions ultimately reduced our serving costs by roughly 50%.</description>
