@@ -10,15 +10,15 @@ author: "Matthew Norberg"
 
 I have been using the Databricks coding assistant for a couple of years now. Over that time I have watched it grow from a basic chat tool into a full agentic coding experience, and even go through a rebrand to become what it is today: Genie Code. Each iteration was noticeably better than the last. But after the rebrand especially, it started feeling like a real development partner rather than just a smarter autocomplete.
 
-That got me thinking. I already use it regularly in my day-to-day work, but could I get meaningfully better results by putting some intentional effort into how it is configured? There are features built specifically for this: a custom instructions file, skills, even MCP server integrations. I had not spent much time with any of them, and I decided it was time to change that.
+That got me thinking. I already use it regularly in my day-to-day work, but could I get significantly better results by putting some intentional effort into how it is configured? There are features built specifically for this: a custom instructions file, skills, even MCP server integrations. I had not spent much time with any of them, and I decided it was time to change that.
 
 That led me to two questions: could Genie complete an entire project without me writing a single line of code, and could it produce production-quality results while doing it?
 
-To find out, I put together a custom instructions file and some skills, then chose a project with one rule: Genie was going to write the whole thing, not a single line of code from me. The project was a full medallion data pipeline pulling live movie data from the TMDB API, all the way through to an AI/BI dashboard. Everything is available on [GitHub](https://github.com/YOUR-USERNAME/movie-database-project) if you want to review the code on your own.
+To find out, I put together a custom instructions file and some skills, then chose a project with one rule: Genie was going to write the whole thing, not a single line of code from me. The project was a full medallion data pipeline pulling live movie data from the TMDB API, all the way through to an AI/BI dashboard. Everything is available on [GitHub](https://github.com/mnorberg-dev/databricks-movie-database-project/tree/main) if you want to review the code on your own.
 
 ---
 
-## A Quick Look at Genie Code
+## Genie Code, Briefly
 
 Genie Code is Databricks' AI assistant, built into the surfaces you already work in: notebooks, the SQL editor, Lakeflow Pipelines, and dashboards. What sets it apart from general-purpose coding tools is its connection to Unity Catalog. When you are working in a notebook, Genie has access to your actual catalog — the table names, column names, data types, and lineage are all visible to it, so generated queries reference your real tables rather than placeholders.
 
@@ -62,7 +62,9 @@ I felt like the best way to create the assistant file was to have Genie create i
 >
 > This is my first time writing an assistant instructions file. Please guide me on other best practices to have. My goal is to create an instructions file that will create code quality and consistency for myself and my team members.
 
-That produced a solid first draft. The file Genie returned covered Python style (docstrings, type hints, naming conventions, import organization, error handling), SQL formatting, medallion architecture patterns, Unity Catalog documentation standards, notebook structure, and team collaboration guidelines. It also suggested an **Agent Memories** section I hadn't thought to ask for, which turned out to be one of the more useful additions.
+That produced a solid first draft. The file Genie returned covered Python style (docstrings, type hints, naming conventions, import organization, error handling), SQL formatting, medallion architecture patterns, Unity Catalog documentation standards, notebook structure, and team collaboration guidelines. It also suggested an **Agent Memories** section I hadn't thought to ask for. As you work on a project, Genie automatically populates this section with things it learns: table names, join keys, business definitions, data freshness. When you open a new session, it reads this and picks up with full context. After the movie project was done, mine looked like this:
+
+{{< figure src="./agent-memories.png" alt="Agent Memories section of the assistant instructions file" caption="The Agent Memories section, automatically populated by Genie throughout the project" >}}
 
 ### The Instructions File Is a Living Document
 
@@ -70,56 +72,7 @@ Here's something I didn't appreciate until I was actually building the test proj
 
 Just like the project code, I never manually edited the assistant file either. Every change came through a prompt, which I thought was a pretty cool detail.
 
-### What's in the Final File
-
-A few sections that had the biggest impact on code quality:
-
-**On Python comments**: a specific, opinionated rule that eliminated inline end-of-line comments:
-
-```python
-# Good - comment block at top with blank line before the code
-# Retrieve API key and initialize client
-# This ensures secure credential handling
-
-api_key = dbutils.secrets.get(scope="tmdb", key="api_key")
-client = MovieAPIClient(api_key=api_key)
-
-# Bad - inline comments at end of lines
-api_key = dbutils.secrets.get(scope="tmdb", key="api_key")  # Get API key
-```
-
-**On SQL structure**: every clause on its own line, every query block starting with purpose, input, and output:
-
-```sql
--- Purpose: Aggregate metrics by genre
--- Input: movies_with_genres temp view
--- Output: genre_aggregates temp view
-
-SELECT
-  genre_id,
-  COUNT(DISTINCT movie_id) AS total_movies,
-  ROUND(AVG(vote_average), 2) AS avg_rating
-FROM
-  movies_with_genres
-GROUP BY
-  genre_id;
-```
-
-**On when to ask vs. proceed**: Guidance on how the assistant should behave, not just what it should produce. This one is specific to working with an agentic tool and ended up changing how the interactions felt throughout the project:
-
-```
-* Proceed autonomously for: standard code patterns, bug fixes, implementing clear requirements
-* Ask before: making architectural changes, deleting code, choosing between significantly different approaches
-* When unsure about business logic or data definitions, ask rather than assume
-```
-
-You would never write this in a regular style guide, but for an AI coding assistant it makes a real difference. It cuts down on unnecessary clarifying questions for routine work while making sure Genie pauses on decisions that actually matter.
-
-The file also defines the split medallion architecture: separate notebooks per layer with numeric prefixes indicating execution order, with Python for bronze ingestion and SQL for silver and gold. It establishes a Unity Catalog documentation standard requiring `COMMENT ON TABLE` and column-level `ALTER COLUMN COMMENT` on every table, always including source lineage and refresh frequency.
-
-One of the most useful things Genie added that I had not thought to ask for was an Agent Memories section at the bottom of the file. As you work on a project, Genie automatically populates this section with things it learns: table names, join keys, business definitions, data freshness. When you open a new session, it reads this and picks up with full context. After the movie project was done, mine looked like this:
-
-{{< figure src="./agent-memories.png" alt="Agent Memories section of the assistant instructions file" caption="The Agent Memories section, automatically populated by Genie throughout the project" >}}
+If you want to see everything that ended up in it, the [full instructions file](https://github.com/mnorberg-dev/databricks-movie-database-project/blob/main/.assistant_instructions.md) is available in the repo.
 
 ---
 
@@ -135,7 +88,7 @@ COMMENT '[Aggregation level] rollup of [source]. Pre-aggregated for
 reporting performance. Refreshed [frequency]. Source: [upstream table].'
 ```
 
-**`code-review-checklist`**: A comprehensive checklist covering Python and SQL quality standards. The way you use this one: at the end of a coding session, invoke it with `@code-review-checklist review this notebook` and Genie works through the checklist systematically, checking docstrings, type hints, naming conventions, import ordering, SQL clause formatting, Unity Catalog documentation, and more. It's kept as a skill rather than embedded in the main instructions so it doesn't load on every prompt, but it's always available when you need it.
+**`code-review-checklist`**: A comprehensive checklist covering Python and SQL quality standards. Genie works through the checklist systematically, checking docstrings, type hints, naming conventions, import ordering, SQL clause formatting, Unity Catalog documentation, and more. It's kept as a skill rather than embedded in the main instructions so it doesn't load on every prompt, but it's always available when you need it.
 
 ---
 
@@ -145,7 +98,7 @@ Now that I had the instructions file and skills in place, I needed a way to actu
 
 I decided on a full medallion pipeline pulling from a live external API. This is a challenge data engineers face all the time: ingesting data through an API, cleaning and transforming it, building aggregations and analytics on top. It is not a small demo using data that is already sitting in a catalog. It mirrors the kind of work that shows up in real projects.
 
-As a reminder, my goal was to complete this without writing any code myself. There were a couple of things I did have to do manually though. I signed up for a free developer account at [The Movie Database (TMDB)](https://www.themoviedb.org/) and stored my API key in Databricks Secrets. Genie cannot reach outside Databricks to configure secrets, so that part was on me.
+And as a reminder, my goal was to complete this without writing any code myself. There were a couple of things I did have to do manually though. I signed up for a free developer account at [The Movie Database (TMDB)](https://www.themoviedb.org/) and stored my API key in Databricks Secrets. Genie cannot reach outside Databricks to configure secrets, so that part was on me. These were the two commands to get it set up:
 
 ```bash
 databricks secrets create-scope tmdb
@@ -226,6 +179,8 @@ def flatten_movie_data(movies: List[Dict]) -> List[Dict]:
 
     return flattened
 ```
+
+> 📸 **[PLACEHOLDER: Screenshot of bronze notebook output — row counts per endpoint, ending with "Total unique movies after deduplication: ~17,000"]**
 
 ### Silver: Cleaning and Normalization
 
@@ -321,19 +276,15 @@ ORDER BY
 
 ### The Dashboard
 
-With gold tables in place, I prompted Genie to build an AI/BI dashboard. The result was a single-page layout with five visualizations.
+With gold tables in place, I prompted Genie to build an AI/BI dashboard. The result was a single-page layout with five visualizations, built without any design guidance from me beyond the prompt.
 
 {{< figure src="./genie-dashboard-1.png" alt="Movie Analytics Dashboard - Top Genres and Volume Over Time" caption="Top genres by average rating (left) and movie volume + quality over time (right)" >}}
 
-Documentary leads genre ratings at 7.3, followed by Animation and History. These are genres that tend to self-select more serious audiences, which likely explains the higher ratings. The volume-over-time chart shows a sharp rise starting around 2000, but that is worth taking with a grain of salt. The ingestion strategy specifically targeted popular and recent films, so the dataset is naturally skewed toward modern releases. What the chart reflects is the shape of the dataset, not necessarily film production history.
-
 {{< figure src="./genie-dashboard-2.png" alt="Top 25 Rated Movies table" caption="Top 25 rated movies requiring 500+ votes for credibility" >}}
 
-The top movies table includes a 500-vote minimum filter Genie added unprompted. Shawshank at 8.72, The Godfather at 8.69. *Selena Gomez: My Mind & Me* at 8.50 with only 590 votes. She appears because the table sorts by rating first, and several films tie at 8.50. At 590 votes, she just clears the minimum to make the list.
+One thing worth calling out: Genie added the 500-vote minimum filter to the top movies table without being asked. It's a reasonable data quality decision — without it, obscure films with only a handful of ratings would dominate the list. Genie inferred it was the right call from context.
 
 {{< figure src="./genie-dashboard-3.png" alt="Top Languages in Modern Cinema (2010+)" caption="Top languages in modern cinema 2010+" >}}
-
-The language chart shows strong English dominance, with meaningful representation from Japanese, Korean, and French cinema.
 
 ---
 
@@ -353,7 +304,7 @@ If you are already using Genie Code and have not set up a custom instructions fi
 
 ---
 
-*The full project code is on GitHub. The TMDB API has a generous free tier, and the pipeline runs on a Databricks Community Edition workspace.*
+*The full project code is on [GitHub](https://github.com/mnorberg-dev/databricks-movie-database-project/tree/main). If you want to try this yourself, the TMDB API has a generous free tier and the whole pipeline runs on a Databricks Community Edition workspace.*
 
 ---
 

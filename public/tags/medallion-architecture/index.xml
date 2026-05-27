@@ -12,12 +12,12 @@
     <lastBuildDate>Wed, 13 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/medallion-architecture/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>How I Configured Databricks Genie Code to Write Better Code — Then Let It Prove It</title>
-      <link>http://localhost:1313/posts/databricks-genie-code-assistant/</link>
+      <title>Getting More Out of Databricks Genie Code</title>
+      <link>http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/</link>
       <pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate>
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/posts/databricks-genie-code-assistant/</guid>
-      <description></description>
+      <guid>http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/</guid>
+      <description>A walkthrough of how to improve Databricks Genie Code&amp;rsquo;s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.</description>
       
     </item>
     
