@@ -1,0 +1,1403 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  
+    <meta http-equiv="content-language" content="en">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color">
+
+  
+  
+    <title>Getting More Out of Databricks Genie Code &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
+    <meta name="title" content="Getting More Out of Databricks Genie Code &middot; Matthew Norberg&#39;s Data Engineering Blog">
+  
+
+  
+  
+    <meta name="description" content="A walkthrough of how to improve Databricks Genie Code&#39;s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.">
+  
+  
+    <meta name="keywords" content="databricks,genie-code,data-engineering,medallion-architecture,tmdb,ai,">
+  
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/">
+  
+
+  
+  
+    <meta name="author" content="Matthew Norberg">
+  
+  
+    
+      
+        
+          <link href="https://github.com/mnorberg-dev" rel="me">
+        
+      
+    
+      
+        
+          <link href="https://www.linkedin.com/in/mnorberg24/" rel="me">
+        
+      
+    
+  
+
+  
+  <meta property="og:url" content="http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/">
+  <meta property="og:site_name" content="Matthew Norberg&#39;s Data Engineering Blog">
+  <meta property="og:title" content="Getting More Out of Databricks Genie Code">
+  <meta property="og:description" content="A walkthrough of how to improve Databricks Genie Code’s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-05-13T00:00:00+00:00">
+    <meta property="article:tag" content="Databricks">
+    <meta property="article:tag" content="Genie-Code">
+    <meta property="article:tag" content="Data-Engineering">
+    <meta property="article:tag" content="Medallion-Architecture">
+    <meta property="article:tag" content="Tmdb">
+    <meta property="article:tag" content="Ai">
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Getting More Out of Databricks Genie Code">
+  <meta name="twitter:description" content="A walkthrough of how to improve Databricks Genie Code’s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.">
+
+  
+  
+  
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+  
+    
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.bd563a6c669dcc9857bae6136f930de88b0447ce6590adc13d72d7e24b427918f9638fe98a575ba1aa195ce63bbf08119c6efe672dda9c4191f38cf1a22e3f3b.css"
+    integrity="sha512-vVY6bGadzJhXuuYTb5MN6IsER85lkK3BPXLX4ktCeRj5Y4/pildboaoZXOY7vwgRnG7&#43;Zy3anEGR84zxoi4/Ow==">
+
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.6f41174b3a05b680820fe08cadbfa5fb7a7ca347b76a0955cdc68b9d8aca1ce24f0547e138cea33bcc7904d551a90afcb1cc7f2d9fe8557075d501419046c08c.js"
+    integrity="sha512-b0EXSzoFtoCCD&#43;CMrb&#43;l&#43;3p8o0e3aglVzcaLnYrKHOJPBUfhOM6jO8x5BNVRqQr8scx/LZ/oVXB11QFBkEbAjA=="></script>
+  
+  
+  
+  
+  
+  
+    
+    <script src="/lib/zoom/zoom.min.umd.a527109b68c082a70f3697716dd72a9d5aa8b545cf800cecbbc7399f2ca6f6e0ce3e431f2062b48bbfa47c9ea42822714060bef309be073f49b9c0e30d318d7b.js" integrity="sha512-pScQm2jAgqcPNpdxbdcqnVqotUXPgAzsu8c5nyym9uDOPkMfIGK0i7&#43;kfJ6kKCJxQGC&#43;8wm&#43;Bz9JucDjDTGNew=="></script>
+  
+
+  
+  
+  
+    
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.9df4fc14d50efcc9aa4cfc2b6f348e365f421f5ad491278f8f48c0360cf2f93f08882fda6da162d7ace8e5add57c2df4ac46bd3861306b1d4c452cd31f448d64.js"
+      integrity="sha512-nfT8FNUO/MmqTPwrbzSONl9CH1rUkSePj0jANgzy&#43;T8IiC/abaFi16zo5a3VfC30rEa9OGEwax1MRSzTH0SNZA=="
+      data-copy="Copy"
+      data-copied="Copied"></script>
+  
+
+  
+  
+
+<script src="/lib/jquery/jquery.slim.min.b0dca576e87d7eaa5850ae4e61759c065786cdb6489d68fcc82240539eebd5da522bdb4fda085ffd245808c8fe2acb2516408eb774ef26b5f6015fc6737c0ea8.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj&#43;KsslFkCOt3TvJrX2AV/Gc3wOqA=="></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+  
+
+  
+  <script type="application/ld+json">
+  [{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Posts",
+    "name": "Getting More Out of Databricks Genie Code",
+    "headline": "Getting More Out of Databricks Genie Code",
+    
+    "abstract": "A walkthrough of how to improve Databricks Genie Code\u0026rsquo;s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.",
+    "inLanguage": "en",
+    "url" : "http:\/\/localhost:1313\/posts\/getting-more-out-of-databricks-genie-code\/",
+    "author" : {
+      "@type": "Person",
+      "name": "Matthew Norberg"
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-05-13T00:00:00\u002b00:00",
+    "datePublished": "2026-05-13T00:00:00\u002b00:00",
+    
+    "dateModified": "2026-05-13T00:00:00\u002b00:00",
+    
+    "keywords": ["databricks","genie-code","data-engineering","medallion-architecture","tmdb","ai"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "2468"
+  }]
+  </script>
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600">
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content">
+        <span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
+        Skip to main content
+      </a>
+    </div>
+    
+    
+      <div class="min-h-[148px]"></div>
+<div class="fixed inset-x-0 bg-neutral dark:bg-neutral-800 z-100">
+  <div class="relative m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32">
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div
+  class="main-menu flex items-center justify-between py-6 md:justify-start gap-x-3 pt-[2px] pr-2 md:pr-4 pb-[3px] pl-0">
+  
+  
+
+  <div class="flex flex-1 items-center justify-between">
+    <nav class="flex space-x-3">
+      
+        <a href="/" class="text-base font-medium">
+          Matthew Norberg&rsquo;s Data Engineering Blog
+        </a>
+      
+    </nav>
+    
+  <nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12">
+    
+      
+        
+  <a
+  href="/posts/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400"
+  aria-label="Blog"
+  title="Posts">
+  
+  
+    <p class="text-base font-medium">
+      Blog
+    </p>
+  
+</a>
+
+
+
+      
+        
+  <a
+  href="/about/"
+  
+  class="flex items-center hover:text-primary-600 dark:hover:text-primary-400"
+  aria-label="About"
+  title="About Me">
+  
+  
+    <p class="text-base font-medium">
+      About
+    </p>
+  
+</a>
+
+
+
+      
+    
+
+    
+
+    
+
+    
+      <button
+        id="search-button"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      </button>
+    
+
+    
+      <div class=" flex items-center">
+        <button
+          id="appearance-switcher"
+          aria-label="Dark mode switcher"
+          type="button"
+          class="text-base hover:text-primary-600 dark:hover:text-primary-400">
+          <div class="flex items-center justify-center dark:hidden">
+            <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+          </div>
+          <div class="items-center justify-center hidden dark:flex">
+            <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+          </div>
+        </button>
+      </div>
+    
+  </nav>
+
+    
+  <div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12">
+    <span></span>
+
+    
+
+    
+
+    
+      <button
+        id="search-button-mobile"
+        aria-label="Search"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400"
+        title="Search (/)">
+        <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+      </button>
+    
+
+    
+      <button
+        id="appearance-switcher-mobile"
+        aria-label="Dark mode switcher"
+        type="button"
+        class="text-base hover:text-primary-600 dark:hover:text-primary-400 me-1">
+        <div class="flex items-center justify-center dark:hidden">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span>
+        </div>
+        <div class="items-center justify-center hidden dark:flex">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+        </div>
+      </button>
+    
+  </div>
+
+  </div>
+  
+  <div class="-my-2 md:hidden">
+    <div id="menu-button" class="block">
+      
+        <div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400">
+          <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96zM0 256C0 238.3 14.33 224 32 224H416C433.7 224 448 238.3 448 256C448 273.7 433.7 288 416 288H32C14.33 288 0 273.7 0 256zM416 448H32C14.33 448 0 433.7 0 416C0 398.3 14.33 384 32 384H416C433.7 384 448 398.3 448 416C448 433.7 433.7 448 416 448z"/></svg>
+</span>
+        </div>
+        <div
+          id="menu-wrapper"
+          class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]">
+          <ul
+            class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none text-end max-w-7xl">
+            <li id="menu-close-button">
+              <span
+                class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400">
+                <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+              </span>
+            </li>
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/posts/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400"
+    aria-label="Blog"
+    title="Posts">
+    
+    
+      <p class="text-bg font-bg">
+        Blog
+      </p>
+    
+  </a>
+</li>
+
+
+
+            
+              
+  <li class="mt-1">
+  <a
+    href="/about/"
+    
+    class="flex items-center hover:text-primary-600 dark:hover:text-primary-400"
+    aria-label="About"
+    title="About Me">
+    
+    
+      <p class="text-bg font-bg">
+        About
+      </p>
+    
+  </a>
+</li>
+
+
+
+            
+
+          </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+  </div>
+</div>
+
+    
+    <div class="relative flex flex-col grow">
+      <main id="main-content" class="grow">
+        
+  
+  <article>
+    
+    
+
+    
+    <header id="single_header" class="mt-5 max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Getting More Out of Databricks Genie Code
+      </h1>
+      <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+        
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+  
+    
+  
+
+  
+
+  
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-05-13T00:00:00&#43;00:00">13 May 2026</time>
+    
+
+    
+    
+  </div>
+
+  
+
+  
+  
+
+  
+  
+
+
+
+      </div>
+      
+        
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+    
+    
+<div class="flex author">
+  
+    
+    
+      
+    
+    
+      
+      
+        
+      
+      <img
+        class="!mt-0 !mb-0 h-24 w-24 rounded-full me-4"
+        width="96"
+        height="96"
+        alt="Matthew Norberg"
+        src="/img/cover-image_hu_45e9b4d828df5a5.jpeg"
+        data-zoom-src="/img/cover-image.jpeg">
+    
+  
+  <div class="place-self-center">
+    
+      <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+        Author
+      </div>
+      <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+        Matthew Norberg
+      </div>
+    
+    
+      <div class="text-sm text-neutral-700 dark:text-neutral-400">Data engineer building AI applications, reliable pipelines, and practical tools.</div>
+    
+    <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://github.com/mnorberg-dev"
+          target="_blank"
+          aria-label="Github"
+          title="Github"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></span></a
+        >
+      
+    
+      
+        <a
+          class="px-1 hover:text-primary-700 dark:hover:text-primary-400"
+          href="https://www.linkedin.com/in/mnorberg24/"
+          target="_blank"
+          aria-label="Linkedin"
+          title="Linkedin"
+          rel="me noopener noreferrer"
+          ><span class="inline-block align-text-bottom"><span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+</span></span></a
+        >
+      
+    
+  </div>
+
+</div>
+  </div>
+</div>
+
+  
+
+  
+
+  
+    <div class="mb-5"></div>
+  
+
+      
+    </header>
+
+    
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
+      
+      
+      
+      
+      
+        <div class="order-first lg:ml-auto px-0 lg:order-last lg:ps-8 lg:max-w-2xs">
+          <div class="toc ps-5 print:hidden lg:sticky lg:top-[140px]">
+            
+              <details
+  open
+  id="TOCView"
+  class="toc-right mt-0 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600 rounded-lg -ms-5 ps-5 pe-2 hidden lg:block">
+  <summary
+    class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#genie-code-briefly">Genie Code, Briefly</a></li>
+    <li><a href="#step-1-building-the-custom-instructions-file">Step 1: Building the Custom Instructions File</a>
+      <ul>
+        <li><a href="#starting-with-a-prompt">Starting with a Prompt</a></li>
+        <li><a href="#the-instructions-file-is-a-living-document">The Instructions File Is a Living Document</a></li>
+      </ul>
+    </li>
+    <li><a href="#step-2-building-skills">Step 2: Building Skills</a></li>
+    <li><a href="#the-test-a-real-pipeline-zero-code-written">The Test: A Real Pipeline, Zero Code Written</a>
+      <ul>
+        <li><a href="#bronze-raw-ingestion">Bronze: Raw Ingestion</a></li>
+        <li><a href="#silver-cleaning-and-normalization">Silver: Cleaning and Normalization</a></li>
+        <li><a href="#gold-business-aggregations">Gold: Business Aggregations</a></li>
+        <li><a href="#the-dashboard">The Dashboard</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-results">The Results</a></li>
+    <li><a href="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+<details class="toc-inside mt-0 overflow-hidden rounded-lg -ms-5 ps-5 lg:hidden">
+  <summary
+    class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">
+    Table of Contents
+  </summary>
+  <div
+    class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#genie-code-briefly">Genie Code, Briefly</a></li>
+    <li><a href="#step-1-building-the-custom-instructions-file">Step 1: Building the Custom Instructions File</a>
+      <ul>
+        <li><a href="#starting-with-a-prompt">Starting with a Prompt</a></li>
+        <li><a href="#the-instructions-file-is-a-living-document">The Instructions File Is a Living Document</a></li>
+      </ul>
+    </li>
+    <li><a href="#step-2-building-skills">Step 2: Building Skills</a></li>
+    <li><a href="#the-test-a-real-pipeline-zero-code-written">The Test: A Real Pipeline, Zero Code Written</a>
+      <ul>
+        <li><a href="#bronze-raw-ingestion">Bronze: Raw Ingestion</a></li>
+        <li><a href="#silver-cleaning-and-normalization">Silver: Cleaning and Normalization</a></li>
+        <li><a href="#gold-business-aggregations">Gold: Business Aggregations</a></li>
+        <li><a href="#the-dashboard">The Dashboard</a></li>
+      </ul>
+    </li>
+    <li><a href="#the-results">The Results</a></li>
+    <li><a href="#wrapping-up">Wrapping Up</a></li>
+  </ul>
+</nav>
+  </div>
+</details>
+
+
+<script>
+  (function () {
+    'use strict'
+
+    const SCROLL_OFFSET_RATIO = 0.33
+    const TOC_SELECTOR = '#TableOfContents'
+    const ANCHOR_SELECTOR = '.anchor'
+    const TOC_LINK_SELECTOR = 'a[href^="#"]'
+    const NESTED_LIST_SELECTOR = 'li ul'
+    const ACTIVE_CLASS = 'active'
+    let isJumpingToAnchor = false
+
+    function getActiveAnchorId(anchors, offsetRatio) {
+      const threshold = window.scrollY + window.innerHeight * offsetRatio
+      const tocLinks = [...document.querySelectorAll('#TableOfContents a[href^="#"]')]
+      const tocIds = new Set(tocLinks.map(link => link.getAttribute('href').substring(1)))
+
+      if (isJumpingToAnchor) {
+        for (let i = 0; i < anchors.length; i++) {
+          const anchor = anchors[i]
+          if (!tocIds.has(anchor.id)) continue
+          const top = anchor.getBoundingClientRect().top + window.scrollY
+          if (Math.abs(window.scrollY - top) < 100) {
+            return anchor.id
+          }
+        }
+      }
+
+      for (let i = anchors.length - 1; i >= 0; i--) {
+        const top = anchors[i].getBoundingClientRect().top + window.scrollY
+        if (top <= threshold && tocIds.has(anchors[i].id)) {
+          return anchors[i].id
+        }
+      }
+      return anchors.find(anchor => tocIds.has(anchor.id))?.id || ''
+    }
+
+    function updateTOC({ toc, anchors, links, scrollOffset, collapseInactive }) {
+      const activeId = getActiveAnchorId(anchors, scrollOffset)
+      if (!activeId) return
+
+      links.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${activeId}`
+        link.classList.toggle(ACTIVE_CLASS, isActive)
+
+        if (collapseInactive) {
+          const ul = link.closest('li')?.querySelector('ul')
+          if (ul) ul.style.display = isActive ? '' : 'none'
+        }
+      })
+
+      if (collapseInactive) {
+        const activeLink = toc.querySelector(`a[href="#${CSS.escape(activeId)}"]`)
+        let el = activeLink
+        while (el && el !== toc) {
+          if (el.tagName === 'UL') el.style.display = ''
+          if (el.tagName === 'LI') el.querySelector('ul')?.style.setProperty('display', '')
+          el = el.parentElement
+        }
+      }
+    }
+
+    function initTOC() {
+      const toc = document.querySelector(TOC_SELECTOR)
+      if (!toc) return
+
+      const collapseInactive = true
+      const anchors = [...document.querySelectorAll(ANCHOR_SELECTOR)]
+      const links = [...toc.querySelectorAll(TOC_LINK_SELECTOR)]
+
+      if (collapseInactive) {
+        toc.querySelectorAll(NESTED_LIST_SELECTOR).forEach(ul => ul.style.display = 'none')
+      }
+
+      links.forEach(link => {
+        link.addEventListener('click', () => {
+          isJumpingToAnchor = true
+        })
+      })
+
+      const config = {
+        toc,
+        anchors,
+        links,
+        scrollOffset: SCROLL_OFFSET_RATIO,
+        collapseInactive
+      }
+
+      window.addEventListener('scroll', () => updateTOC(config), { passive: true })
+      window.addEventListener('hashchange', () => updateTOC(config), { passive: true })
+
+      updateTOC(config)
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', initTOC)
+      : initTOC()
+  })()
+</script>
+
+
+            
+          </div>
+        </div>
+      
+
+
+      <div class="min-w-0 min-h-0 max-w-fit">
+        
+
+        <div class="article-content max-w-prose mb-20">
+          <p>I have been using the Databricks coding assistant for a couple of years now. Over that time I have watched it grow from a basic chat tool into a full agentic coding experience, and even go through a rebrand to become what it is today: Genie Code. Each iteration was noticeably better than the last. But after the rebrand especially, it started feeling like a real development partner rather than just a smarter autocomplete.</p>
+<p>That got me thinking. I already use it regularly in my day-to-day work, but could I get significantly better results by putting some intentional effort into how it is configured? There are features built specifically for this: a custom instructions file, skills, even MCP server integrations. I had not spent much time with any of them, and I decided it was time to change that.</p>
+<p>That led me to two questions: could Genie complete an entire project without me writing a single line of code, and could it produce production-quality results while doing it?</p>
+<p>To find out, I put together a custom instructions file and some skills, then chose a project with one rule: Genie was going to write the whole thing, not a single line of code from me. The project was a full medallion data pipeline pulling live movie data from the TMDB API, all the way through to an AI/BI dashboard. Everything is available on <a
+  href="https://github.com/mnorberg-dev/databricks-movie-database-project/tree/main"
+    target="_blank"
+  >GitHub</a> if you want to review the code on your own.</p>
+<hr>
+
+<h2 class="relative group">Genie Code, Briefly
+    <div id="genie-code-briefly" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#genie-code-briefly" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Genie Code is Databricks&rsquo; AI assistant, built into the surfaces you already work in: notebooks, the SQL editor, Lakeflow Pipelines, and dashboards. What sets it apart from general-purpose coding tools is its connection to Unity Catalog. When you are working in a notebook, Genie has access to your actual catalog — the table names, column names, data types, and lineage are all visible to it, so generated queries reference your real tables rather than placeholders.</p>
+<p>In Agent mode, it goes further. It plans multi-step tasks, writes code, runs it against your cluster, reads the output, and keeps iterating. Context carries over as you move between surfaces during a session, so you are not starting fresh every time you switch from a notebook to the SQL editor.</p>
+<p>Out of the box, Genie produces functional code. But there are three things you can configure to improve the quality of what it produces:</p>
+<ul>
+<li><strong>Custom instructions</strong>: A markdown file applied globally to every interaction. Think of it as your team&rsquo;s style guide, built once and enforced automatically.</li>
+<li><strong>Skills</strong>: Focused, domain-specific documents loaded contextually in Agent mode, only when relevant. They live in <code>.assistant/skills/</code> and can also be invoked directly by <code>@mentioning</code> them.</li>
+<li><strong>MCP servers</strong>: Connections to external tools like Jira, Confluence, or GitHub.</li>
+</ul>
+<p>For this project I focused on the first two. MCP servers are worth exploring, I just did not get into them here. Here is how I built the setup.</p>
+<hr>
+
+<h2 class="relative group">Step 1: Building the Custom Instructions File
+    <div id="step-1-building-the-custom-instructions-file" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#step-1-building-the-custom-instructions-file" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The custom instructions file is the foundation. At the user level, it tells Genie how you want your code formatted, documented, and organized, and it applies to every prompt you make.</p>
+
+<h3 class="relative group">Starting with a Prompt
+    <div id="starting-with-a-prompt" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#starting-with-a-prompt" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>I felt like the best way to create the assistant file was to have Genie create it for me. To do that, I needed to give it a good prompt. So I reviewed some of my existing code, thought through the standards I wanted to enforce, and wrote it all out:</p>
+<blockquote>
+<p>Help me create a genie assistant instructions md file</p>
+<p>I write a lot of python and sql code. The instructions file should be tuned for both languages.</p>
+<p>For Python:
+We should have docstrings when applicable following google coding style.
+Python code should have descriptive comments highlighting each logical section.
+We should use proper naming conventions where applicable.</p>
+<p>For SQL:
+We should strive to break up the task into logical sections and use temp views rather than writing very long queries that do too much work.
+We should follow best SQL practices: capitalize key words, use explicit joins and aliases, and use good comments to explain the code.</p>
+<p>Both Python and SQL should strive to have descriptive names and clear organization that can be easily understood.</p>
+<p>For projects:
+We want to make sure that documentation stays up to date. If we are working in a git folder and there&rsquo;s a README file, we should check that file at the end of big tasks to make sure it is still up to date. We can then actively remove stale sections and add new information relevant to the project.</p>
+<p>This is my first time writing an assistant instructions file. Please guide me on other best practices to have. My goal is to create an instructions file that will create code quality and consistency for myself and my team members.</p>
+</blockquote>
+<p>That produced a solid first draft. The file Genie returned covered Python style (docstrings, type hints, naming conventions, import organization, error handling), SQL formatting, medallion architecture patterns, Unity Catalog documentation standards, notebook structure, and team collaboration guidelines. It also suggested an <strong>Agent Memories</strong> section I hadn&rsquo;t thought to ask for. As you work on a project, Genie automatically populates this section with things it learns: table names, join keys, business definitions, data freshness. When you open a new session, it reads this and picks up with full context. After the movie project was done, mine looked like this:</p>
+
+<figure>
+      <img class="my-0 rounded-md" src="./agent-memories.png" alt="Agent Memories section of the assistant instructions file" />
+  
+  <figcaption>The Agent Memories section, automatically populated by Genie throughout the project</figcaption>
+  </figure>
+
+<h3 class="relative group">The Instructions File Is a Living Document
+    <div id="the-instructions-file-is-a-living-document" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-instructions-file-is-a-living-document" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Here&rsquo;s something I didn&rsquo;t appreciate until I was actually building the test project: the first draft isn&rsquo;t the final product. As I worked, Genie would occasionally produce something I wanted done differently. Rather than just fixing the output, I&rsquo;d prompt Genie to update the instructions file. By the end of the project, the file was significantly richer and more specific than what came out of that first prompt.</p>
+<p>Just like the project code, I never manually edited the assistant file either. Every change came through a prompt, which I thought was a pretty cool detail.</p>
+<p>If you want to see everything that ended up in it, the <a
+  href="https://github.com/mnorberg-dev/databricks-movie-database-project/blob/main/.assistant_instructions.md"
+    target="_blank"
+  >full instructions file</a> is available in the repo.</p>
+<hr>
+
+<h2 class="relative group">Step 2: Building Skills
+    <div id="step-2-building-skills" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#step-2-building-skills" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Where the instructions file sets global standards, skills handle specific workflows. Each one lives in its own folder under <code>.assistant/skills/</code> with a <code>SKILL.md</code> file. In Agent mode, a skill is loaded automatically when the context calls for it, so they stay out of the way until they are needed. For the movie pipeline project, I created two skills, and like the instructions file, both came entirely from prompting Genie.</p>
+<p><strong><code>unity-catalog-documentation</code></strong>: A step-by-step procedure for documenting tables and views in Unity Catalog. This is what made Genie include proper <code>COMMENT ON TABLE</code> statements and <code>ALTER COLUMN COMMENT</code> entries on every table, without being reminded on each prompt. The skill provides explicit templates:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- For Aggregate/Rollup tables:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;[Aggregation level] rollup of [source]. Pre-aggregated for
+</span></span></span><span class="line"><span class="cl"><span class="s1">reporting performance. Refreshed [frequency]. Source: [upstream table].&#39;</span><span class="w">
+</span></span></span></code></pre></div><p><strong><code>code-review-checklist</code></strong>: A comprehensive checklist covering Python and SQL quality standards. Genie works through the checklist systematically, checking docstrings, type hints, naming conventions, import ordering, SQL clause formatting, Unity Catalog documentation, and more. It&rsquo;s kept as a skill rather than embedded in the main instructions so it doesn&rsquo;t load on every prompt, but it&rsquo;s always available when you need it.</p>
+<hr>
+
+<h2 class="relative group">The Test: A Real Pipeline, Zero Code Written
+    <div id="the-test-a-real-pipeline-zero-code-written" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-test-a-real-pipeline-zero-code-written" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Now that I had the instructions file and skills in place, I needed a way to actually measure whether they worked. Writing a few test functions would not tell me much. I needed something with real complexity and enough moving parts that the standards would either hold or visibly break down.</p>
+<p>I decided on a full medallion pipeline pulling from a live external API. This is a challenge data engineers face all the time: ingesting data through an API, cleaning and transforming it, building aggregations and analytics on top. It is not a small demo using data that is already sitting in a catalog. It mirrors the kind of work that shows up in real projects.</p>
+<p>And as a reminder, my goal was to complete this without writing any code myself. There were a couple of things I did have to do manually though. I signed up for a free developer account at <a
+  href="https://www.themoviedb.org/"
+    target="_blank"
+  >The Movie Database (TMDB)</a> and stored my API key in Databricks Secrets. Genie cannot reach outside Databricks to configure secrets, so that part was on me. These were the two commands to get it set up:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">databricks secrets create-scope tmdb
+</span></span><span class="line"><span class="cl">databricks secrets put-secret tmdb api_key
+</span></span></code></pre></div><p>Everything after that was prompting.</p>
+
+<h3 class="relative group">Bronze: Raw Ingestion
+    <div id="bronze-raw-ingestion" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#bronze-raw-ingestion" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The first notebook fetches from multiple TMDB endpoints and writes raw records to a Delta table. Two things immediately stood out in the generated code.</p>
+<p>First, Genie structured the API layer as a class without being asked. It emerged from the instruction to follow object-oriented patterns:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MovieAPIClient</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Client for interacting with The Movie Database (TMDB) API.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Attributes:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        api_key: TMDB API authentication key
+</span></span></span><span class="line"><span class="cl"><span class="s2">        base_url: Base URL for TMDB API endpoints
+</span></span></span><span class="line"><span class="cl"><span class="s2">        session: Requests session for connection pooling
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">TMDB_BASE_URL</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">                <span class="s2">&#34;API key cannot be empty. Please provide a valid TMDB API key.&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span></span></code></pre></div><p>Input validation, a meaningful error message, connection pooling. These are defensive details that appeared because the instructions made them expected.</p>
+<p>Second, the data transformation function came out with a complete Google-style docstring, type hints on both arguments and return value, and early input validation:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">flatten_movie_data</span><span class="p">(</span><span class="n">movies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Flattens nested movie data from TMDB API into a tabular structure.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Converts nested JSON structures (like genre_ids arrays) into a format
+</span></span></span><span class="line"><span class="cl"><span class="s2">    suitable for DataFrame creation.
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        movies: List of movie dictionaries from TMDB API
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Returns:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        List of flattened movie dictionaries with simplified structure
+</span></span></span><span class="line"><span class="cl"><span class="s2">
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Raises:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        TypeError: If movies is not a list
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">movies</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Expected list, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">movies</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">flattened</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">movie</span> <span class="ow">in</span> <span class="n">movies</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">flat_movie</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;movie_id&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;id&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;title&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;title&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;original_title&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;original_title&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;overview&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;overview&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;release_date&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;release_date&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;popularity&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;popularity&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vote_average&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;vote_average&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;vote_count&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;vote_count&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;genre_ids&#34;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;genre_ids&#34;</span><span class="p">,</span> <span class="p">[])),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;original_language&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;original_language&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;adult&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;adult&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;poster_path&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;poster_path&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;backdrop_path&#34;</span><span class="p">:</span> <span class="n">movie</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;backdrop_path&#34;</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;ingestion_timestamp&#34;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">flattened</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">flat_movie</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">flattened</span>
+</span></span></code></pre></div><blockquote>
+<p>📸 <strong>[PLACEHOLDER: Screenshot of bronze notebook output — row counts per endpoint, ending with &ldquo;Total unique movies after deduplication: ~17,000&rdquo;]</strong></p>
+</blockquote>
+
+<h3 class="relative group">Silver: Cleaning and Normalization
+    <div id="silver-cleaning-and-normalization" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#silver-cleaning-and-normalization" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>The silver notebook is pure SQL. It filters null critical fields, coalesces numerics, and derives <code>release_year</code> and <code>release_decade</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_silver</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">COMMENT</span><span class="w"> </span><span class="s1">&#39;Silver layer: Cleaned and normalized movie data with derived fields.
+</span></span></span><span class="line"><span class="cl"><span class="s1">Source: workspace.default.movies_bronze.&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">AS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">movie_id</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">title</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">COALESCE</span><span class="p">(</span><span class="n">popularity</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">popularity</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">COALESCE</span><span class="p">(</span><span class="n">vote_average</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">vote_average</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">COALESCE</span><span class="p">(</span><span class="n">vote_count</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">      </span><span class="k">AS</span><span class="w"> </span><span class="n">vote_count</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">YEAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">release_date</span><span class="p">))</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">release_year</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">CAST</span><span class="p">(</span><span class="n">FLOOR</span><span class="p">(</span><span class="k">YEAR</span><span class="p">(</span><span class="n">TO_DATE</span><span class="p">(</span><span class="n">release_date</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">release_decade</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_bronze</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">WHERE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">movie_id</span><span class="w">         </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">title</span><span class="w">        </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">release_date</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div>
+<figure>
+      <img class="my-0 rounded-md" src="./silver-layer-output.png" alt="Silver layer transformation output" />
+  
+  <figcaption>Silver layer output showing total movies processed and the date range covered</figcaption>
+  </figure>
+
+<h3 class="relative group">Gold: Business Aggregations
+    <div id="gold-business-aggregations" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#gold-business-aggregations" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>Two gold tables power the dashboard. The genre table required exploding a JSON array, joining to a lookup, and aggregating. Genie broke it into three labeled temp views rather than one large query. This is actually a practice I personally prefer. When something is complicated, I would rather split it into smaller, focused steps and build up from there. It is easier to read, easier to debug, and the instructions made this the expected approach:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="c1">-- Step 1: Explode genre_ids array for genre-level analysis
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">movies_with_genres</span><span class="w"> </span><span class="k">AS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">movie_id</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">vote_average</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">popularity</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">CAST</span><span class="p">(</span><span class="n">genre_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nb">INT</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">genre_id</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_silver</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">LATERAL</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">explode</span><span class="p">(</span><span class="n">from_json</span><span class="p">(</span><span class="n">genre_ids</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;array&lt;int&gt;&#39;</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">genre_id</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Step 2: Aggregate metrics by genre
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="n">TEMP</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">genre_aggregates</span><span class="w"> </span><span class="k">AS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">genre_id</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">movie_id</span><span class="p">)</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">total_movies</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">vote_average</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_rating</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="n">vote_count</span><span class="p">)</span><span class="w">              </span><span class="k">AS</span><span class="w"> </span><span class="n">total_votes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">movies_with_genres</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">genre_id</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- Step 3: Join with genre names and create gold table
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_gold_by_genre</span><span class="w"> </span><span class="k">AS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">g</span><span class="p">.</span><span class="n">genre_name</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">ga</span><span class="p">.</span><span class="o">*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">genre_aggregates</span><span class="w"> </span><span class="n">ga</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">INNER</span><span class="w"> </span><span class="k">JOIN</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_bronze_genres</span><span class="w"> </span><span class="k">g</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">ga</span><span class="p">.</span><span class="n">genre_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">g</span><span class="p">.</span><span class="n">genre_id</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div><p>The analysis notebook used LAG window functions for period-over-period comparisons, including a <code>NULLIF</code> guard against division by zero on the earliest decade, another unprompted defensive detail:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">WITH</span><span class="w"> </span><span class="n">decade_metrics</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">release_decade</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">total_movies</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">avg_rating</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">LAG</span><span class="p">(</span><span class="n">total_movies</span><span class="p">)</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">release_decade</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">prev_decade_movies</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">LAG</span><span class="p">(</span><span class="n">avg_rating</span><span class="p">)</span><span class="w">   </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">release_decade</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">prev_decade_rating</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">workspace</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">movies_gold_by_decade</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">SELECT</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">release_decade</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">total_movies</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">ROUND</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">((</span><span class="n">total_movies</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prev_decade_movies</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">prev_decade_movies</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="mi">1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">pct_change_in_volume</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">decade_metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">release_decade</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></div>
+<h3 class="relative group">The Dashboard
+    <div id="the-dashboard" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-dashboard" aria-label="Anchor">#</a>
+    </span>
+    
+</h3>
+<p>With gold tables in place, I prompted Genie to build an AI/BI dashboard. The result was a single-page layout with five visualizations, built without any design guidance from me beyond the prompt.</p>
+
+<figure>
+      <img class="my-0 rounded-md" src="./genie-dashboard-1.png" alt="Movie Analytics Dashboard - Top Genres and Volume Over Time" />
+  
+  <figcaption>Top genres by average rating (left) and movie volume + quality over time (right)</figcaption>
+  </figure>
+
+<figure>
+      <img class="my-0 rounded-md" src="./genie-dashboard-2.png" alt="Top 25 Rated Movies table" />
+  
+  <figcaption>Top 25 rated movies requiring 500+ votes for credibility</figcaption>
+  </figure>
+<p>One thing worth calling out: Genie added the 500-vote minimum filter to the top movies table without being asked. It&rsquo;s a reasonable data quality decision — without it, obscure films with only a handful of ratings would dominate the list. Genie inferred it was the right call from context.</p>
+
+<figure>
+      <img class="my-0 rounded-md" src="./genie-dashboard-3.png" alt="Top Languages in Modern Cinema (2010&#43;)" />
+  
+  <figcaption>Top languages in modern cinema 2010+</figcaption>
+  </figure>
+<hr>
+
+<h2 class="relative group">The Results
+    <div id="the-results" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-results" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Looking at the results across four notebooks and hundreds of lines, the setup clearly made a difference. The code was consistent in a way that is hard to achieve even when writing it yourself. Functions had proper docstrings, SQL was organized into labeled temp views with purposeful comments, and Unity Catalog documentation showed up on every table. Small defensive coding details appeared throughout without being explicitly requested. None of it required reminding Genie from prompt to prompt. It was already there because the instructions made it the default.</p>
+<hr>
+
+<h2 class="relative group">Wrapping Up
+    <div id="wrapping-up" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#wrapping-up" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Going back to the two questions I started with: yes, Genie completed the entire project without me writing a single line of code, and yes, the code quality was there. Not just functional, but consistent and well-documented across the whole thing.</p>
+<p>The bigger takeaway for me was how little it takes to get meaningfully better results. A prompt to generate the instructions file, a couple of skills, and some refinement along the way. None of it was complicated.</p>
+<p>If you are already using Genie Code and have not set up a custom instructions file yet, that is the first thing I would do. Describe your standards and let Genie write the file for you. You will notice the difference quickly.</p>
+<hr>
+<p><em>The full project code is on <a
+  href="https://github.com/mnorberg-dev/databricks-movie-database-project/tree/main"
+    target="_blank"
+  >GitHub</a>. If you want to try this yourself, the TMDB API has a generous free tier and the whole pipeline runs on a Databricks Community Edition workspace.</em></p>
+<hr>
+<p>Sources:</p>
+<ul>
+<li><a
+  href="https://docs.databricks.com/aws/en/genie-code/"
+    target="_blank"
+  >Genie Code | Databricks Documentation</a></li>
+<li><a
+  href="https://docs.databricks.com/aws/en/genie-code/skills"
+    target="_blank"
+  >Extend Genie Code with Agent Skills | Databricks Documentation</a></li>
+<li><a
+  href="https://docs.databricks.com/aws/en/genie-code/tips"
+    target="_blank"
+  >Tips to Improve Genie Code Responses | Databricks Documentation</a></li>
+<li><a
+  href="https://www.databricks.com/blog/introducing-genie-code"
+    target="_blank"
+  >Introducing Genie Code | Databricks Blog</a></li>
+</ul>
+
+          
+          
+          
+        </div>
+        
+        
+
+        
+
+        
+
+      </div>
+
+      
+      
+        
+        
+          
+          
+        
+        
+        
+        <script
+          type="text/javascript"
+          src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
+          integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
+          data-oid="views_posts/databricks-genie-code-assistant/index.md"
+          data-oid-likes="likes_posts/databricks-genie-code-assistant/index.md"></script>
+      
+    </section>
+
+    
+    <footer class="pt-8 max-w-prose print:hidden">
+      
+
+      
+    </footer>
+  </article>
+
+        
+
+
+  
+
+
+
+
+
+
+<div
+  id="scroll-to-top"
+  class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200">
+  <a
+    href="#the-top"
+    class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+    aria-label="Scroll to top"
+    title="Scroll to top">
+    &uarr;
+  </a>
+</div>
+
+      </main><footer id="site-footer" class="py-10 print:hidden">
+  
+  
+    
+  
+  <div class="flex items-center justify-between">
+    
+    
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          &copy;
+          2026
+          Matthew Norberg
+      </p>
+    
+
+    
+    
+      <p class="text-xs text-neutral-500 dark:text-neutral-400">
+        
+        
+        Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+          href="https://blowfish.page/" target="_blank" rel="noopener noreferrer">Blowfish</a>
+      </p>
+    
+  </div>
+  
+    <script>
+      mediumZoom(document.querySelectorAll("img:not(.nozoom)"), {
+        margin: 24,
+        background: "rgba(0,0,0,0.5)",
+        scrollOffset: 0,
+      });
+    </script>
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js"
+    integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh&#43;sCQ0E53ghYrxgYqw&#43;0GCRyIEpA=="></script>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500"
+  data-url="http://localhost:1313/">
+  <div
+    id="search-modal"
+    class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800">
+    <header class="relative z-10 flex items-center justify-between flex-none px-2">
+      <form class="flex items-center flex-auto min-w-0">
+        <div class="flex items-center justify-center w-8 h-8 text-neutral-400">
+          <span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="Search"
+          tabindex="0">
+      </form>
+      <button
+        id="close-search-button"
+        class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="Close (Esc)">
+        <span class="relative block icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto px-2 overflow-auto">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+  
+</html>
