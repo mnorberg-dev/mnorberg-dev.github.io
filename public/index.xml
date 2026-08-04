@@ -13,10 +13,10 @@
     
     <item>
       <title>Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase</title>
-      <link>http://localhost:1313/posts/databricks-tally-app/</link>
+      <link>http://localhost:1313/posts/databricks-orion-app/</link>
       <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
       <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
-      <guid>http://localhost:1313/posts/databricks-tally-app/</guid>
+      <guid>http://localhost:1313/posts/databricks-orion-app/</guid>
       <description>A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we&amp;rsquo;re reverse-engineering. Here&amp;rsquo;s why I built it, how it works, and why the same pattern can work for any codebase.</description>
       
     </item>
