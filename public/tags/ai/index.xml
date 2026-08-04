@@ -22,6 +22,16 @@
     </item>
     
     <item>
+      <title>Getting More Out of Databricks Genie Code</title>
+      <link>http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/</link>
+      <pubDate>Wed, 13 May 2026 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/getting-more-out-of-databricks-genie-code/</guid>
+      <description>A walkthrough of how to improve Databricks Genie Code&amp;rsquo;s output by building a custom instructions file and skills. Includes a real-world test project — a full medallion pipeline pulling from the TMDB API — to see whether the investment actually pays off.</description>
+      
+    </item>
+    
+    <item>
       <title>Boston Code Camp Recap: Building AI Agents in Databricks</title>
       <link>http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/</link>
       <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
