@@ -1,7 +1,7 @@
 ---
 title: "Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase"
 date: 2026-07-29
-draft: true
+draft: false
 tags: ["AI", "Databricks", "MCP", "Data-Engineering"]
 summary: "A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we're reverse-engineering. Here's why I built it, how it works, and why the same pattern can work for any codebase."
 ---
@@ -22,7 +22,7 @@ Orion's job was to collect data from a number of different sources, normalize it
 
 This is exactly the kind of work Databricks is built for. In lakehouse terms, the rebuild falls naturally into a medallion architecture. Raw data lands in a bronze layer, gets conformed and normalized in a silver layer, and the metrics are computed in gold. Each stage is an ETL pipeline written in PySpark and Spark SQL, running on Spark's distributed, in-memory engine, so the work spreads across a cluster instead of grinding through a single machine.
 
-Reverse engineering the application proved to be a very difficult task. Most of the difficulty was in understanding how the original system moved data: following the call stack, tracing how values flowed through memory and got transformed at each step, accounting for every precise operation. The sheer volume of code only made it worse.
+Reverse-engineering the application proved to be a very difficult task. Most of the difficulty was in understanding how the original system moved data: following the call stack, tracing how values flowed through memory and got transformed at each step, accounting for every precise operation. The sheer volume of code only made it worse.
 
 The language gap was a challenge of its own. Orion was written in Node.js, a perfectly good language but not a natural fit for large-scale data transformation. Code like that walks through data row by row, holding running state as it goes, and that pattern has no clean equivalent in a set-based world. Picture reproducing a loop that iterates over an array and tracks values along the way, when your target is a single SQL query over the whole set at once. The concepts translate loosely. The approach has to change completely.
 
@@ -32,7 +32,7 @@ Throughout the project I've leaned heavily on a coding assistant, Databricks' Ge
 
 Genie Code had access to our new Databricks code, but not to the legacy codebase we were trying to understand. When I needed to know how Orion handled a particular calculation, my options were to dig through the source myself or paste a snippet into the chat, which only ever gave the model a keyhole view of one file at a time. Each new case meant hours of painstaking code archaeology.
 
-That's the connection that clicked during the keynote. The Orion codebase was the missing context. If the assistant could search and understand the whole thing, the goals, the original intent, the actual implementation, it could ground its answers in real code instead of guessing. That was the piece I set out to build.
+That's the connection that clicked during the keynote. The Orion codebase was the missing context. If the assistant could search and understand the whole thing, including the goals, the original intent, and the actual implementation, it could ground its answers in real code instead of guessing. That was the piece I set out to build.
 
 ## First Attempt: MCP (and Why It Didn't Work)
 
@@ -50,7 +50,7 @@ The app needed to do a few things.
 
 The important detail is that the index holds chunks of text, not whole files. When the assistant asks a question in plain language, the search returns the handful of chunks most relevant to it, wording match or not, each with a pointer back to the file it lives in.
 
-I'll admit I was skeptical this would work. Semantic search is built for natural language, and English doesn't map cleanly onto source code. It worked better than I expected. Part of the reason is that code carries more natural language than you'd think, in its comments, function names, and variable names. The embedding models also turn out to be genuinely good at code, matching snippets that are conceptually similar even when the syntax differs. Whatever the reason, retrieval consistently surfaced the right parts of the codebase.
+I'll admit I was skeptical this would work. Semantic search is built for natural language, and English doesn't map cleanly onto source code. It worked better than I expected. Part of the reason is that code carries more natural language than you'd think, in its comments, function names, and variable names. The embedding models also turn out to be very good at code, matching snippets that are conceptually similar even when the syntax differs. Whatever the reason, retrieval consistently surfaced the right parts of the codebase.
 
 It did more than point me to the right place, too. I could ask how a particular value was calculated, get the logic back in plain language, then ask the assistant to cite the exact file and lines it drew from. That last step is what made the answers trustworthy. Instead of taking a plausible explanation on faith, I could check it against the source every time.
 
@@ -96,7 +96,7 @@ This was version one, and it deliberately handled a single source of context: th
 
 The obvious next step is to pull in everything around it. Databricks' Lakeflow connectors can ingest from Confluence and SharePoint, where a lot of the written knowledge about Orion lives, in design docs and notes from teammates and the original authors. That material is too sprawling for any one person to hold in their head, but it's exactly what an LLM can sift through to find the right context for a question.
 
-Layer those sources together and the tool changes character. Once the assistant can draw on code, documentation, and tribal knowledge at once, and decide for itself which to consult, it stops being a search tool. It becomes a knowledge assistant agent, something you can hold a real conversation with about the whole system.
+Layer those sources together and the tool changes character. Once the assistant can draw on code, documentation, and tribal knowledge together, and decide for itself which to consult, it stops being a search tool. It becomes a knowledge assistant agent, something you can hold a real conversation with about the whole system.
 
 Step back, and this stops being about one legacy app at all. It's a reusable pattern: point a coding assistant at a codebase it can't otherwise see, give it the tools to search and read that code on demand, then layer in whatever surrounding knowledge exists. You could stand one up for any codebase in the company, and give a new developer a way to get up to speed in days instead of months. Even after Orion is gone, an assistant like this could stick around as institutional memory, a way to answer "how did the old system actually do this?" long after the source has been retired.
 
@@ -106,7 +106,7 @@ The models are good. What's usually missing is context.
 
 If you're stuck on a problem where an AI assistant should be able to help but keeps coming up short, it's worth asking whether the real bottleneck is the model, or whether you just haven't given it the context it needs. For us, closing that gap was the difference between an assistant that guessed and one that knew.
 
-Ghodsi was right. It's a context problem. The good news is that context is something you can actually do something about.
+Ghodsi was right. It's a context problem. The good news is that context is a problem you can actually do something about.
 
 ---
 
