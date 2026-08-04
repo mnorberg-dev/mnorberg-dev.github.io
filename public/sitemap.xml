@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>http://localhost:1313/posts/databricks-tally-app/</loc>
+    <loc>http://localhost:1313/posts/databricks-orion-app/</loc>
     <lastmod>2026-07-29T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
