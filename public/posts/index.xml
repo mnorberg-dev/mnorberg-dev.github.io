@@ -9,7 +9,17 @@
     <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
     <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
     <copyright>© 2026 Matthew Norberg</copyright>
-    <lastBuildDate>Wed, 13 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 29 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase</title>
+      <link>http://localhost:1313/posts/databricks-tally-app/</link>
+      <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/databricks-tally-app/</guid>
+      <description>A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we&amp;rsquo;re reverse-engineering. Here&amp;rsquo;s why I built it, how it works, and why the same pattern can work for any codebase.</description>
+      
+    </item>
     
     <item>
       <title>Getting More Out of Databricks Genie Code</title>
