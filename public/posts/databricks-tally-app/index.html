@@ -15,20 +15,20 @@
 
   
   
-    <title>Boston Code Camp Recap: Building AI Agents in Databricks &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
-    <meta name="title" content="Boston Code Camp Recap: Building AI Agents in Databricks &middot; Matthew Norberg&#39;s Data Engineering Blog">
+    <title>Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase &middot; Matthew Norberg&#39;s Data Engineering Blog</title>
+    <meta name="title" content="Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase &middot; Matthew Norberg&#39;s Data Engineering Blog">
   
 
   
   
-    <meta name="description" content="A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.">
+    <meta name="description" content="A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we&#39;re reverse-engineering. Here&#39;s why I built it, how it works, and why the same pattern can work for any codebase.">
   
   
-    <meta name="keywords" content="databricks,ai,data engineering,mlflow,">
+    <meta name="keywords" content="AI,Databricks,MCP,Data-Engineering,">
   
   
   
-  <link rel="canonical" href="http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/">
+  <link rel="canonical" href="http://localhost:1313/posts/databricks-tally-app/">
   
 
   
@@ -52,24 +52,24 @@
   
 
   
-  <meta property="og:url" content="http://localhost:1313/posts/boston-code-camp-ai-agents-databricks/">
+  <meta property="og:url" content="http://localhost:1313/posts/databricks-tally-app/">
   <meta property="og:site_name" content="Matthew Norberg&#39;s Data Engineering Blog">
-  <meta property="og:title" content="Boston Code Camp Recap: Building AI Agents in Databricks">
-  <meta property="og:description" content="A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.">
+  <meta property="og:title" content="Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase">
+  <meta property="og:description" content="A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we’re reverse-engineering. Here’s why I built it, how it works, and why the same pattern can work for any codebase.">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-04-05T00:00:00+00:00">
-    <meta property="article:modified_time" content="2026-04-05T00:00:00+00:00">
-    <meta property="article:tag" content="Databricks">
+    <meta property="article:published_time" content="2026-07-29T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-07-29T00:00:00+00:00">
     <meta property="article:tag" content="AI">
+    <meta property="article:tag" content="Databricks">
+    <meta property="article:tag" content="MCP">
     <meta property="article:tag" content="Data Engineering">
-    <meta property="article:tag" content="Mlflow">
 
   
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Boston Code Camp Recap: Building AI Agents in Databricks">
-  <meta name="twitter:description" content="A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.">
+  <meta name="twitter:title" content="Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase">
+  <meta name="twitter:description" content="A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we’re reverse-engineering. Here’s why I built it, how it works, and why the same pattern can work for any codebase.">
 
   
   
@@ -167,6 +167,16 @@
 
 
 
+  
+  
+  
+  
+  <script
+    defer
+    type="text/javascript"
+    src="/js/mermaid.bundle.952a37a4056669084b44489b8acec851a95825e3c34632c74a0d9916b951884204b8f720e6292cc85b51c6bac44ab6392877b98585ecc205b41ea076df927163.js"
+    integrity="sha512-lSo3pAVmaQhLREibis7IUalYJePDRjLHSg2ZFrlRiEIEuPcg5iksyFtRxrrESrY5KHe5hYXswgW0HqB235JxYw=="></script>
+
 
 
 
@@ -218,26 +228,26 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "articleSection": "Posts",
-    "name": "Boston Code Camp Recap: Building AI Agents in Databricks",
-    "headline": "Boston Code Camp Recap: Building AI Agents in Databricks",
+    "name": "Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase",
+    "headline": "Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase",
     
-    "abstract": "A recap of my session at Boston Code Camp, covering how to build, deploy, and test AI agents in Databricks using the Responses Agent framework. Includes links to the slides and code on GitHub.",
+    "abstract": "A keynote line about context sent me down the path of building a Databricks app that gives Genie Code full knowledge of a legacy codebase we\u0026rsquo;re reverse-engineering. Here\u0026rsquo;s why I built it, how it works, and why the same pattern can work for any codebase.",
     "inLanguage": "en",
-    "url" : "http:\/\/localhost:1313\/posts\/boston-code-camp-ai-agents-databricks\/",
+    "url" : "http:\/\/localhost:1313\/posts\/databricks-tally-app\/",
     "author" : {
       "@type": "Person",
       "name": "Matthew Norberg"
     },
     "copyrightYear": "2026",
-    "dateCreated": "2026-04-05T00:00:00\u002b00:00",
-    "datePublished": "2026-04-05T00:00:00\u002b00:00",
+    "dateCreated": "2026-07-29T00:00:00\u002b00:00",
+    "datePublished": "2026-07-29T00:00:00\u002b00:00",
     
-    "dateModified": "2026-04-05T00:00:00\u002b00:00",
+    "dateModified": "2026-07-29T00:00:00\u002b00:00",
     
-    "keywords": ["databricks","ai","data engineering","mlflow"],
+    "keywords": ["AI","Databricks","MCP","Data-Engineering"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "400"
+    "wordCount": "2005"
   }]
   </script>
 
@@ -526,7 +536,7 @@
     <header id="single_header" class="mt-5 max-w-prose">
       
       <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-        Boston Code Camp Recap: Building AI Agents in Databricks
+        Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase
       </h1>
       <div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
         
@@ -574,10 +584,18 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2026-04-05T00:00:00&#43;00:00">5 April 2026</time>
+      <time datetime="2026-07-29T00:00:00&#43;00:00">29 July 2026</time>
     
 
     
+    
+      <span class="ps-2"><span class="flex cursor-pointer">
+  <span
+    class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
+    Draft
+  </span>
+</span>
+</span>
     
   </div>
 
@@ -706,8 +724,14 @@
     class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#what-the-session-covered">What the Session Covered</a></li>
-    <li><a href="#slides-and-code">Slides and Code</a></li>
+    <li><a href="#the-problem-reverse-engineering-a-black-box">The Problem: Reverse-Engineering a Black Box</a></li>
+    <li><a href="#where-the-ai-assistant-kept-falling-short">Where the AI Assistant Kept Falling Short</a></li>
+    <li><a href="#first-attempt-mcp-and-why-it-didnt-work">First Attempt: MCP (and Why It Didn&rsquo;t Work)</a></li>
+    <li><a href="#the-solution-a-databricks-app-to-serve-the-codebase-over-mcp">The Solution: A Databricks App to Serve the Codebase Over MCP</a></li>
+    <li><a href="#keeping-costs-honest">Keeping Costs Honest</a></li>
+    <li><a href="#teaching-the-assistant-when-to-use-it">Teaching the Assistant When to Use It</a></li>
+    <li><a href="#where-this-goes-next">Where This Goes Next</a></li>
+    <li><a href="#wrapping-up">Wrapping Up</a></li>
   </ul>
 </nav>
   </div>
@@ -721,8 +745,14 @@
     class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#what-the-session-covered">What the Session Covered</a></li>
-    <li><a href="#slides-and-code">Slides and Code</a></li>
+    <li><a href="#the-problem-reverse-engineering-a-black-box">The Problem: Reverse-Engineering a Black Box</a></li>
+    <li><a href="#where-the-ai-assistant-kept-falling-short">Where the AI Assistant Kept Falling Short</a></li>
+    <li><a href="#first-attempt-mcp-and-why-it-didnt-work">First Attempt: MCP (and Why It Didn&rsquo;t Work)</a></li>
+    <li><a href="#the-solution-a-databricks-app-to-serve-the-codebase-over-mcp">The Solution: A Databricks App to Serve the Codebase Over MCP</a></li>
+    <li><a href="#keeping-costs-honest">Keeping Costs Honest</a></li>
+    <li><a href="#teaching-the-assistant-when-to-use-it">Teaching the Assistant When to Use It</a></li>
+    <li><a href="#where-this-goes-next">Where This Goes Next</a></li>
+    <li><a href="#wrapping-up">Wrapping Up</a></li>
   </ul>
 </nav>
   </div>
@@ -840,39 +870,167 @@
         
 
         <div class="article-content max-w-prose mb-20">
-          <p>A few weeks ago I gave my first professional talk at Boston Code Camp. The session was called <em>Your First AI Agent in Databricks: Building, Deploying, and Testing with Confidence</em>, and it was one of the more rewarding experiences I&rsquo;ve had in my career so far.</p>
+          <p>For the third year running, I was lucky enough to attend the Databricks Data + AI Summit on behalf of Rightworks. This year, one line from the keynote stuck with me. Databricks CEO Ali Ghodsi put it plainly:</p>
+<blockquote>
+<p>AI doesn&rsquo;t have an intelligence problem. It has a context problem.</p>
+</blockquote>
+<p>His point was simple. The frontier models are already plenty smart, and only getting smarter. The gap between AI that solves your problem and AI that spins its wheels usually isn&rsquo;t intelligence. It&rsquo;s context. Give a capable model what it needs, and it becomes far more effective.</p>
+<p>I sat in the convention hall, turning the idea over against my own work. It explained, almost perfectly, why the big project on my plate had been so painful.</p>
 
-<h2 class="relative group">What the Session Covered
-    <div id="what-the-session-covered" class="anchor"></div>
+<h2 class="relative group">The Problem: Reverse-Engineering a Black Box
+    <div id="the-problem-reverse-engineering-a-black-box" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#what-the-session-covered" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-problem-reverse-engineering-a-black-box" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>The talk was aimed at beginner to intermediate practitioners who have probably experimented with AI agents in a notebook but haven&rsquo;t yet figured out how to get one running reliably in production. The core thread running through it: getting an agent to <em>work</em> is very different from getting one to <em>ship</em>.</p>
-<p>We walked through the full lifecycle — defining an agent using the MLflow Responses Agent framework, registering it in Unity Catalog, and deploying it through the Mosaic AI Gateway. From there we looked at two ways to actually use the agent: the AI Playground built into the Databricks UI, and <code>AI_QUERY</code>, which lets you call your agent directly from SQL — useful for things like running sentiment analysis on a table of customer reviews as part of a data pipeline.</p>
-<p>The second half of the talk was about what happens after you deploy. MLflow tracing gives you full visibility into every request your agent handles, and LLM judges let you evaluate response quality at scale — not just whether the agent ran successfully, but whether it responded appropriately. We also covered the Mosaic AI Gateway&rsquo;s inference tables, where every request gets logged automatically for auditing and analysis.</p>
-<p>The final section was on stress testing. The short version: interact with your agent irresponsibly before your users get the chance to. Prompting edge cases, evaluating the results with LLM judges, and tightening your system prompt based on what you find is a much better discovery process than finding out in production.</p>
+<p>For months, my team has been reverse-engineering a legacy application. I can&rsquo;t name it publicly, so I&rsquo;ll call it Orion.</p>
+<p>Orion&rsquo;s job was to collect data from a number of different sources, normalize it, and compute a set of metrics on top of it. Our job has been to rebuild that capability on modern infrastructure: collect the same data, normalize it across sources, and reproduce the metrics exactly, as pipelines that run at scale.</p>
+<p>This is exactly the kind of work Databricks is built for. In lakehouse terms, the rebuild falls naturally into a medallion architecture. Raw data lands in a bronze layer, gets conformed and normalized in a silver layer, and the metrics are computed in gold. Each stage is an ETL pipeline written in PySpark and Spark SQL, running on Spark&rsquo;s distributed, in-memory engine, so the work spreads across a cluster instead of grinding through a single machine.</p>
+<p>Reverse engineering the application proved to be a very difficult task. Most of the difficulty was in understanding how the original system moved data: following the call stack, tracing how values flowed through memory and got transformed at each step, accounting for every precise operation. The sheer volume of code only made it worse.</p>
+<p>The language gap was a challenge of its own. Orion was written in Node.js, a perfectly good language but not a natural fit for large-scale data transformation. Code like that walks through data row by row, holding running state as it goes, and that pattern has no clean equivalent in a set-based world. Picture reproducing a loop that iterates over an array and tracks values along the way, when your target is a single SQL query over the whole set at once. The concepts translate loosely. The approach has to change completely.</p>
 
-<h2 class="relative group">Slides and Code
-    <div id="slides-and-code" class="anchor"></div>
+<h2 class="relative group">Where the AI Assistant Kept Falling Short
+    <div id="where-the-ai-assistant-kept-falling-short" class="anchor"></div>
     
     <span
         class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
-        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#slides-and-code" aria-label="Anchor">#</a>
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#where-the-ai-assistant-kept-falling-short" aria-label="Anchor">#</a>
     </span>
     
 </h2>
-<p>Everything from the talk — the slides and the notebook template — is on GitHub:</p>
-<p><strong><a
-  href="https://github.com/mnorberg-dev/first-ai-agent-in-databricks"
+<p>Throughout the project I&rsquo;ve leaned heavily on a coding assistant, Databricks&rsquo; Genie Code, and it&rsquo;s been a real time-saver. But it had one persistent blind spot. It couldn&rsquo;t see Orion.</p>
+<p>Genie Code had access to our new Databricks code, but not to the legacy codebase we were trying to understand. When I needed to know how Orion handled a particular calculation, my options were to dig through the source myself or paste a snippet into the chat, which only ever gave the model a keyhole view of one file at a time. Each new case meant hours of painstaking code archaeology.</p>
+<p>That&rsquo;s the connection that clicked during the keynote. The Orion codebase was the missing context. If the assistant could search and understand the whole thing, the goals, the original intent, the actual implementation, it could ground its answers in real code instead of guessing. That was the piece I set out to build.</p>
+
+<h2 class="relative group">First Attempt: MCP (and Why It Didn&rsquo;t Work)
+    <div id="first-attempt-mcp-and-why-it-didnt-work" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#first-attempt-mcp-and-why-it-didnt-work" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>My first instinct was the simplest one: connect the codebase to Genie Code over MCP. If Orion lived in GitHub, this would have been close to plug-and-play, since there are GitHub MCP connectors that work with the assistant out of the box.</p>
+<p>But Orion lives in Azure DevOps, and there&rsquo;s no MCP connector available for it. The easy path was closed, so I had to get more creative.</p>
+
+<h2 class="relative group">The Solution: A Databricks App to Serve the Codebase Over MCP
+    <div id="the-solution-a-databricks-app-to-serve-the-codebase-over-mcp" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#the-solution-a-databricks-app-to-serve-the-codebase-over-mcp" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Databricks apps ship with MCP support out of the box, and they integrate cleanly with Genie Code. Instead of wiring the assistant to source control directly, I built a small Databricks app to serve the codebase, then connected Genie Code to it over MCP.</p>
+<p>The app needed to do a few things.</p>
+<p><strong>Make the codebase searchable.</strong> A keyword search over a large, unfamiliar codebase isn&rsquo;t enough, since you rarely know the exact term to look for. Instead, I set up semantic search with Databricks Vector Search. The files were far too large to embed whole, so each one gets split into smaller chunks, and every chunk becomes a vector produced by an embedding model. Those vectors live in a Vector Search index, each tagged with metadata like the path of the file it came from.</p>
+<p>The important detail is that the index holds chunks of text, not whole files. When the assistant asks a question in plain language, the search returns the handful of chunks most relevant to it, wording match or not, each with a pointer back to the file it lives in.</p>
+<p>I&rsquo;ll admit I was skeptical this would work. Semantic search is built for natural language, and English doesn&rsquo;t map cleanly onto source code. It worked better than I expected. Part of the reason is that code carries more natural language than you&rsquo;d think, in its comments, function names, and variable names. The embedding models also turn out to be genuinely good at code, matching snippets that are conceptually similar even when the syntax differs. Whatever the reason, retrieval consistently surfaced the right parts of the codebase.</p>
+<p>It did more than point me to the right place, too. I could ask how a particular value was calculated, get the logic back in plain language, then ask the assistant to cite the exact file and lines it drew from. That last step is what made the answers trustworthy. Instead of taking a plausible explanation on faith, I could check it against the source every time.</p>
+<p><strong>Serve the raw files.</strong> The index only holds chunks, so the assistant usually needs the full file behind a promising match, and that full text lives somewhere else. The code effectively sits in two places. The raw source is staged in a Unity Catalog volume that maps an ADLS blob container into our environment, separate from the vector index. The app itself runs as isolated compute and doesn&rsquo;t hold the codebase inside it. When the assistant lands on a relevant file, the app reaches out and fetches it on demand, through its service principal and the Databricks Files API, reading straight from the volume.</p>
+<p><strong>Expose a small set of tools over MCP.</strong> From a coding standpoint this part was deliberately simple, just four or five basic utilities: search the codebase semantically, get an overview of the project, read a raw file by path, and so on. Nothing fancy. Just enough for Genie Code to explore Orion the way a person would.</p>
+<p>Here&rsquo;s the shape of it:</p>
+<pre class="not-prose mermaid">
+flowchart LR
+    A["Genie Code"] -- MCP --> B["Databricks app<br/>(isolated compute)"]
+    B -- "1 · semantic search" --> C["Vector Search index<br/>chunked embeddings + file paths"]
+    B -- "2 · fetch full file<br/>service principal + Files API" --> D["Unity Catalog volume<br/>(ADLS blob container)<br/>raw source files"]
+    subgraph index ["Indexing (build time)"]
+        D -- "chunk + embed" --> C
+    end
+    subgraph future ["Planned extensions"]
+        F["Confluence"]
+        G["SharePoint"]
+    end
+    F -- Lakeflow --> D
+    G -- Lakeflow --> D
+</pre>
+
+<p>One decision worth calling out: I deliberately didn&rsquo;t build anything to keep the index or the staged code in sync as the source changes. Normally that would be a glaring omission. But the whole point of this project is to retire Orion, so it&rsquo;s a frozen target. Building refresh pipelines for code we&rsquo;re actively replacing would have been effort spent in the wrong direction.</p>
+
+<h2 class="relative group">Keeping Costs Honest
+    <div id="keeping-costs-honest" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#keeping-costs-honest" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>A Databricks app doesn&rsquo;t need to run around the clock, especially one serving a small internal team. I set up a scheduled job to spin it up and down on a sensible cadence rather than leave it running continuously. It&rsquo;s a small thing, but for an internal tool it keeps the cost proportional to the value.</p>
+
+<h2 class="relative group">Teaching the Assistant When to Use It
+    <div id="teaching-the-assistant-when-to-use-it" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#teaching-the-assistant-when-to-use-it" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>Building the app was only half the work. The other half was making Genie Code aware of it, so it knew when to reach out over MCP and how to work the results into its reasoning.</p>
+<p>I did that with Genie Code&rsquo;s native configuration: a custom instructions file and skills. If you&rsquo;ve built these before, this will feel familiar. If you haven&rsquo;t, I put together a <a
+  href="https://mnorberg-dev.github.io/posts/getting-more-out-of-databricks-genie-code/"
     target="_blank"
-  >github.com/mnorberg-dev/first-ai-agent-in-databricks</a></strong></p>
-<p>The notebook is designed as a starter template, so if you want to follow along with the concepts from the talk you can work through it directly in your own Databricks environment.</p>
+  >guide on what they are and how to set them up</a>. Through trial and error I wrote my own, a set of rules that tell Genie Code what Orion is, what we&rsquo;re trying to do, and when to call the app&rsquo;s tools instead of guessing.</p>
+<p>Here&rsquo;s something I didn&rsquo;t appreciate at first: that configuration is never really done. For the first week or so I was tweaking those files constantly. Then it converged. After a while the assistant genuinely knew Orion. It reached for the app on its own when a question called for it, and its answers were grounded and consistent instead of the occasional lucky guess. What started as a promising experiment became something I relied on every day, and it saved us an enormous amount of time on the rebuild.</p>
+
+<h2 class="relative group">Where This Goes Next
+    <div id="where-this-goes-next" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#where-this-goes-next" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>This was version one, and it deliberately handled a single source of context: the code itself. That was enough to prove the idea. But code is only the first input.</p>
+<p>The obvious next step is to pull in everything around it. Databricks&rsquo; Lakeflow connectors can ingest from Confluence and SharePoint, where a lot of the written knowledge about Orion lives, in design docs and notes from teammates and the original authors. That material is too sprawling for any one person to hold in their head, but it&rsquo;s exactly what an LLM can sift through to find the right context for a question.</p>
+<p>Layer those sources together and the tool changes character. Once the assistant can draw on code, documentation, and tribal knowledge at once, and decide for itself which to consult, it stops being a search tool. It becomes a knowledge assistant agent, something you can hold a real conversation with about the whole system.</p>
+<p>Step back, and this stops being about one legacy app at all. It&rsquo;s a reusable pattern: point a coding assistant at a codebase it can&rsquo;t otherwise see, give it the tools to search and read that code on demand, then layer in whatever surrounding knowledge exists. You could stand one up for any codebase in the company, and give a new developer a way to get up to speed in days instead of months. Even after Orion is gone, an assistant like this could stick around as institutional memory, a way to answer &ldquo;how did the old system actually do this?&rdquo; long after the source has been retired.</p>
+
+<h2 class="relative group">Wrapping Up
+    <div id="wrapping-up" class="anchor"></div>
+    
+    <span
+        class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none">
+        <a class="text-primary-300 dark:text-neutral-700 !no-underline" href="#wrapping-up" aria-label="Anchor">#</a>
+    </span>
+    
+</h2>
+<p>The models are good. What&rsquo;s usually missing is context.</p>
+<p>If you&rsquo;re stuck on a problem where an AI assistant should be able to help but keeps coming up short, it&rsquo;s worth asking whether the real bottleneck is the model, or whether you just haven&rsquo;t given it the context it needs. For us, closing that gap was the difference between an assistant that guessed and one that knew.</p>
+<p>Ghodsi was right. It&rsquo;s a context problem. The good news is that context is something you can actually do something about.</p>
 <hr>
-<p>The conversations after the session were great, and I&rsquo;m already looking forward to the next Boston Code Camp in November. If you attended and have questions, or you know of a conference where this kind of topic would be a good fit, feel free to reach out.</p>
+<p>Here are some resources related to the technologies covered in this post that I&rsquo;d recommend if you want to learn more about these concepts:</p>
+<p>Sources:</p>
+<ul>
+<li><a
+  href="https://docs.databricks.com/aws/en/genie-code/"
+    target="_blank"
+  >Genie Code | Databricks Documentation</a></li>
+<li><a
+  href="https://modelcontextprotocol.io/"
+    target="_blank"
+  >Model Context Protocol</a></li>
+<li><a
+  href="https://docs.databricks.com/aws/en/ai-search/ai-search"
+    target="_blank"
+  >Mosaic AI Vector Search | Databricks Documentation</a></li>
+<li><a
+  href="https://docs.databricks.com/aws/en/data-engineering/"
+    target="_blank"
+  >Data engineering with Databricks | Databricks Documentation</a></li>
+<li><a
+  href="https://learn.microsoft.com/en-us/azure/databricks/dev-tools/databricks-apps/uc-volumes"
+    target="_blank"
+  >Add a Unity Catalog volume resource to a Databricks app | Databricks Documentation</a></li>
+</ul>
 
           
           
@@ -900,8 +1058,8 @@
           type="text/javascript"
           src="/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js"
           integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA=="
-          data-oid="views_posts/boston-code-camp-databricks-agents/index.md"
-          data-oid-likes="likes_posts/boston-code-camp-databricks-agents/index.md"></script>
+          data-oid="views_posts/databricks-tally-app/index.md"
+          data-oid-likes="likes_posts/databricks-tally-app/index.md"></script>
       
     </section>
 
