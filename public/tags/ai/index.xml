@@ -9,7 +9,17 @@
     <managingEditor>mattnorberg4@gmail.com (Matthew Norberg)</managingEditor>
     <webMaster>mattnorberg4@gmail.com (Matthew Norberg)</webMaster>
     <copyright>© 2026 Matthew Norberg</copyright>
-    <lastBuildDate>Wed, 29 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Nov 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/ai/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Plan First, Code Second: How Agentic Coding Changed the Way I Work</title>
+      <link>http://localhost:1313/posts/plan-first-code-second/</link>
+      <pubDate>Sat, 07 Nov 2026 00:00:00 +0000</pubDate>
+      <author>mattnorberg4@gmail.com (Matthew Norberg)</author>
+      <guid>http://localhost:1313/posts/plan-first-code-second/</guid>
+      <description>I write less code than I used to and spend more time guiding AI tools toward the solution. Here&amp;rsquo;s the workflow I&amp;rsquo;ve landed on: start with a conversation instead of code, build up a set of markdown docs that both people and AI tools rely on, and use a few key ideas in the instructions file to tie it all together.</description>
+      
+    </item>
     
     <item>
       <title>Context Is the Bottleneck: Building a Knowledge Assistant for a Legacy Codebase</title>
